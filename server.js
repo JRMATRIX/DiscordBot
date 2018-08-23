@@ -25,7 +25,7 @@ app.get( "/file", function( request, response ) {
   response.sendFile( __dirname + "/public/index.html" );
 } );
 
-  // we can also respond to a request with data
+// instead of we can also respond to a request with data
 app.get( "/json", function( request, response ) {
   response.json( {
     key: "value",
