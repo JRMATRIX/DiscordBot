@@ -8,13 +8,13 @@ var app = express();
 // so we need to 
 app.get( "/", function( request, response ){
   response.send( "Hello node" );
-});
+} );
 
 
 // and we can define other routes
 app.get( "/html", function( request, response ){
   response.send( "<h1>Hello HTML</h1>" );
-});
+} );
 
 
 // or we can set express to serve files from a specific folder:
