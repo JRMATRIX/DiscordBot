@@ -2,15 +2,14 @@
   "name": "hello-node-server",
   "version": "0.0.1",
   "description": "A simple Node app built on Express, instantly up and running.",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "dependencies": {
-    "express": "^4.16.3"
-  },
   "engines": {
-    "node": "10.x"
+    "node": "10.5.0"
+  },
+  "dependencies": {
+    "express": "4.16.3"
   },
   "repository": {
     "url": "https://glitch.com/edit/#!/hello-node-server"
