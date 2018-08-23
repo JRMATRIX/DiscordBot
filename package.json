@@ -1,5 +1,5 @@
 {
-  "name": "hello-express",
+  "name": "hello-node-server",
   "version": "0.0.1",
   "description": "A simple Node app built on Express, instantly up and running.",
   "main": "server.js",
@@ -13,7 +13,7 @@
     "node": "10.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/hello-express"
+    "url": "https://glitch.com/edit/#!/hello-node-server"
   },
   "license": "MIT",
   "keywords": [

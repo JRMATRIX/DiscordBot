@@ -1,5 +1,5 @@
 // load express package
-var express = require('express');
+var express = require('express' );
 
 // create an express object
 var app = express();
@@ -19,9 +19,12 @@ app.get( '/html', function( request, response ){
 app.use( express.static( 'public' ) );
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get('/file', function( request, response ) {
+app.get( '/file', function( request, response ) {
   response.sendFile( __dirname + '/public/index.html' );
-});
+} );
+
+
+app.get( '/json'
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function() {
