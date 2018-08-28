@@ -6,14 +6,8 @@ var app = express();
 
 // when our server receives a request, it needs to know what it should respond
 // so we need to 
-app.get( "/", function( request, response ){
-  response.send( "Hello node" );
-} );
-
-
-// and we can define other routes
-app.get( "/html", function( request, response ){
-  response.send( "<h1>Hello HTML</h1>" );
+app.get( "/", function( request, response ) {
+  response.send( "<h1>Hello Express :)</h1>" );
 } );
 
 
@@ -30,11 +24,11 @@ app.get( "/json", function( request, response ) {
   response.json( {
     key: "value",
     randomNumber: Math.random() * 10
-  } )
+  } );
 } );
 // here we are returning a simple JS object as JSON, but it could connect to a database to look for special data and return it
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function() {
-  console.log("Your app is listening on port " + listener.address().port);
+var listener = app.listen( process.env.PORT, function() {
+  console.log( "Your app is listening on port " + listener.address().port );
 } );
