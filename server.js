@@ -20,4 +20,4 @@ app.get( "/about", function( request, response ) {
 
 // finally we set the server to listen for requests :)
 app.listen( process.env.PORT );
-// "process.env.PORT"
+// 3000 is the 
