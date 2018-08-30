@@ -14,7 +14,7 @@ app.get( "/", function( request, response ) {
 
 // when the server gets a request for "https://hello-node-server.glitch.me/about"
 app.get( "/about", function( request, response ) {
-  response.send( "<h1>All about Express</h1>" );
+  response.send( "<h1>This is my about page</h1>" );
 } );
 
 
