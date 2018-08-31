@@ -1,4 +1,4 @@
-// load express package
+// this is the way to load a package with NodeJS
 var express = require( "express" );
 
 // create an express object: a Web server
