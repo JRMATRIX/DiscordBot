@@ -7,6 +7,7 @@
   
   "//comment2": "dependencies are the Node Packages (ie. libraries) needed for our program. We need to provide the name of the package and the version we want, and Glitch installs them",
   "dependencies": {
+    "//comment3": "express (https://www.npmjs.com/package/express) is a Web frameworks for NodeJS that helps to create Web server in a few lines of code",
     "express": "4.16.3"
   }
 }
