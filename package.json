@@ -1,7 +1,11 @@
 {
+  
+  "//comment1": "scripts.start is the command to execute server.js with NodeJS, Glitch automatically execute this command",
   "scripts": {
     "start": "node server.js"
   },
+  
+  "//comment2": "dependencies are the Node Packages (ie. libraries) needed to for our program, Glitch automatically install them",
   "dependencies": {
     "express": "4.16.3"
   }
