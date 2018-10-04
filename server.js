@@ -9,7 +9,8 @@ var app = express();
 // When the server gets a request for the "root" route of this domain: "/"
 // here: "https://hello-node-server.glitch.me/"
 app.get( "/", function( request, response ) {
-  response.send( "<h1>Hello :)</h1><p><a href='/about'>About</a></p>" ); // we tell the server to respond with some HTML
+  // we program the server to respond with an HTML string
+  response.send( "<h1>Hello :)</h1><p><a href='/about'>About</a></p>" ); 
 } );
 
 // when the server gets a request for "https://hello-node-server.glitch.me/about"
@@ -17,8 +18,7 @@ app.get( "/about", function( request, response ) {
   response.send( "<h1>This is my about page</h1><a href='/'>Home</a></p>" );
 } );
 
-
-// finally we set the server to listen for requests :)
+// finally we tell the server to listen for requests
 app.listen( process.env.PORT );
 // the server needs to listen for requests on a specified port:
 // a port can be thought of as an access on device to communicate data
