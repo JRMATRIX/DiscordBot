@@ -58,24 +58,38 @@ bot.on('message', msg => {
 function parse( msg, args ) {
   // msg.channel.send( '*Command received*' );
   
+  console.log( args[1] );
+  
   switch( args[2] ) {
   
-    case 'mixer' :
-      addMixerChannel( msg, args[1], args[3], args[4] );
+    case 'mixerChannel' :
+      mixerChannel( msg, args[1], args[3], args[4] );
       break;
       
-    case 'twitch' :
-      
-      break;
-      
-    case 'youtube' :
+    case 'twitchChannel' :
       
       break;
       
   }
 }
 
-function mixerChannel( case, msg, 
+function mixerChannel( msg, operator, username, channel ) {
+  switch( operator ) {
+    
+    case 'add':
+      mixerChannel( msg, username, channel );
+      break;
+      
+    case 'remove':
+      
+      break;
+      
+    default:
+      msg.channel.send(`*Error: Unknown operator ${operator}*`);
+      break;
+      
+  }
+}
 
 /**
  * Add Mixer Channel
