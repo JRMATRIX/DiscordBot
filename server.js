@@ -1,3 +1,16 @@
+/**
+ * The Real World Community Announcement Bot
+ *
+ * Custom Mixer and Discord bot used for shouting out Mixer Streams
+ * within The Real World community Discord Server.
+ *
+ * @package      the-real-world
+ * @version      0.0.1
+ * @author       JRMATRIX
+ * @authorEmail  jrm47r1x@gmail.com
+ * @since        19/02/2019
+ */
+
 // Setup Discord NPM package
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -21,12 +34,18 @@ const DB = require('flatfile');
 // })
 
 /**
- * Discord Command INtegration
+ * Discord Command Integration
+ *
+ * Watches Discord for new command messages
+ *
+ * @uses    Discord
+ * @param   \Discord\Message    msg
+ * @since   0.0.1
+ * @return  null
+ */
 bot.on('message', msg => {  
   // Don't read commands from the bot account, look for '!' to read for commands
   if (msg.author.username != 'TRW Bot' && msg.content.substring(0, 1) == '!' && msg.channel.name === 'bot-configuration' ) {
-    
-    // msg.channel.send( '*Message received in #' + msg.channel.name + '*' );
     
     var args = msg.content.substring(1).split(' ');
     var call = args[0];
@@ -56,6 +75,18 @@ function parse( msg, args ) {
   }
 }
 
+/**
+ * Add Mixer Channel
+ *
+ * Adds a new Mixer Channel to the bot's Watch List
+ *
+ * @uses    Discord
+ * @uses    MixerClient
+ * @param   msg      \Discord\Message
+ * @param   
+ * @since   0.0.1
+ * @return  null
+ */
 function addMixerChannel( msg, username, channel ) {
   msg.channel.send( '*Adding mixer stream ' + username + ' to #' + channel + '*' );
   
@@ -65,4 +96,5 @@ function addMixerChannel( msg, username, channel ) {
   });
 }
 
+// Run the bot in the selected Discord Server
 bot.login(process.env.BOT_TOKEN);
