@@ -4,10 +4,11 @@ const Mixer = require('@mixer/client-node');
 const bot = new Discord.Client();
 
 bot.on('message', msg => {  
-  // msg.channel.send( '*Message received in ' + msg.channel.name + '*' );
   
   // Don't read commands from the bot account, look for '!' to read for commands
   if (msg.author.username != 'TRW Bot' && msg.content.substring(0, 1) == '!' ) {
+    
+    msg.channel.send( '*Message received in #' + msg.channel.name + '*' );
     
     var args = msg.content.substring(1).split(' ');
     var call = args[0];
@@ -38,7 +39,7 @@ function parse( msg, args ) {
 }
 
 function addMixerChannel( msg, username, channel ) {
-  msg.channel.send( '*Adding mixer stream ' + username + ' to ' + channel + '*' );
+  msg.channel.send( '*Adding mixer stream ' + username + ' to #' + channel + '*' );
 }
 
 bot.login(process.env.BOT_TOKEN);
