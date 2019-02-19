@@ -25,13 +25,15 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
 // Setup FlatFile NPM package
 const DB = require('flatfile');
 
-// DB.db('database/mixer.json', ( err, data ) => {
-//   if( err ) throw err;
+DB.db('database/mixer.json', ( err, data ) => {
+  if( err ) throw err;
   
-//   data.save( err => {
-//     if( err ) throw err; 
-//   });
-// })
+  
+  if( data === {} ) {
+    data.channels = [];
+    data.save( err => { if( err ) throw err; });
+  }
+})
 
 /**
  * Discord Command Integration
@@ -137,6 +139,10 @@ function removeMixerChannel( msg, username ) {
 }
 
 function listMixerChannels( msg ) {
+  var channels = fetchMixerChannels();
+  
+  console.log( channels );
+  
   var out = "```css\n";
   out = out + "Listing all current Mixer channels:";
   out = out + "```";
@@ -146,7 +152,11 @@ function listMixerChannels( msg ) {
 }
 
 function fetchMixerChannels() {
-  
+  DB.db('database/mixer.json', ( err, data ) => {
+    if( err ) throw err;
+    
+    return data;
+  })
 }
 
 function getMixerChannel( username ) {
