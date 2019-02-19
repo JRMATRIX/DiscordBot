@@ -81,7 +81,7 @@ function mixerChannel( msg, operator, username, channel ) {
       break;
       
     case 'remove':
-      
+      removeMixerChannel( msg, username );
       break;
       
     case 'list':
@@ -116,7 +116,19 @@ function addMixerChannel( msg, username, channel ) {
   console.log( channel );
 }
 
-function removeMixerChannel( msg, username, channel ) {
+/**
+ * Add Mixer Channel
+ *
+ * Adds a new Mixer Channel to the bot's Watch List
+ *
+ * @uses    Discord
+ * @uses    MixerClient
+ * @param   \Discord\Message    msg
+ * @param   string              username
+ * @since   0.0.1
+ * @return  null
+ */
+function removeMixerChannel( msg, username ) {
   msg.channel.send( `*Removing Mixer channel ${username} from ${channel}*` );
   
   var channel = getMixerChannel( username );
@@ -125,7 +137,15 @@ function removeMixerChannel( msg, username, channel ) {
 }
 
 function listMixerChannels( msg ) {
-  msg.channel.send( "```CSS\n*Listing all current Mixer channels...*\n```" );
+  var out = "```css\n";
+  out = out + "Listing all current Mixer channels:";
+  out = out + "```";
+  
+  msg.channel.send( out );
+  
+}
+
+function fetchMixerChannels() {
   
 }
 
