@@ -77,11 +77,15 @@ function mixerChannel( msg, operator, username, channel ) {
   switch( operator ) {
     
     case 'add':
-      mixerChannel( msg, username, channel );
+      addMixerChannel( msg, username, channel );
       break;
       
     case 'remove':
       
+      break;
+      
+    case 'list':
+      listMixerChannels( msg );
       break;
       
     default:
@@ -105,10 +109,29 @@ function mixerChannel( msg, operator, username, channel ) {
  * @return  null
  */
 function addMixerChannel( msg, username, channel ) {
-  msg.channel.send( '*Adding mixer stream ' + username + ' to #' + channel + '*' );
+  msg.channel.send( `*Adding Mixer channel ${username} to ${channel}*` );
   
+  var channel = getMixerChannel( username );
+  
+  console.log( channel );
+}
+
+function removeMixerChannel( msg, username, channel ) {
+  msg.channel.send( `*Removing Mixer channel ${username} from ${channel}*` );
+  
+  var channel = getMixerChannel( username );
+  
+  console.log( channel );
+}
+
+function listMixerChannels( msg ) {
+  msg.channel.send( "```CSS\n*Listing all current Mixer channels...*\n```" );
+  
+}
+
+function getMixerChannel( username ) {
   mixerClient.request('GET', `channels/${username}`).then(res => {
-      var channelID = res.body.id;
+      return res.body;
   });
 }
 
