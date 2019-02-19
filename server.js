@@ -58,10 +58,10 @@ bot.on('message', msg => {
 function parse( msg, args ) {
   // msg.channel.send( '*Command received*' );
   
-  switch( args[1] ) {
+  switch( args[2] ) {
   
     case 'mixer' :
-      addMixerChannel( msg, args[2], args[3] );
+      addMixerChannel( msg, args[1], args[3], args[4] );
       break;
       
     case 'twitch' :
@@ -75,6 +75,8 @@ function parse( msg, args ) {
   }
 }
 
+function mixerChannel( case, msg, 
+
 /**
  * Add Mixer Channel
  *
@@ -82,8 +84,9 @@ function parse( msg, args ) {
  *
  * @uses    Discord
  * @uses    MixerClient
- * @param   msg      \Discord\Message
- * @param   
+ * @param   \Discord\Message    msg
+ * @param   string              username
+ * @param   string              channel
  * @since   0.0.1
  * @return  null
  */
@@ -91,8 +94,7 @@ function addMixerChannel( msg, username, channel ) {
   msg.channel.send( '*Adding mixer stream ' + username + ' to #' + channel + '*' );
   
   mixerClient.request('GET', `channels/${username}`).then(res => {
-      const viewers = res.body.viewersTotal;
-      console.log(res.body);
+      var channelID = res.body.id;
   });
 }
 
