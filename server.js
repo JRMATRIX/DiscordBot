@@ -1,8 +1,13 @@
 const Discord = require('discord.js');
-const Mixer = require('@mixer/client-node');
-const DB = require('flatfile');
-
 const bot = new Discord.Client();
+
+const Mixer = require('@mixer/client-node');
+const mixerClient = new Mixer.Client( new Mixer.DefaultRequestRunner() );
+mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
+    clientId: 'd726efa15d16a2c68f7c29e42e88b1f885aa48b0e8cc1c9f',
+}));
+
+const DB = require('flatfile');
 
 DB.db('database/mixer.json', ( err, data ) => {
   if( err ) throw err;
@@ -49,6 +54,11 @@ function parse( msg, args ) {
 
 function addMixerChannel( msg, username, channel ) {
   msg.channel.send( '*Adding mixer stream ' + username + ' to #' + channel + '*' );
+  
+  mixerClient.request('GET', `channels/${username}`).then(res => {
+      const viewers = res.body.viewersTotal;
+      console.log(res.body);
+  });
 }
 
 bot.login(process.env.BOT_TOKEN);
