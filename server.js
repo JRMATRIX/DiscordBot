@@ -77,6 +77,10 @@ DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 var msg = null;
 
+const errors = {
+  mixerChannelExists : 'That streamer has already been added to the Mixer Announcement list.\n\nTo update this streamer, you can run the following command:\n!trw update mixer <mixerName> <announcementChannel> <'
+}
+
 
 /******************************************************************************
  * DISCORD
@@ -168,6 +172,15 @@ function parseMixerArgs( args ) {
   return obj;
 }
 
+function createErrorEmbed( message ) {
+  var embed = new Discord.RichEmbed()
+    .setTitle( 'TRW Bot Error' )
+    .setDescription( message )
+    .setColor( '0xFF0000' );
+  
+  msg.channel.send( embed );
+}
+
 function createMixerEmbed( data ) {
   
   var embed = new Discord.RichEmbed()
@@ -245,18 +258,21 @@ function mixerChannel( operator, username, channel ) {
  */
 function addMixerChannel( username, channel ) {  
   mixerClient.request('GET', `channels/${username}`).then(res => {
-    pushMixerChannel( res.body, channel );
     
-    ca.subscribe(`channel:${res.body.id}:update`, (type, event, data) => {
-      console.log(type, event, data);
-    });
+    if( pushMixerChannel( res.body, channel ) ) {
     
-    var out = "```diff\n";
-    out = out + "+ Added Mixer channel " + username + " to " + channel + "\n";
-    out = out + "```\n";
-    
-    msg.react('✅');
-    msg.channel.send( out );
+      ca.subscribe(`channel:${res.body.id}:update`, (type, event, data) => {
+        console.log(type, event, data);
+      });
+
+      var out = "```diff\n";
+      out = out + "+ Added Mixer channel " + username + " to " + channel + "\n";
+      out = out + "```\n";
+
+      msg.react('✅');
+      msg.channel.send( out );
+      
+    }
   });
 }
 
@@ -488,13 +504,23 @@ function listOptions() {
  * @return  null
  */
 function pushMixerChannel( mixerChannel, channel ) {  
+  
+  if( DB.get( 'mixer' ).find({ id: mixerChannel.id }).value() ) {
+    // msg.react( '❌');
+    createErrorEmbed( `Mixer channel for ${mixerChannel.token} already exists` );
+    
+    return false;
+  }
+  
   DB.get( 'mixer' ).push({
     id: mixerChannel.id,
     name : mixerChannel.token,
     channelName : channel,
-    channelID : msg.guild.channels.find( ch => ch.name === channel ) ,
+    channelID : msg.guild.channels.find( ch => ch.name === channel.substr(1) ),
     twitter : null
   }).write();
+  
+  return true;
 }
 
 /**
