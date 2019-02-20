@@ -78,6 +78,9 @@ function parse( msg, args ) {
 }
 
 function mixerChannel( msg, operator, username, channel ) {
+  if( ! channel ) channel = getOption( false, 'defaultAnnouncementChannel' );
+  console.log( channel );
+  
   switch( operator ) {
     
     case 'add':
@@ -93,7 +96,12 @@ function mixerChannel( msg, operator, username, channel ) {
       break;
       
     default:
-      msg.channel.send(`*Error: Unknown operator ${operator}*`);
+      var out = "```diff\n";
+      out = out + "- Error: Unknown operator " + operator + "\n";
+      out = out + "```\n";
+      
+      msg.react( '❌');
+      msg.channel.send( out );
       break;
       
   }
@@ -232,7 +240,9 @@ function trwOption( msg, operator, option, value ) {
 }
 
 function setOption( msg, option, value ) {
-  DB.set( 'options.' + option, value ).write();
+  console.log( option, value );
+  
+  DB.set( `options.${option}`, value ).write();
   
   // @TODO: Add some check here to see if the option was set correctly
   
@@ -251,8 +261,10 @@ function getOption( msg, option ) {
   out = out + "# " + option + " : " + value + "\n";
   out = out + "```\n";
   
-  msg.react('✅');
-  msg.channel.send( out );
+  if( msg ) {
+    msg.react('✅');
+    msg.channel.send( out );
+  }
 }
 
 function listOptions( msg ) {
@@ -264,7 +276,7 @@ function fetchOptions() {
 }
 
 function fetchOption( option ) {
-  return DB.get( 'options.' + option ).value();
+  return DB.get( `options.${option}` ).value();
 }
 
 
