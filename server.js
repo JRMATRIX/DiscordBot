@@ -136,9 +136,11 @@ function pushMixerChannel( mixerChannel, channel ) {
  * @return  null
  */
 function removeMixerChannel( msg, username ) {
-  msg.channel.send( `*Removing Mixer channel ${username} from ${channel}*` );
+  msg.channel.send( `*Removing Mixer channel ${username}*` );
   
-  var channel = getMixerChannel( username );
+  mixerClient.request('GET', `channels/${username}`).then(res => {
+    pushMixerChannel( res.body.id );
+  });
   
   // console.log( channel );
 }
@@ -148,12 +150,13 @@ function listMixerChannels( msg ) {
   
   console.log( channels );
   
-  var out = "```css\n";
-  out = out + "Listing all current Mixer channels:";
+  var out = "```md\n";
+  out = out + "Listing all current Mixer channels:\n";
+  out = out + "---";
   
   channels.forEach( function( channel ) {
     out = out + "\n\n";
-    out = out + `- ${channel.name} (ID: ${channel.id})\n`;
+    out = out + `* ${channel.name} (ID: ${channel.id})\n`;
     out = out + `  Announcement Channel: ${channel.channel}\n`;
     out = out + "\n";
   });
