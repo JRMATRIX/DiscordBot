@@ -41,7 +41,7 @@ const adapter = new FileSync('.data/db.json');
 
 const DB = low(adapter);
 
-DB.defaults({ mixer:[], twitch:[] }).write();
+DB.defaults({ mixer:[], twitch:[], options:{} }).write();
 
 /**
  * Discord Command Integration
