@@ -43,9 +43,9 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
 /** 
  * Carina NPM package
  *
- * Used for connecting and interacting with the Mixer API
+ * Used for connecting and interacting with the Mixer Constellation API
  *
- * @minVersion  3.2.0
+ * @minVersion  0.11.2
  */
 const Carina = require('carina').Carina;
 const ws = require('ws');
@@ -58,7 +58,13 @@ const ca = new Carina({
     isBot: true,
 }).open();
 
-// Setup lowdb NPM package (Database)
+/** 
+ * lowdb NPM package
+ *
+ * Used for local persistent data storage
+ *
+ * @minVersion  1.0.0
+ */
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('.data/db.json');
@@ -142,7 +148,6 @@ function parse( msg, args ) {
  *
  * Parses an action to take for a Mixer Channel request
  *
- * @uses    MixerClient
  * @param   \Discord\Message    msg
  * @param   string              operator
  * @param   string              username
@@ -332,6 +337,18 @@ function fetchMixerChannels() {
  * SETTINGS / OPTIONS
  */
 
+/**
+ * TRW Bot Option
+ *
+ * Parses an action to take for a Bot Option request
+ *
+ * @param   \Discord\Message    msg
+ * @param   string              operator
+ * @param   string              option
+ * @param   string              value
+ * @since   0.0.1
+ * @return  null
+ */
 function trwOption( msg, operator, option, value ) {
   switch( operator ) {
     
@@ -359,6 +376,17 @@ function trwOption( msg, operator, option, value ) {
   }
 }
 
+/**
+ * Set Bot Option
+ *
+ * Sets or updates a Bot Option
+ *
+ * @param   \Discord\Message    msg
+ * @param   string              option
+ * @param   mixed               value
+ * @since   0.0.1
+ * @return  null
+ */
 function setOption( msg, option, value ) {
   pushOption( option, value );
   
@@ -373,6 +401,17 @@ function setOption( msg, option, value ) {
   msg.channel.send( out );
 }
 
+/**
+ * Push Bot Option
+ *
+ * Updates a Bot Option in the database
+ *
+ * @uses    lowdb
+ * @param   string              option
+ * @param   mixed               value
+ * @since   0.0.1
+ * @return  null
+ */
 function pushOption( option, value ) {
    DB.get( 'options' ).push({
     key: option,
@@ -380,6 +419,16 @@ function pushOption( option, value ) {
   }).write(); 
 }
 
+/**
+ * Get Bot Option
+ *
+ * Outputs a Bot Option value
+ *
+ * @param   \Discord\Message    msg
+ * @param   string              option
+ * @since   0.0.1
+ * @return  mixed
+ */
 function getOption( msg, option ) {
   var value = fetchOption( option );
   
@@ -395,6 +444,15 @@ function getOption( msg, option ) {
   return value;
 }
 
+/**
+ * List Bot Options
+ *
+ * Lists all currently assigned Bot Options
+ *
+ * @param   \Discord\Message    msg
+ * @since   0.0.1
+ * @return  object|null
+ */
 function listOptions( msg ) {
   var options = fetchOptions();
   console.log( options );
@@ -424,10 +482,29 @@ function listOptions( msg ) {
   msg.channel.send( out );
 }
 
+/**
+ * Fetch Bot Options
+ *
+ * Fetches all Bot Options from the database
+ *
+ * @uses    lowdb
+ * @since   0.0.1
+ * @return  object|null
+ */
 function fetchOptions() {
   return DB.get( 'options' ).value();
 }
 
+/**
+ * Fetch Bot Option
+ *
+ * Fetches a sing Bot Option from the database
+ *
+ * @uses    lowdb
+ * @param   string              option
+ * @since   0.0.1
+ * @return  mixed
+ */
 function fetchOption( option ) {
   return DB.get( 'options' ).filter({key: option}).value();
 }
