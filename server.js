@@ -41,9 +41,7 @@ const adapter = new FileSync('.data/db.json');
 
 const DB = low(adapter);
 
-DB.defaults({ mixer:[], twitch:[], options:{
-  defaultAnnouncementChannel: ''
-} }).write();
+DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 /**
  * Discord Command Integration
@@ -266,7 +264,8 @@ function trwOption( msg, operator, option, value ) {
 }
 
 function setOption( msg, option, value ) {
-  DB.set( `options.${option}`, value ).write();
+  DB.set( `options.${option}`, value ).value();
+  DB.write();
   
   // @TODO: Add some check here to see if the option was set correctly
   
