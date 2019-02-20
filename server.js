@@ -41,7 +41,9 @@ const adapter = new FileSync('.data/db.json');
 
 const DB = low(adapter);
 
-DB.defaults({ mixer:[], twitch:[], options:{} }).write();
+DB.defaults({ mixer:[], twitch:[], options:{
+  defaultAnnouncementChannel: ''
+} }).write();
 
 /**
  * Discord Command Integration
@@ -83,11 +85,17 @@ function parse( msg, args ) {
       break;
       
     case 'option' :
+    case 'options' :
       trwOption( msg, args[1], args[3], args[4] );
       break;
       
   }
 }
+
+/**
+ * MIXER
+ */
+
 
 function mixerChannel( msg, operator, username, channel ) {
   if( ! channel ) channel = getOption( false, 'defaultAnnouncementChannel' );
@@ -258,8 +266,6 @@ function trwOption( msg, operator, option, value ) {
 }
 
 function setOption( msg, option, value ) {
-  console.log( option, value );
-  
   DB.set( `options.${option}`, value ).write();
   
   // @TODO: Add some check here to see if the option was set correctly
@@ -290,6 +296,7 @@ function getOption( msg, option ) {
 
 function listOptions( msg ) {
   var options = fetchOptions();
+  console.log( options );
   
   var out = "```md\n";
   
@@ -301,10 +308,12 @@ function listOptions( msg ) {
   
     out = out + "# TRW Bot Options:\n";
 
-    options.forEach( function( key, value ) {
+    // options.forEach( function( key, value ) {
+    for( var key in options ) {
       out = out + "\n";
-      out = out + `* ${key} : ${value}\n`;
-    });
+      out = out + `* ${key} : ${options[key]}\n`;
+    }
+    // });
 
   }
   
