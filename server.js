@@ -209,7 +209,7 @@ function createMixerEmbed( data ) {
     .setFooter( 'The Real World', 'https://cdn.discordapp.com/avatars/547391401000828938/26da8949887ea34cbd3ad3edab407b7c.png?size=256' )
     .setTimestamp( new Date() );
   
-  msg.channel.send( embed );
+  // data.announcementChannel.send( embed );
   
 }
 
@@ -220,7 +220,7 @@ function mixerLivePost( channelID ) {
      
      var channel = fetchMixerChannel( channelID );
      
-     console.log( channel );
+     // console.log( channel[0] );
      
      var data = {
        username : res.body.user.token,
@@ -229,7 +229,8 @@ function mixerLivePost( channelID ) {
        game : res.body.type.name,
        avatar : res.body.user.avatarUrl,
        followers : res.body.numFollowers,
-       viewers : res.body.viewersTotal
+       viewers : res.body.viewersTotal,
+       announcementChannel : channel[0].channelID
      }
      
      createMixerEmbed( data );
@@ -327,10 +328,12 @@ function addMixerChannel( username, channel ) {
     console.log( channel );
     
     if( pushMixerChannel( res.body, channel ) ) {
+      
+      console.log( fetchMixerChannel( res.body.id ) );
     
       ca.subscribe(`channel:${res.body.id}:update`, data => {
         console.log(data, res.body.id);
-        mixerLivePost( channel.id );
+        mixerLivePost( res.body.id );
       });
 
       msg.react('✅');
