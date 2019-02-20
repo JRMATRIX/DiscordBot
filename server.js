@@ -171,11 +171,24 @@ function parseMixerArgs( args ) {
   return obj;
 }
 
-function createErrorEmbed( message ) {
+function createErrorEmbed( message, title ) {
+  if( ! title ) title = 'TRW Bot Error';
+  
   var embed = new Discord.RichEmbed()
-    .setTitle( 'TRW Bot Error' )
+    .setTitle( title )
     .setDescription( message )
     .setColor( '0xFF0000' );
+  
+  msg.channel.send( embed );
+}
+
+function createSuccessEmbed( message, title ) {
+  if( ! title ) title = 'TRW Bot Success';
+  
+  var embed = new Discord.RichEmbed()
+    .setTitle( title )
+    .setDescription( message )
+    .setColor( '0x00FF00' );
   
   msg.channel.send( embed );
 }
@@ -460,29 +473,29 @@ function listOptions() {
   var options = fetchOptions();
   console.log( options );
   
-  var out = "```md\n";
+  // var out = "```md\n";
   
   if( isEmpty( options ) ) {
     
-    out = out + "No TRW Bot Options Available\n";
+    return createErrorEmbed( 'No TRW Bot Options Available' );
+    // out = out + "No TRW Bot Options Available\n";
     
   } else {
   
-    out = out + "# TRW Bot Options:\n";
+    var out = '';
 
     options.forEach( function( option ) {
     // for( var key in options ) {
       out = out + "\n";
-      out = out + `* ${option.key} : ${option.value}\n`;
+      out = out + `**${option.key}** : ${option.value}\n`;
     // }
     });
 
   }
   
-  out = out + "```\n";
-  
   msg.react('✅');
-  msg.channel.send( out );
+  return createSuccessEmbed( out, 'TRW Bot Options' );
+  // msg.channel.send( out );
 }
 
 
