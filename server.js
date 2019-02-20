@@ -22,7 +22,7 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
     clientId: process.env.MIXER_TOKEN
 }));
 
-const Carina = require('carina').Carina();
+const Carina = require('carina').Carina;
 const ws = require('ws');
 Carina.WebSocket = ws;
 
@@ -135,6 +135,10 @@ function addMixerChannel( msg, username, channel ) {
   mixerClient.request('GET', `channels/${username}`).then(res => {
     pushMixerChannel( res.body, channel );
     
+    ca.subscribe(`channel:${res.body.id}:update`, (type, event, data) => {
+      console.log(type, event, data);
+    });
+    
     var out = "```diff\n";
     out = out + "+ Added Mixer channel " + username + " to " + channel + "\n";
     out = out + "```\n";
@@ -169,6 +173,8 @@ function removeMixerChannel( msg, username ) {
   
   mixerClient.request('GET', `channels/${username}`).then(res => {
     deleteMixerChannel( res.body.id );
+    
+    ca.unsubscribe(`channel:${res.body.id}:update`);
     
     var out = "```diff\n";
     out = out + "- Removed Mixer channel " + username + " from announcements";
