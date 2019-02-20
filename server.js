@@ -196,9 +196,12 @@ function createSuccessEmbed( message, title ) {
 function createMixerEmbed( data ) {
   
   var embed = new Discord.RichEmbed()
-    .setTitle( 'Test Embed' )
-    .setDescription( 'This is a test embed' )
-    .setColor( '0x00FF00' );
+    .setTitle( 'JRMATRIX is Live on mixer' )
+    .setUrl( 'https://mixer.com/JRMATRIX' )
+    .setDescription( "**Now Playing**\n{Game Title}\n**Stream Title**\n{This is the stream title. It can take up to 2 lines on Mixer}\n**Followers**\t\t**Total Views**\n" )
+    .setColor( '0x00FF00' )
+    .setImage( 'https://uploads.mixer.com/thumbnails/hdhepi5a-39628981.jpg' )
+    .setThumbnail( 'https://mixer.com/api/v1/users/47436757/avatar?w=256&h=256' );
   
   msg.channel.send( embed );
   
