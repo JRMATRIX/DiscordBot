@@ -19,7 +19,7 @@ const bot = new Discord.Client();
 const Mixer = require('@mixer/client-node');
 const mixerClient = new Mixer.Client( new Mixer.DefaultRequestRunner() );
 mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
-    clientId: 'd726efa15d16a2c68f7c29e42e88b1f885aa48b0e8cc1c9f',
+    clientId: process.env.MIXER_TOKEN
 }));
 
 // Setup lowdb NPM package (Database)
