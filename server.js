@@ -11,18 +11,42 @@
  * @since        19/02/2019
  */
 
-// Setup Discord NPM package
+
+
+/**
+ * CONFIG
+ */
+
+/** 
+ * Discord NPM package
+ *
+ * Used for connecting and interacting with Discord channels
+ *
+ * @minVersion  11.4.2
+ */
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-// Setup Mixer NPM package
+/** 
+ * Mixer NPM package
+ *
+ * Used for connecting and interacting with the Mixer API
+ *
+ * @minVersion  3.2.0
+ */
 const Mixer = require('@mixer/client-node');
 const mixerClient = new Mixer.Client( new Mixer.DefaultRequestRunner() );
 mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
     clientId: process.env.MIXER_TOKEN
 }));
 
-// Setup Carina NPM package
+/** 
+ * Carina NPM package
+ *
+ * Used for connecting and interacting with the Mixer API
+ *
+ * @minVersion  3.2.0
+ */
 const Carina = require('carina').Carina;
 const ws = require('ws');
 Carina.WebSocket = ws;
@@ -42,6 +66,12 @@ const adapter = new FileSync('.data/db.json');
 const DB = low(adapter);
 
 DB.defaults({ mixer:[], twitch:[], options:[] }).write();
+
+
+
+/**
+ * DISCORD
+ */
 
 /**
  * Discord Command Integration
@@ -65,6 +95,17 @@ bot.on('message', msg => {
   }
 })
 
+/**
+ * Discord Command Parser
+ *
+ * Parses a Discord message for commands
+ *
+ * @uses    Discord
+ * @param   \Discord\Message    msg
+ * @param   array               args
+ * @since   0.0.1
+ * @return  null
+ */
 function parse( msg, args ) {
   // msg.channel.send( '*Command received*' );
 
@@ -96,6 +137,19 @@ function parse( msg, args ) {
  * MIXER
  */
 
+/**
+ * Mixer Channel
+ *
+ * Parses an action to take for a Mixer Channel request
+ *
+ * @uses    MixerClient
+ * @param   \Discord\Message    msg
+ * @param   string              operator
+ * @param   string              username
+ * @param   string              channel
+ * @since   0.0.1
+ * @return  null
+ */
 function mixerChannel( msg, operator, username, channel ) {
   if( ! channel ) {
     var defaultChannel = fetchOption( 'defaultAnnouncementChannel' );
@@ -158,6 +212,17 @@ function addMixerChannel( msg, username, channel ) {
   });
 }
 
+/**
+ * Push Mixer Channel
+ *
+ * Pushes a Mixer Channel to the Database
+ *
+ * @uses    lowdb
+ * @param   object              mixerChannel
+ * @param   string              channel
+ * @since   0.0.1
+ * @return  null
+ */
 function pushMixerChannel( mixerChannel, channel ) {  
   DB.get( 'mixer' ).push({
     id: mixerChannel.id,
@@ -168,9 +233,9 @@ function pushMixerChannel( mixerChannel, channel ) {
 }
 
 /**
- * Add Mixer Channel
+ * Remove Mixer Channel
  *
- * Adds a new Mixer Channel to the bot's Watch List
+ * Removes a Mixer Channel from the bot's Watch List
  *
  * @uses    Discord
  * @uses    MixerClient
@@ -197,10 +262,29 @@ function removeMixerChannel( msg, username ) {
   // console.log( channel );
 }
 
+/**
+ * Delete Mixer Channel
+ *
+ * Deletes a Mixer Channel from the Database
+ *
+ * @uses    lowdb
+ * @param   string              channelID
+ * @since   0.0.1
+ * @return  null
+ */
 function deleteMixerChannel( channelID ) {
   DB.get( 'mixer' ).remove({id:channelID}).write();
 }
 
+/**
+ * Lits Mixer Channels
+ *
+ * Outputs a list of all currently active Mixer Channels
+ *
+ * @param   \Discord\Message    msg
+ * @since   0.0.1
+ * @return  null
+ */
 function listMixerChannels( msg ) {
   var channels = fetchMixerChannels();
   
@@ -229,6 +313,15 @@ function listMixerChannels( msg ) {
   
 }
 
+/**
+ * Fetch Mixer Channels
+ *
+ * Fetches all Mixer Channels from the Database
+ *
+ * @uses    lowdb
+ * @since   0.0.1
+ * @return  null
+ */
 function fetchMixerChannels() {
   return DB.get( 'mixer' ).value();
 }
@@ -345,6 +438,15 @@ function fetchOption( option ) {
  * UTILITIES
  */
 
+/**
+ * Is Empty
+ *
+ * Checks if the passed in object has properties
+ *
+ * @param   object              obj
+ * @since   0.0.1
+ * @return  boolean
+ */
 function isEmpty(obj) {
     for(var key in obj) {
         if(obj.hasOwnProperty(key))
