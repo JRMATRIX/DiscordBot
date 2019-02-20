@@ -344,28 +344,31 @@ function removeMixerChannel( username ) {
 function listMixerChannels() {
   var channels = fetchMixerChannels();
   
-  var out = "```md\n";
+  // var out = "```md\n";
   
   if( isEmpty( channels ) ) {
     
-    out = out + "No Mixer Channels Available\n";
+    return createErrorEmbed( 'No Mixer Channels Available' );
+    // out = out + "No Mixer Channels Available\n";
     
   } else {
   
-    out = out + "# Mixer channels:\n";
+    // out = out + "# Mixer channels:\n";
+    var out = '';
 
     channels.forEach( function( channel ) {
       out = out + "\n";
-      out = out + `* ${channel.name} (ID: ${channel.id})\n`;
-      out = out + `  Announcement Channel: ${channel.channel}\n`;
+      out = out + `**${channel.name} *(ID: ${channel.id})***\n`;
+      out = out + `    - **Announcement Channel**: ${channel.channel}\n`;
     });
 
   }
   
-  out = out + "```\n";
+  // out = out + "```\n";
   
   msg.react('✅');
-  msg.channel.send( out );
+  return createSuccessEmbed( out, 'Mixer Streamers' );
+  // msg.channel.send( out );
   
 }
 
