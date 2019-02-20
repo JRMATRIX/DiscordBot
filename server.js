@@ -45,7 +45,7 @@ bot.on('message', msg => {
   // Don't read commands from the bot account, look for '!' to read for commands
   if (msg.author.username != 'TRW Bot' && msg.content.substring(0, 1) == '!' && msg.channel.name === 'bot-configuration' ) {
     
-    var args = msg.content.substring(1).split(' ');
+    var args = msg.cleanContent.substring(1).split(' ');
     var call = args[0];
     
     if( call == 'trw' ) parse( msg, args );
@@ -110,7 +110,7 @@ function addMixerChannel( msg, username, channel ) {
   mixerClient.request('GET', `channels/${username}`).then(res => {
     pushMixerChannel( res.body, channel );
     
-    msg.react('U+2705');
+    msg.react('✅');
     msg.channel.send( `*Added Mixer channel ${username} to ${channel}*` );
   });
 }
@@ -119,7 +119,7 @@ function pushMixerChannel( mixerChannel, channel ) {
   DB.get( 'mixer' ).push({
     id: mixerChannel.id,
     name : mixerChannel.token,
-    channel : channel.toString(),
+    channel : channel,
     twitter : null
   }).write();
 }
@@ -141,7 +141,7 @@ function removeMixerChannel( msg, username ) {
   mixerClient.request('GET', `channels/${username}`).then(res => {
     deleteMixerChannel( res.body.id );
     
-    msg.react('U+2705');
+    msg.react('✅');
     msg.channel.send( `*Removed Mixer channel ${username} from announcements*` );
   });
   
@@ -155,18 +155,25 @@ function deleteMixerChannel( channelID ) {
 function listMixerChannels( msg ) {
   var channels = fetchMixerChannels();
   
-  console.log( channels );
-  
   var out = "```md\n";
-  out = out + "Listing all current Mixer channels:\n";
-  out = out + "---";
   
-  channels.forEach( function( channel ) {
-    out = out + "\n\n";
-    out = out + `* ${channel.name} (ID: ${channel.id})\n`;
-    out = out + `  Announcement Channel: ${channel.channel}\n`;
-    out = out + "\n";
-  });
+  if( isEmpty( channels ) ) {
+    
+    out = out + "No Mixer Channels Available\n";
+    
+  } else {
+  
+    out = out + "Listing all current Mixer channels:\n";
+    out = out + "---";
+
+    channels.forEach( function( channel ) {
+      out = out + "\n\n";
+      out = out + `* ${channel.name} (ID: ${channel.id})\n`;
+      out = out + `  Announcement Channel: ${channel.channel}\n`;
+      out = out + "\n";
+    });
+
+  }
   
   out = out + "```\n";
   
@@ -181,6 +188,23 @@ function fetchMixerChannels() {
 function getMixerChannel( username ) {
   
 }
+
+
+
+/**
+ * UTILITIES
+ */
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+
+
 
 // Run the bot in the selected Discord Server
 bot.login(process.env.BOT_TOKEN);
