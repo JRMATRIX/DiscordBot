@@ -95,7 +95,7 @@ const errors = require( './errors.js' );
  */
 bot.on('message', message => {  
   // Don't read commands from the bot account, look for '!' to read for commands
-  if (message.author.username != 'TRW Bot' && message.content.substring(0, 1) == '!' && message.channel.name === 'bot-configuration' ) {
+  if ( ! message.author.bot && message.content.substring(0, 1) == '!' && message.channel.name === 'bot-configuration' ) {
     
     msg = message;
     
