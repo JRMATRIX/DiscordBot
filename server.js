@@ -114,8 +114,13 @@ function addMixerChannel( msg, username, channel ) {
   });
 }
 
-function pushMixerChannel( mixerChannel, channel ) {
-  console.log( mixerChannel, channel );
+function pushMixerChannel( mixerChannel, channel ) {  
+  DB.get( 'mixer' ).push({
+    id: mixerChannel.id,
+    name : mixerChannel.token,
+    channel : channel,
+    twitter : null
+  }).write();
 }
 
 /**
@@ -135,7 +140,7 @@ function removeMixerChannel( msg, username ) {
   
   var channel = getMixerChannel( username );
   
-  console.log( channel );
+  // console.log( channel );
 }
 
 function listMixerChannels( msg ) {
