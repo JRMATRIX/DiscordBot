@@ -67,26 +67,26 @@ bot.on('message', msg => {
 
 function parse( msg, args ) {
   // msg.channel.send( '*Command received*' );
-  
+
   // console.log( args[1] );
-  
+
   switch( args[2].toLowerCase() ) {
-  
+
     case 'mixer' :
     case 'mixerchannel' :
       mixerChannel( msg, args[1], args[3], args[4] );
       break;
-      
+
     case 'twitch' :
     case 'twitchchannel' :
-      
+
       break;
-      
+
     case 'option' :
     case 'options' :
       trwOption( msg, args[1], args[3], args[4] );
       break;
-      
+
   }
 }
 
