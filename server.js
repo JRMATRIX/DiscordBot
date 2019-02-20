@@ -109,8 +109,9 @@ function mixerChannel( msg, operator, username, channel ) {
 function addMixerChannel( msg, username, channel ) {
   msg.channel.send( `*Adding Mixer channel ${username} to ${channel}*` );
   
-  var mixerChannel = getMixerChannel( username );
-  pushMixerChannel( mixerChannel, channel );
+  mixerClient.request('GET', `channels/${username}`).then(res => {
+    pushMixerChannel( res.body, channel );
+  });
 }
 
 function pushMixerChannel( mixerChannel, channel ) {
@@ -155,10 +156,6 @@ function fetchMixerChannels() {
 }
 
 function getMixerChannel( username ) {
-  
-  return mixerClient.request('GET', `channels/${username}`).then(res => {
-      return res.body;
-  });
   
 }
 
