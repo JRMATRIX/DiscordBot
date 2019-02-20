@@ -335,7 +335,17 @@ function isEmpty(obj) {
 }
 
 
-
+/**
+ * MAIN
+ */
 
 // Run the bot in the selected Discord Server
 bot.login(process.env.BOT_TOKEN);
+
+// Loop through our list of streamers and subscribe them to ca events
+var channels = fetchMixerChannels();
+channels.forEach( function( channel ) {
+    ca.subscribe(`channel:${channel.id}:update`, (type, event, data) => {
+      console.log(type, event, data);
+    });
+});
