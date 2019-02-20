@@ -282,8 +282,8 @@ function addMixerChannel( username, channel ) {
     
     if( pushMixerChannel( res.body, channel ) ) {
     
-      ca.subscribe(`channel:${res.body.id}:update`, (type, event, data) => {
-        console.log(type, event, data);
+      ca.subscribe(`channel:${res.body.id}:update`, data => {
+        console.log(data);
       });
 
       var out = "```diff\n";
@@ -654,7 +654,7 @@ bot.login(process.env.BOT_TOKEN);
 // Loop through our list of streamers and subscribe them to ca events
 var channels = fetchMixerChannels();
 channels.forEach( function( channel ) {
-    ca.subscribe(`channel:${channel.id}:update`, (type, event, data) => {
-      console.log(type, event, data);
+    ca.subscribe(`channel:${channel.id}:update`, data => {
+      console.log(data);
     });
 });
