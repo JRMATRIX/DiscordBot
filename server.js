@@ -283,7 +283,7 @@ function addMixerChannel( username, channel ) {
     if( pushMixerChannel( res.body, channel ) ) {
     
       ca.subscribe(`channel:${res.body.id}:update`, data => {
-        console.log(data);
+        console.log(data, res.body.id);
       });
 
       var out = "```diff\n";
