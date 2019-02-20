@@ -90,14 +90,17 @@ function parse( msg, args ) {
   }
 }
 
+
+
 /**
  * MIXER
  */
 
-
 function mixerChannel( msg, operator, username, channel ) {
-  if( ! channel ) channel = getOption( false, 'defaultAnnouncementChannel' );
-  console.log( channel );
+  if( ! channel ) {
+    var defaultChannel = fetchOption( 'defaultAnnouncementChannel' );
+    channel = defaultChannel[0].value;
+  }
   
   switch( operator ) {
     
@@ -264,8 +267,7 @@ function trwOption( msg, operator, option, value ) {
 }
 
 function setOption( msg, option, value ) {
-  DB.set( `options.${option}`, value ).value();
-  DB.write();
+  pushOption( option, value );
   
   // @TODO: Add some check here to see if the option was set correctly
   
@@ -276,6 +278,13 @@ function setOption( msg, option, value ) {
   
   msg.react('✅');
   msg.channel.send( out );
+}
+
+function pushOption( option, value ) {
+   DB.get( 'options' ).push({
+    key: option,
+    value : value
+  }).write(); 
 }
 
 function getOption( msg, option ) {
@@ -307,12 +316,12 @@ function listOptions( msg ) {
   
     out = out + "# TRW Bot Options:\n";
 
-    // options.forEach( function( key, value ) {
-    for( var key in options ) {
+    options.forEach( function( option ) {
+    // for( var key in options ) {
       out = out + "\n";
-      out = out + `* ${key} : ${options[key]}\n`;
-    }
-    // });
+      out = out + `* ${option.key} : ${option.value}\n`;
+    // }
+    });
 
   }
   
@@ -327,8 +336,9 @@ function fetchOptions() {
 }
 
 function fetchOption( option ) {
-  return DB.get( `options.${option}` ).value();
+  return DB.get( 'options' ).filter({key: option}).value();
 }
+
 
 
 /**
@@ -342,6 +352,7 @@ function isEmpty(obj) {
     }
     return true;
 }
+
 
 
 /**
