@@ -196,16 +196,17 @@ function createSuccessEmbed( message, title ) {
 function createMixerEmbed( data ) {
   
   var embed = new Discord.RichEmbed()
-    .setAuthor( 'JRMATRIX is Live on mixer', 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', 'https://mixer.com/JRMATRIX' )
+    .setAuthor( 'JRMATRIX is Live on Mixer', 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', 'https://mixer.com/JRMATRIX' )
     .setTitle( 'https://mixer.com/JRMATRIX' )
     .setURL( 'https://mixer.com/JRMATRIX' )
     .addField( 'Now Playing', '{Game Title}' )
     .addField( 'Stream Title', '{This is the stream title. It can take up to 2 lines on a Mixer embed}' )
     .addField( 'Followers', '318', true )
     .addField( 'Total Views', '2,926', true )
-    .setColor( '0x00FF00' )
+    .setColor( '0x1C78C0' )
     .setImage( 'https://uploads.mixer.com/thumbnails/hdhepi5a-39628981.jpg' )
     .setThumbnail( 'https://mixer.com/api/v1/users/47436757/avatar?w=256&h=256' )
+    .setFooter( 'The Real World', 'https://cdn.discordapp.com/avatars/547391401000828938/26da8949887ea34cbd3ad3edab407b7c.png?size=256' )
     .setTimestamp( new Date() );
   
   msg.channel.send( embed );
