@@ -116,9 +116,11 @@ bot.on('message', message => {
  * @return  null
  */
 function parse( args ) {
-  msg.channel.send( '*Command received*' );
+  // msg.channel.send( '*Command received*' );
 
   // console.log( args[1] );
+  
+  if( args[1] == 'ping' ) return msg.reply( 'Go ping yourself!' );
 
   switch( args[2].toLowerCase() ) {
 
