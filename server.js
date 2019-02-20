@@ -47,6 +47,7 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
  *
  * @minVersion  0.11.2
  */
+
 const Carina = require('carina').Carina;
 const ws = require('ws');
 Carina.WebSocket = ws;
@@ -57,6 +58,7 @@ const ca = new Carina({
     },
     isBot: true,
 }).open();
+
 
 /** 
  * lowdb NPM package
@@ -114,7 +116,7 @@ bot.on('message', message => {
  * @return  null
  */
 function parse( args ) {
-  // msg.channel.send( '*Command received*' );
+  msg.channel.send( '*Command received*' );
 
   // console.log( args[1] );
 
@@ -337,7 +339,6 @@ function listMixerChannels() {
  *
  * Parses an action to take for a Bot Option request
  *
- * @param   \Discord\Message    msg
  * @param   string              operator
  * @param   string              option
  * @param   string              value
@@ -376,7 +377,6 @@ function trwOption( operator, option, value ) {
  *
  * Sets or updates a Bot Option
  *
- * @param   \Discord\Message    msg
  * @param   string              option
  * @param   mixed               value
  * @since   0.0.1
@@ -397,29 +397,10 @@ function setOption( option, value ) {
 }
 
 /**
- * Push Bot Option
- *
- * Updates a Bot Option in the database
- *
- * @uses    lowdb
- * @param   string              option
- * @param   mixed               value
- * @since   0.0.1
- * @return  null
- */
-function pushOption( option, value ) {
-   DB.get( 'options' ).push({
-    key: option,
-    value : value
-  }).write(); 
-}
-
-/**
  * Get Bot Option
  *
  * Outputs a Bot Option value
  *
- * @param   \Discord\Message    msg
  * @param   string              option
  * @since   0.0.1
  * @return  mixed
@@ -444,7 +425,6 @@ function getOption( option ) {
  *
  * Lists all currently assigned Bot Options
  *
- * @param   \Discord\Message    msg
  * @since   0.0.1
  * @return  object|null
  */
@@ -475,33 +455,6 @@ function listOptions() {
   
   msg.react('✅');
   msg.channel.send( out );
-}
-
-/**
- * Fetch Bot Options
- *
- * Fetches all Bot Options from the database
- *
- * @uses    lowdb
- * @since   0.0.1
- * @return  object|null
- */
-function fetchOptions() {
-  return DB.get( 'options' ).value();
-}
-
-/**
- * Fetch Bot Option
- *
- * Fetches a sing Bot Option from the database
- *
- * @uses    lowdb
- * @param   string              option
- * @since   0.0.1
- * @return  mixed
- */
-function fetchOption( option ) {
-  return DB.get( 'options' ).filter({key: option}).value();
 }
 
 
@@ -555,6 +508,51 @@ function deleteMixerChannel( channelID ) {
  */
 function fetchMixerChannels() {
   return DB.get( 'mixer' ).value();
+}
+
+/**
+ * Push Bot Option
+ *
+ * Updates a Bot Option in the database
+ *
+ * @uses    lowdb
+ * @param   string              option
+ * @param   mixed               value
+ * @since   0.0.1
+ * @return  null
+ */
+function pushOption( option, value ) {
+   DB.get( 'options' ).push({
+    key: option,
+    value : value
+  }).write(); 
+}
+
+/**
+ * Fetch Bot Options
+ *
+ * Fetches all Bot Options from the database
+ *
+ * @uses    lowdb
+ * @since   0.0.1
+ * @return  object|null
+ */
+function fetchOptions() {
+  return DB.get( 'options' ).value();
+}
+
+/**
+ * Fetch Bot Option
+ *
+ * Fetches a sing Bot Option from the database
+ *
+ * @uses    lowdb
+ * @param   string              option
+ * @since   0.0.1
+ * @return  mixed
+ */
+function fetchOption( option ) {
+  return DB.get( 'options' ).filter({key: option}).value();
 }
 
 
