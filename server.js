@@ -196,16 +196,16 @@ function createSuccessEmbed( message, title ) {
 function createMixerEmbed( data ) {
   
   var embed = new Discord.RichEmbed()
-    .setAuthor( `JRMATRIX is Live on Mixer', 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', 'https://mixer.com/JRMATRIX' )
-    .setTitle( 'https://mixer.com/JRMATRIX' )
-    .setURL( 'https://mixer.com/JRMATRIX' )
-    .addField( 'Now Playing', '{Game Title}' )
-    .addField( 'Stream Title', '{This is the stream title. It can take up to 2 lines on a Mixer embed}' )
-    .addField( 'Followers', '318', true )
-    .addField( 'Views', '2,926', true )
+    .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+    .setTitle( `https://mixer.com/${data.username}` )
+    .setURL( `https://mixer.com/${data.username}` )
+    .addField( 'Now Playing', `${data.game}` )
+    .addField( 'Stream Title', `${data.title}` )
+    .addField( 'Followers', `${data.followers}`, true )
+    .addField( 'Views', `${data.viewers}`, true )
     .setColor( '0x1C78C0' )
-    .setImage( 'https://uploads.mixer.com/thumbnails/hdhepi5a-39628981.jpg' )
-    .setThumbnail( 'https://mixer.com/api/v1/users/47436757/avatar?w=256&h=256' )
+    .setImage( `${data.thumbnail}` )
+    .setThumbnail( `${data.avatar}` )
     .setFooter( 'The Real World', 'https://cdn.discordapp.com/avatars/547391401000828938/26da8949887ea34cbd3ad3edab407b7c.png?size=256' )
     .setTimestamp( new Date() );
   
@@ -216,19 +216,23 @@ function createMixerEmbed( data ) {
 function mixerLivePost( channelID ) {
    mixerClient.request('GET', `channels/${channelID}`).then(res => {
      
-     console.log( res.body );
+     // console.log( res.body );
+     
+     var channel = fetchMixerChannel( channelID );
+     
+     console.log( channel );
      
      var data = {
-       username : data.user.token,
-       streamTitle : data.name,
-       thumbnail : data.thumbnail.url,
-       game : data.type.name,
-       avatar : data.user.avatarUrl,
-       followers : data.numFollowers,
-       viewers : data.viewersTotal
+       username : res.body.user.token,
+       title : res.body.name,
+       thumbnail : res.body.thumbnail.url,
+       game : res.body.type.name,
+       avatar : res.body.user.avatarUrl,
+       followers : res.body.numFollowers,
+       viewers : res.body.viewersTotal
      }
      
-     // createMixerEmbed( data );
+     createMixerEmbed( data );
      
   }); 
 }
@@ -613,6 +617,10 @@ function deleteMixerChannel( channelID ) {
  */
 function fetchMixerChannels() {
   return DB.get( 'mixer' ).value();
+}
+
+function fetchMixerChannel( channelID ) {
+  return DB.get( 'mixer' ).filter({id: channelID}).value();
 }
 
 /**
