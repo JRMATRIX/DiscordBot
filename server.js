@@ -29,7 +29,7 @@ const adapter = new FileSync('.data/db.json');
 
 const DB = low(adapter);
 
-DB.defaults({ mixer:[], twitch:[], options:[defaultAnnouncementChannel: null] }).write();
+DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 /**
  * Discord Command Integration
@@ -211,7 +211,7 @@ function trwOption( msg, operator, option, value ) {
       setOption( msg, option, value );
       break;
       
-    case 'remove':
+    case 'get':
       getOption( msg, option );
       break;
       
@@ -220,18 +220,39 @@ function trwOption( msg, operator, option, value ) {
       break;
       
     default:
-      msg.channel.send(`*Error: Unknown operator ${operator}*`);
+      var out = "```diff\n";
+      out = out + "- Error: Unknown operator " + operator + "\n";
+      out = out + "```\n";
+      
+      msg.react( '❌');
+      msg.channel.send( out );
       break;
       
   }
 }
 
 function setOption( msg, option, value ) {
+  DB.set( 'options.' + option, value ).write();
   
+  // @TODO: Add some check here to see if the option was set correctly
+  
+  var out = "```diff\n";
+  out = out + "+ Set " + option + " to " + value + "\n";
+  out = out + "```\n";
+  
+  msg.react('✅');
+  msg.channel.send( out );
 }
 
 function getOption( msg, option ) {
+  var value = fetchOption( option );
   
+  var out = "```css\n";
+  out = out + "# " + option + " : " + value + "\n";
+  out = out + "```\n";
+  
+  msg.react('✅');
+  msg.channel.send( out );
 }
 
 function listOptions( msg ) {
