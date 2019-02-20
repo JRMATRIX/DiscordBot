@@ -22,18 +22,14 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
     clientId: 'd726efa15d16a2c68f7c29e42e88b1f885aa48b0e8cc1c9f',
 }));
 
-// Setup FlatFile NPM package
-const DB = require('flatfile');
+// Setup lowdb NPM package
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync')
+const adapter = new FileSync('db.json');
 
-DB.db('.data/mixer.json', ( err, data ) => {
-  if( err ) throw err;
-  
-  
-  if( data === {} ) {
-    data.channels = [];
-    data.save( err => { if( err ) throw err; });
-  }
-})
+const DB = low(adapter);
+
+DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 /**
  * Discord Command Integration
@@ -152,11 +148,7 @@ function listMixerChannels( msg ) {
 }
 
 function fetchMixerChannels() {
-  DB.db('.data/mixer.json', ( err, data ) => {
-    if( err ) throw err;
-    
-    return data.channels;
-  })
+  return DB.get( 'mixer' ).value();
 }
 
 function getMixerChannel( username ) {
