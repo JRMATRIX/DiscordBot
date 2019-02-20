@@ -13,9 +13,9 @@
 
 
 
-/**
- * CONFIG
- */
+/******************************************************************************
+ * NPM Packages
+ ******************************************************************************/
 
 /** 
  * Discord NPM package
@@ -75,9 +75,9 @@ DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 
 
-/**
+/******************************************************************************
  * DISCORD
- */
+ ******************************************************************************/
 
 /**
  * Discord Command Integration
@@ -139,9 +139,9 @@ function parse( msg, args ) {
 
 
 
-/**
+/******************************************************************************
  * MIXER
- */
+ ******************************************************************************/
 
 /**
  * Mixer Channel
@@ -218,26 +218,6 @@ function addMixerChannel( msg, username, channel ) {
 }
 
 /**
- * Push Mixer Channel
- *
- * Pushes a Mixer Channel to the Database
- *
- * @uses    lowdb
- * @param   object              mixerChannel
- * @param   string              channel
- * @since   0.0.1
- * @return  null
- */
-function pushMixerChannel( mixerChannel, channel ) {  
-  DB.get( 'mixer' ).push({
-    id: mixerChannel.id,
-    name : mixerChannel.token,
-    channel : channel,
-    twitter : null
-  }).write();
-}
-
-/**
  * Remove Mixer Channel
  *
  * Removes a Mixer Channel from the bot's Watch List
@@ -265,20 +245,6 @@ function removeMixerChannel( msg, username ) {
   });
   
   // console.log( channel );
-}
-
-/**
- * Delete Mixer Channel
- *
- * Deletes a Mixer Channel from the Database
- *
- * @uses    lowdb
- * @param   string              channelID
- * @since   0.0.1
- * @return  null
- */
-function deleteMixerChannel( channelID ) {
-  DB.get( 'mixer' ).remove({id:channelID}).write();
 }
 
 /**
@@ -318,24 +284,11 @@ function listMixerChannels( msg ) {
   
 }
 
-/**
- * Fetch Mixer Channels
- *
- * Fetches all Mixer Channels from the Database
- *
- * @uses    lowdb
- * @since   0.0.1
- * @return  null
- */
-function fetchMixerChannels() {
-  return DB.get( 'mixer' ).value();
-}
 
 
-
-/**
+/******************************************************************************
  * SETTINGS / OPTIONS
- */
+ ******************************************************************************/
 
 /**
  * TRW Bot Option
@@ -511,9 +464,62 @@ function fetchOption( option ) {
 
 
 
+/******************************************************************************
+ * Database
+ ******************************************************************************/
+
 /**
- * UTILITIES
+ * Push Mixer Channel
+ *
+ * Pushes a Mixer Channel to the Database
+ *
+ * @uses    lowdb
+ * @param   object              mixerChannel
+ * @param   string              channel
+ * @since   0.0.1
+ * @return  null
  */
+function pushMixerChannel( mixerChannel, channel ) {  
+  DB.get( 'mixer' ).push({
+    id: mixerChannel.id,
+    name : mixerChannel.token,
+    channel : channel,
+    twitter : null
+  }).write();
+}
+
+/**
+ * Delete Mixer Channel
+ *
+ * Deletes a Mixer Channel from the Database
+ *
+ * @uses    lowdb
+ * @param   string              channelID
+ * @since   0.0.1
+ * @return  null
+ */
+function deleteMixerChannel( channelID ) {
+  DB.get( 'mixer' ).remove({id:channelID}).write();
+}
+
+/**
+ * Fetch Mixer Channels
+ *
+ * Fetches all Mixer Channels from the Database
+ *
+ * @uses    lowdb
+ * @since   0.0.1
+ * @return  null
+ */
+function fetchMixerChannels() {
+  return DB.get( 'mixer' ).value();
+}
+
+
+
+/******************************************************************************
+ * UTILITIES
+ ******************************************************************************/
 
 /**
  * Is Empty
@@ -534,9 +540,9 @@ function isEmpty(obj) {
 
 
 
-/**
+/******************************************************************************
  * MAIN
- */
+ ******************************************************************************/
 
 // Run the bot in the selected Discord Server
 bot.login(process.env.BOT_TOKEN);
