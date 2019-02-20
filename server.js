@@ -121,6 +121,8 @@ function parse( args ) {
   // console.log( args[1] );
   
   if( args[1] == 'ping' ) return msg.reply( 'Go ping yourself!' );
+  
+  if( args[1] == 'testEmbed' ) return createMixerEmbed();
 
   switch( args[2].toLowerCase() ) {
 
@@ -143,6 +145,8 @@ function parse( args ) {
 }
 
 /**
+ * @TODO: IMPLEMENT THIS
+ *
  * Discord Mixer Argument Parser
  *
  * Parses arguments passed to the mixer commands
@@ -164,7 +168,14 @@ function parseMixerArgs( args ) {
   return obj;
 }
 
-function createEmbed( data ) {
+function createMixerEmbed( data ) {
+  
+  var embed = new Discord.RichEmbed()
+    .setTitle( 'Test Embed' )
+    .setDescription( 'This is a test embed' )
+    .setColor( '0x00FF00' );
+  
+  msg.channel.send( embed );
   
 }
 
