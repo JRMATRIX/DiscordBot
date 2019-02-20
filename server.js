@@ -29,7 +29,7 @@ const adapter = new FileSync('.data/db.json');
 
 const DB = low(adapter);
 
-DB.defaults({ mixer:[], twitch:[], options:[] }).write();
+DB.defaults({ mixer:[], twitch:[], options:[defaultAnnouncementChannel: null] }).write();
 
 /**
  * Discord Command Integration
@@ -68,6 +68,10 @@ function parse( msg, args ) {
     case 'twitch' :
     case 'twitchchannel' :
       
+      break;
+      
+    case 'option' :
+      trwOption( msg, args[1], args[3], args[4] );
       break;
       
   }
@@ -194,17 +198,53 @@ function fetchMixerChannels() {
   return DB.get( 'mixer' ).value();
 }
 
-function getMixerChannel( username ) {
-  
-}
-
 
 
 /**
  * SETTINGS / OPTIONS
  */
 
+function trwOption( msg, operator, option, value ) {
+  switch( operator ) {
+    
+    case 'set':
+      setOption( msg, option, value );
+      break;
+      
+    case 'remove':
+      getOption( msg, option );
+      break;
+      
+    case 'list':
+      listOptions( msg );
+      break;
+      
+    default:
+      msg.channel.send(`*Error: Unknown operator ${operator}*`);
+      break;
+      
+  }
+}
 
+function setOption( msg, option, value ) {
+  
+}
+
+function getOption( msg, option ) {
+  
+}
+
+function listOptions( msg ) {
+  
+}
+
+function fetchOptions() {
+  return DB.get( 'options' ).value();
+}
+
+function fetchOption( option ) {
+  return DB.get( 'options.' + option ).value();
+}
 
 
 /**
