@@ -150,7 +150,15 @@ function listMixerChannels( msg ) {
   
   var out = "```css\n";
   out = out + "Listing all current Mixer channels:";
-  out = out + "```";
+  
+  channels.forEach( function( channel ) {
+    out = out + "\n\n";
+    out = out + `- ${channel.name} (ID: ${channel.id})\n`;
+    out = out + `  Announcement Channel: ${channel.channel}\n`;
+    out = out + "\n";
+  });
+  
+  out = out + "```\n";
   
   msg.channel.send( out );
   
