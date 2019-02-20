@@ -15,12 +15,23 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-// Setup Mixer NPM package
+// Setup Mixer NPM packages
 const Mixer = require('@mixer/client-node');
 const mixerClient = new Mixer.Client( new Mixer.DefaultRequestRunner() );
 mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
     clientId: process.env.MIXER_TOKEN
 }));
+
+const Carina = require('carina').Carina();
+const ws = require('ws');
+Carina.WebSocket = ws;
+
+const ca = new Carina({
+    queryString: {
+        'Client-ID': process.env.MIXER_TOKEN,
+    },
+    isBot: true,
+}).open();
 
 // Setup lowdb NPM package (Database)
 const low = require('lowdb');
@@ -29,7 +40,7 @@ const adapter = new FileSync('.data/db.json');
 
 const DB = low(adapter);
 
-DB.defaults({ mixer:[], twitch:[], options:[] }).write();
+DB.defaults({ mixer:[], twitch:[] }).write();
 
 /**
  * Discord Command Integration
@@ -246,8 +257,9 @@ function setOption( msg, option, value ) {
   
   // @TODO: Add some check here to see if the option was set correctly
   
-  var out = "```diff\n";
-  out = out + "+ Set " + option + " to " + value + "\n";
+  var out = "```md\n";
+  out = out + "# Updated options:\n\n";
+  out = out + "* Set " + option + " to " + value + "\n";
   out = out + "```\n";
   
   msg.react('✅');
@@ -270,7 +282,29 @@ function getOption( msg, option ) {
 }
 
 function listOptions( msg ) {
+  var options = fetchOptions();
   
+  var out = "```md\n";
+  
+  if( isEmpty( options ) ) {
+    
+    out = out + "No TRW Bot Options Available\n";
+    
+  } else {
+  
+    out = out + "# TRW Bot Options:\n";
+
+    options.forEach( function( key, value ) {
+      out = out + "\n";
+      out = out + `* ${key} : ${value}\n`;
+    });
+
+  }
+  
+  out = out + "```\n";
+  
+  msg.react('✅');
+  msg.channel.send( out );
 }
 
 function fetchOptions() {
