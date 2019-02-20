@@ -77,9 +77,7 @@ DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 var msg = null;
 
-const errors = {
-  mixerChannelExists : 'That streamer has already been added to the Mixer Announcement list.\n\nTo update this streamer, you can run the following command:\n!trw update mixer <mixerName> <announcementChannel> <'
-}
+const errors = require( './errors.js' );
 
 
 /******************************************************************************
@@ -158,9 +156,10 @@ function parse( args ) {
  * Expects:
  * arg[1] : operator            One of 'add', 'update', 'remove' or 'list'
  * arg[2] : cmd                 One of 'mixer' or 'mixerChannel'
- * arg[3] : user                The Discord Username of the Mixer Channel Owner
- * arg[4] : channelName         The Mixer Channel name
- * arg[5] : twitterHandle       A Twitter Handle for the user
+ * arg[3] : mixerChannel        The Mixer Channel name
+ * arg[4] : announcementChannel The Discord Announcement Channel
+ * arg[5] : discordUsername     The Discord Username of the Mixer Channel Owner
+ * arg[6] : twitterHandle       A Twitter Handle for the user
  *
  * @param   array               args
  * @since   0.0.1
@@ -507,7 +506,7 @@ function pushMixerChannel( mixerChannel, channel ) {
   
   if( DB.get( 'mixer' ).find({ id: mixerChannel.id }).value() ) {
     // msg.react( '❌');
-    createErrorEmbed( `Mixer channel for ${mixerChannel.token} already exists` );
+    createErrorEmbed( errors.mixerChannelExists );
     
     return false;
   }
