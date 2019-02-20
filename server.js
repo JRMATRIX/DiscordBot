@@ -265,6 +265,8 @@ function getOption( msg, option ) {
     msg.react('✅');
     msg.channel.send( out );
   }
+  
+  return value;
 }
 
 function listOptions( msg ) {
