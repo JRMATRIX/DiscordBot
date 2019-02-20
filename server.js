@@ -209,9 +209,10 @@ function createMixerEmbed( data ) {
     .setFooter( 'The Real World', 'https://cdn.discordapp.com/avatars/547391401000828938/26da8949887ea34cbd3ad3edab407b7c.png?size=256' )
     .setTimestamp( new Date() );
   
-  var announcementChannel = bot.guilds.channels.find( ch => ch.name === data.announcementChannel );
-  console.log( announcementChannel );
-  // data.announcementChannel.send( embed );
+  var announcementChannel = bot.channels.find( ch => ch.name === data.announcementChannel );
+  // console.log( announcementChannel );
+  // console.log( announcementChannel );
+  // announcementChannel.send( embed );
   
 }
 
