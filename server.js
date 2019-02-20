@@ -25,7 +25,7 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
 // Setup FlatFile NPM package
 const DB = require('flatfile');
 
-DB.db('database/mixer.json', ( err, data ) => {
+DB.db('.data/mixer.json', ( err, data ) => {
   if( err ) throw err;
   
   
@@ -60,7 +60,7 @@ bot.on('message', msg => {
 function parse( msg, args ) {
   // msg.channel.send( '*Command received*' );
   
-  console.log( args[1] );
+  // console.log( args[1] );
   
   switch( args[2] ) {
   
@@ -152,10 +152,10 @@ function listMixerChannels( msg ) {
 }
 
 function fetchMixerChannels() {
-  DB.db('database/mixer.json', ( err, data ) => {
+  DB.db('.data/mixer.json', ( err, data ) => {
     if( err ) throw err;
     
-    return data;
+    return data.channels;
   })
 }
 
