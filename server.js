@@ -196,7 +196,7 @@ function createSuccessEmbed( message, title ) {
 function createMixerEmbed( data ) {
   
   var embed = new Discord.RichEmbed()
-    .setAuthor( 'JRMATRIX is Live on Mixer', 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', 'https://mixer.com/JRMATRIX' )
+    .setAuthor( `JRMATRIX is Live on Mixer', 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', 'https://mixer.com/JRMATRIX' )
     .setTitle( 'https://mixer.com/JRMATRIX' )
     .setURL( 'https://mixer.com/JRMATRIX' )
     .addField( 'Now Playing', '{Game Title}' )
@@ -211,6 +211,26 @@ function createMixerEmbed( data ) {
   
   msg.channel.send( embed );
   
+}
+
+function mixerLivePost( channelID ) {
+   mixerClient.request('GET', `channels/${channelID}`).then(res => {
+     
+     console.log( res.body );
+     
+     var data = {
+       username : data.user.token,
+       streamTitle : data.name,
+       thumbnail : data.thumbnail.url,
+       game : data.type.name,
+       avatar : data.user.avatarUrl,
+       followers : data.numFollowers,
+       viewers : data.viewersTotal
+     }
+     
+     // createMixerEmbed( data );
+     
+  }); 
 }
 
 function createTwitchEmbed( data ) {
@@ -304,6 +324,7 @@ function addMixerChannel( username, channel ) {
     
       ca.subscribe(`channel:${res.body.id}:update`, data => {
         console.log(data, res.body.id);
+        mixerLivePost( channel.id );
       });
 
       var out = "```diff\n";
@@ -676,5 +697,6 @@ var channels = fetchMixerChannels();
 channels.forEach( function( channel ) {
     ca.subscribe(`channel:${channel.id}:update`, data => {
       console.log(data, channel.id);
+      mixerLivePost( channel.id );
     });
 });
