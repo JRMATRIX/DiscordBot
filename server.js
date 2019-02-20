@@ -73,6 +73,7 @@ const DB = low(adapter);
 
 DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
+var msg = null;
 
 
 /******************************************************************************
@@ -85,18 +86,19 @@ DB.defaults({ mixer:[], twitch:[], options:[] }).write();
  * Watches Discord for new command messages
  *
  * @uses    Discord
- * @param   \Discord\Message    msg
  * @since   0.0.1
  * @return  null
  */
-bot.on('message', msg => {  
+bot.on('message', message => {  
   // Don't read commands from the bot account, look for '!' to read for commands
-  if (msg.author.username != 'TRW Bot' && msg.content.substring(0, 1) == '!' && msg.channel.name === 'bot-configuration' ) {
+  if (message.author.username != 'TRW Bot' && message.content.substring(0, 1) == '!' && message.channel.name === 'bot-configuration' ) {
+    
+    msg = message;
     
     var args = msg.cleanContent.substring(1).split(' ');
     var call = args[0];
     
-    if( call == 'trw' ) parse( msg, args );
+    if( call == 'trw' ) parse( args );
     
   }
 })
@@ -107,12 +109,11 @@ bot.on('message', msg => {
  * Parses a Discord message for commands
  *
  * @uses    Discord
- * @param   \Discord\Message    msg
  * @param   array               args
  * @since   0.0.1
  * @return  null
  */
-function parse( msg, args ) {
+function parse( args ) {
   // msg.channel.send( '*Command received*' );
 
   // console.log( args[1] );
@@ -121,7 +122,7 @@ function parse( msg, args ) {
 
     case 'mixer' :
     case 'mixerchannel' :
-      mixerChannel( msg, args[1], args[3], args[4] );
+      mixerChannel( args[1], args[3], args[4] );
       break;
 
     case 'twitch' :
@@ -131,7 +132,7 @@ function parse( msg, args ) {
 
     case 'option' :
     case 'options' :
-      trwOption( msg, args[1], args[3], args[4] );
+      trwOption( args[1], args[3], args[4] );
       break;
 
   }
@@ -143,9 +144,11 @@ function parse( msg, args ) {
  * Parses arguments passed to the mixer commands
  *
  * Expects:
- * arg[1] : operator            One of 'add', 'remove' or 'list'
+ * arg[1] : operator            One of 'add', 'update', 'remove' or 'list'
  * arg[2] : cmd                 One of 'mixer' or 'mixerChannel'
- * arg[3] : cmd                 One of 'mixer' or 'mixerChannel'
+ * arg[3] : user                The Discord Username of the Mixer Channel Owner
+ * arg[4] : channelName         The Mixer Channel name
+ * arg[5] : twitterHandle       A Twitter Handle for the user
  *
  * @param   array               args
  * @since   0.0.1
@@ -171,14 +174,13 @@ function createEmbed( data ) {
  *
  * Parses an action to take for a Mixer Channel request
  *
- * @param   \Discord\Message    msg
  * @param   string              operator
  * @param   string              username
  * @param   string              channel
  * @since   0.0.1
  * @return  null
  */
-function mixerChannel( msg, operator, username, channel ) {
+function mixerChannel( operator, username, channel ) {
   if( ! channel ) {
     var defaultChannel = fetchOption( 'defaultAnnouncementChannel' );
     channel = defaultChannel[0].value;
@@ -187,15 +189,19 @@ function mixerChannel( msg, operator, username, channel ) {
   switch( operator ) {
     
     case 'add':
-      addMixerChannel( msg, username, channel );
+      addMixerChannel( username, channel );
+      break;
+      
+    case 'update':
+      updateMixerChannel( username, channel );
       break;
       
     case 'remove':
-      removeMixerChannel( msg, username );
+      removeMixerChannel( username );
       break;
       
     case 'list':
-      listMixerChannels( msg );
+      listMixerChannels();
       break;
       
     default:
@@ -217,13 +223,12 @@ function mixerChannel( msg, operator, username, channel ) {
  *
  * @uses    Discord
  * @uses    MixerClient
- * @param   \Discord\Message    msg
  * @param   string              username
  * @param   string              channel
  * @since   0.0.1
  * @return  null
  */
-function addMixerChannel( msg, username, channel ) {  
+function addMixerChannel( username, channel ) {  
   mixerClient.request('GET', `channels/${username}`).then(res => {
     pushMixerChannel( res.body, channel );
     
@@ -241,18 +246,33 @@ function addMixerChannel( msg, username, channel ) {
 }
 
 /**
+ * Update Mixer Channel
+ *
+ * Updates a Mixer Channel in the bot's Watch List
+ *
+ * @uses    Discord
+ * @uses    MixerClient
+ * @param   string              username
+ * @param   string              channel
+ * @since   0.0.1
+ * @return  null
+ */
+function updateMixerChannel( username, channel ) {  
+  
+}
+
+/**
  * Remove Mixer Channel
  *
  * Removes a Mixer Channel from the bot's Watch List
  *
  * @uses    Discord
  * @uses    MixerClient
- * @param   \Discord\Message    msg
  * @param   string              username
  * @since   0.0.1
  * @return  null
  */
-function removeMixerChannel( msg, username ) {
+function removeMixerChannel( username ) {
   
   mixerClient.request('GET', `channels/${username}`).then(res => {
     deleteMixerChannel( res.body.id );
@@ -275,11 +295,10 @@ function removeMixerChannel( msg, username ) {
  *
  * Outputs a list of all currently active Mixer Channels
  *
- * @param   \Discord\Message    msg
  * @since   0.0.1
  * @return  null
  */
-function listMixerChannels( msg ) {
+function listMixerChannels() {
   var channels = fetchMixerChannels();
   
   var out = "```md\n";
@@ -325,7 +344,7 @@ function listMixerChannels( msg ) {
  * @since   0.0.1
  * @return  null
  */
-function trwOption( msg, operator, option, value ) {
+function trwOption( operator, option, value ) {
   switch( operator ) {
     
     case 'set':
@@ -363,7 +382,7 @@ function trwOption( msg, operator, option, value ) {
  * @since   0.0.1
  * @return  null
  */
-function setOption( msg, option, value ) {
+function setOption( option, value ) {
   pushOption( option, value );
   
   // @TODO: Add some check here to see if the option was set correctly
@@ -405,7 +424,7 @@ function pushOption( option, value ) {
  * @since   0.0.1
  * @return  mixed
  */
-function getOption( msg, option ) {
+function getOption( option ) {
   var value = fetchOption( option );
   
   var out = "```css\n";
@@ -429,7 +448,7 @@ function getOption( msg, option ) {
  * @since   0.0.1
  * @return  object|null
  */
-function listOptions( msg ) {
+function listOptions() {
   var options = fetchOptions();
   console.log( options );
   
