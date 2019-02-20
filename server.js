@@ -137,6 +137,29 @@ function parse( msg, args ) {
   }
 }
 
+/**
+ * Discord Mixer Argument Parser
+ *
+ * Parses arguments passed to the mixer commands
+ *
+ * Expects:
+ * arg[1] : operator            One of 'add', 'remove' or 'list'
+ * arg[2] : cmd                 One of 'mixer' or 'mixerChannel'
+ * arg[3] : cmd                 One of 'mixer' or 'mixerChannel'
+ *
+ * @param   array               args
+ * @since   0.0.1
+ * @return  null
+ */
+function parseMixerArgs( args ) {
+  var obj = {};
+  
+  return obj;
+}
+
+function createEmbed( data ) {
+  
+}
 
 
 /******************************************************************************
