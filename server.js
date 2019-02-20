@@ -119,7 +119,7 @@ function pushMixerChannel( mixerChannel, channel ) {
   DB.get( 'mixer' ).push({
     id: mixerChannel.id,
     name : mixerChannel.token,
-    channel : channel,
+    channel : channel.toString(),
     twitter : null
   }).write();
 }
