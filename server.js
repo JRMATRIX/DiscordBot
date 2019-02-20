@@ -230,7 +230,7 @@ function mixerLivePost( channelID ) {
        avatar : res.body.user.avatarUrl,
        followers : res.body.numFollowers,
        viewers : res.body.viewersTotal,
-       announcementChannel : channel[0].channelID
+       announcementChannel : channel[0].channelName
      }
      
      createMixerEmbed( data );
@@ -275,7 +275,7 @@ function createTwitchEmbed( data ) {
  * @return  null
  */
 function mixerChannel( operator, username, channel ) {
-  if( ! channel ) {
+  if( channel === undefined ) {
     var defaultChannel = fetchOption( 'defaultAnnouncementChannel' );
     channel = defaultChannel[0].value;
   }
@@ -588,8 +588,7 @@ function pushMixerChannel( mixerChannel, channel ) {
   DB.get( 'mixer' ).push({
     id: mixerChannel.id,
     name : mixerChannel.token,
-    channelName : channel,
-    channelID : msg.guild.channels.find( ch => ch.name === channel.substr(1) ),
+    channelName : channel.substr(1),
     twitter : null
   }).write();
   
