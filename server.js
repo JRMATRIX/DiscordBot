@@ -22,10 +22,10 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
     clientId: 'd726efa15d16a2c68f7c29e42e88b1f885aa48b0e8cc1c9f',
 }));
 
-// Setup lowdb NPM package
+// Setup lowdb NPM package (Database)
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync')
-const adapter = new FileSync('db.json');
+const adapter = new FileSync('.data/db.json');
 
 const DB = low(adapter);
 
@@ -109,9 +109,12 @@ function mixerChannel( msg, operator, username, channel ) {
 function addMixerChannel( msg, username, channel ) {
   msg.channel.send( `*Adding Mixer channel ${username} to ${channel}*` );
   
-  var channel = getMixerChannel( username );
-  
-  console.log( channel );
+  var mixerChannel = getMixerChannel( username );
+  pushMixerChannel( mixerChannel, channel );
+}
+
+function pushMixerChannel( mixerChannel, channel ) {
+  console.log( mixerChannel, channel );
 }
 
 /**
@@ -152,9 +155,11 @@ function fetchMixerChannels() {
 }
 
 function getMixerChannel( username ) {
-  mixerClient.request('GET', `channels/${username}`).then(res => {
+  
+  return mixerClient.request('GET', `channels/${username}`).then(res => {
       return res.body;
   });
+  
 }
 
 // Run the bot in the selected Discord Server
