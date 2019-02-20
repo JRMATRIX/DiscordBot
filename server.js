@@ -491,7 +491,8 @@ function pushMixerChannel( mixerChannel, channel ) {
   DB.get( 'mixer' ).push({
     id: mixerChannel.id,
     name : mixerChannel.token,
-    channel : channel,
+    channelName : channel,
+    channelID : msg.guild.channels.find( ch => ch.name === channel ) ,
     twitter : null
   }).write();
 }
