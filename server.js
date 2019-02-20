@@ -58,13 +58,15 @@ function parse( msg, args ) {
   
   // console.log( args[1] );
   
-  switch( args[2] ) {
+  switch( args[2].toLowerCase() ) {
   
-    case 'mixerChannel' :
+    case 'mixer' :
+    case 'mixerchannel' :
       mixerChannel( msg, args[1], args[3], args[4] );
       break;
       
-    case 'twitchChannel' :
+    case 'twitch' :
+    case 'twitchchannel' :
       
       break;
       
@@ -110,8 +112,12 @@ function addMixerChannel( msg, username, channel ) {
   mixerClient.request('GET', `channels/${username}`).then(res => {
     pushMixerChannel( res.body, channel );
     
+    var out = "```diff\n";
+    out = out + "+ Added Mixer channel " + username + " to " + channel + "\n";
+    out = out + "```\n";
+    
     msg.react('✅');
-    msg.channel.send( `*Added Mixer channel ${username} to ${channel}*` );
+    msg.channel.send( out );
   });
 }
 
@@ -141,8 +147,12 @@ function removeMixerChannel( msg, username ) {
   mixerClient.request('GET', `channels/${username}`).then(res => {
     deleteMixerChannel( res.body.id );
     
+    var out = "```diff\n";
+    out = out + "- Removed Mixer channel " + username + " from announcements";
+    out = out + "```\n";
+    
     msg.react('✅');
-    msg.channel.send( `*Removed Mixer channel ${username} from announcements*` );
+    msg.channel.send( out );
   });
   
   // console.log( channel );
@@ -163,20 +173,19 @@ function listMixerChannels( msg ) {
     
   } else {
   
-    out = out + "Listing all current Mixer channels:\n";
-    out = out + "---";
+    out = out + "# Mixer channels:\n";
 
     channels.forEach( function( channel ) {
-      out = out + "\n\n";
+      out = out + "\n";
       out = out + `* ${channel.name} (ID: ${channel.id})\n`;
       out = out + `  Announcement Channel: ${channel.channel}\n`;
-      out = out + "\n";
     });
 
   }
   
   out = out + "```\n";
   
+  msg.react('✅');
   msg.channel.send( out );
   
 }
@@ -188,6 +197,13 @@ function fetchMixerChannels() {
 function getMixerChannel( username ) {
   
 }
+
+
+
+/**
+ * SETTINGS / OPTIONS
+ */
+
 
 
 
