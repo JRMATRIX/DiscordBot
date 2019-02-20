@@ -106,11 +106,12 @@ function mixerChannel( msg, operator, username, channel ) {
  * @since   0.0.1
  * @return  null
  */
-function addMixerChannel( msg, username, channel ) {
-  msg.channel.send( `*Adding Mixer channel ${username} to ${channel}*` );
-  
+function addMixerChannel( msg, username, channel ) {  
   mixerClient.request('GET', `channels/${username}`).then(res => {
     pushMixerChannel( res.body, channel );
+    
+    msg.react('U+2705');
+    msg.channel.send( `*Added Mixer channel ${username} to ${channel}*` );
   });
 }
 
@@ -136,13 +137,19 @@ function pushMixerChannel( mixerChannel, channel ) {
  * @return  null
  */
 function removeMixerChannel( msg, username ) {
-  msg.channel.send( `*Removing Mixer channel ${username}*` );
   
   mixerClient.request('GET', `channels/${username}`).then(res => {
-    pushMixerChannel( res.body.id );
+    deleteMixerChannel( res.body.id );
+    
+    msg.react('U+2705');
+    msg.channel.send( `*Removed Mixer channel ${username} from announcements*` );
   });
   
   // console.log( channel );
+}
+
+function deleteMixerChannel( channelID ) {
+  DB.get( 'mixer' ).remove({id:channelID}).write();
 }
 
 function listMixerChannels( msg ) {
