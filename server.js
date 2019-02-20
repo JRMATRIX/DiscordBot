@@ -324,6 +324,8 @@ function mixerChannel( operator, username, channel ) {
 function addMixerChannel( username, channel ) {  
   mixerClient.request('GET', `channels/${username}`).then(res => {
     
+    console.log( channel );
+    
     if( pushMixerChannel( res.body, channel ) ) {
     
       ca.subscribe(`channel:${res.body.id}:update`, data => {
@@ -331,12 +333,8 @@ function addMixerChannel( username, channel ) {
         mixerLivePost( channel.id );
       });
 
-      var out = "```diff\n";
-      out = out + "+ Added Mixer channel " + username + " to " + channel + "\n";
-      out = out + "```\n";
-
       msg.react('✅');
-      msg.channel.send( out );
+      createSuccessEmbed( `Added Mixer channel ${username} to ${channel}`, 'Mixer Streamer Added' );
       
     }
   });
@@ -376,12 +374,15 @@ function removeMixerChannel( username ) {
     
     ca.unsubscribe(`channel:${res.body.id}:update`);
     
-    var out = "```diff\n";
-    out = out + "- Removed Mixer channel " + username + " from announcements";
-    out = out + "```\n";
+//     var out = "```diff\n";
+//     out = out + "- Removed Mixer channel " + username + " from announcements";
+//     out = out + "```\n";
     
-    msg.react('✅');
-    msg.channel.send( out );
+//     msg.react('✅');
+//     msg.channel.send( out );
+    
+      msg.react('✅');
+      createErrorEmbed( `Removed Mixer channel ${username} from announcements`, 'Mixer Streamer Removed' );
   });
   
   // console.log( channel );
