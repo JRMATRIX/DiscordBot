@@ -4,6 +4,7 @@ dependencies:
   discord.js: 11.4.2
   express: 4.16.4
   lowdb: 1.0.0
+  twitter: 1.7.1
   ws: 6.1.4
 packages:
   /@mixer/client-node/3.3.0:
@@ -151,6 +152,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
+  /deep-extend/0.5.1:
+    dev: false
+    engines:
+      iojs: '>=1.0.0'
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-N8vBdOa+DF7zkRrDCsaOXoCs/E2fJfx9B9MrKnnSiHNh4ws7eSys6YQE4KvT1cecKmOASYQBhbKjeuDD9lT81w==
   /deepmerge/1.5.2:
     dev: false
     engines:
@@ -715,6 +723,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-kcoMoKTPYnoeS50tzoqjPY3Uv9axeuuFAZY9M/9zFnhoVvRfxz9K29IMPD7jGmt2c8SW7i3gT9WqDl2+nV7p4A==
+  /twitter/1.7.1:
+    dependencies:
+      deep-extend: 0.5.1
+      request: 2.88.0
+    dev: false
+    resolution:
+      integrity: sha1-B2I3jx3BwFDkj2ZqypBOJLGpYvQ=
   /type-is/1.6.16:
     dependencies:
       media-typer: 0.3.0
@@ -796,4 +811,5 @@ specifiers:
   discord.js: ^11.4.2
   express: ^4.16.4
   lowdb: ^1.0.0
+  twitter: ^1.7.1
   ws: ^6.1.4

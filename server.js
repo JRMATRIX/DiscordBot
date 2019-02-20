@@ -15,13 +15,14 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-// Setup Mixer NPM packages
+// Setup Mixer NPM package
 const Mixer = require('@mixer/client-node');
 const mixerClient = new Mixer.Client( new Mixer.DefaultRequestRunner() );
 mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
     clientId: process.env.MIXER_TOKEN
 }));
 
+// Setup Carina NPM package
 const Carina = require('carina').Carina;
 const ws = require('ws');
 Carina.WebSocket = ws;
