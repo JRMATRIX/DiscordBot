@@ -226,7 +226,7 @@ function mixerLivePost( channelID ) {
      // console.log( channel[0] );
      
      var data = {
-       username : res.body.user.token,
+       username : res.body.token,
        title : res.body.name,
        thumbnail : res.body.thumbnail.url,
        game : res.body.type.name,
