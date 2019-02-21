@@ -253,8 +253,16 @@ function createMixerEmbed( data ) {
 }
 
 /*
-function updateMixerEmbed( data ) {
+function createMixerLiveEmbed( data ) {
 
+}
+
+function updateMixerLiveEmbed( data ) {
+
+}
+
+function createMixerOfflineEmbed( data ) {
+  
 }
 */
 
@@ -525,6 +533,7 @@ function mixerLiveUpdate( channelID ) {
       avatar : res.body.user.avatarUrl,
       followers : res.body.numFollowers,
       viewers : res.body.viewersTotal,
+      liveViewers : res.body.viewersCurrent,
       announcementChannel : bot.channels.find( ch => ch.name === channel.channelName ),
       embed : channel.embed,
       embedMessage : channel.embedMessage
@@ -539,7 +548,7 @@ function mixerLiveUpdate( channelID ) {
 function mixerOfflinePost( channelID ) {
   mixerClient.request('GET', `channels/${channelID}`).then(res => {
      
-    var channel = fetchMixerChannel( channelID );
+    var channel = fetchMixerChannel( channelID )[0];
      
     var data = {
       username : res.body.token,
@@ -549,7 +558,7 @@ function mixerOfflinePost( channelID ) {
       avatar : res.body.user.avatarUrl,
       followers : res.body.numFollowers,
       viewers : res.body.viewersTotal,
-      announcementChannel : bot.channels.find( ch => ch.name === channel[0].channelName ),
+      announcementChannel : bot.channels.find( ch => ch.name === channel.channelName ),
       embed : channel.embed,
       embedMessage : channel.embedMessage
     }
