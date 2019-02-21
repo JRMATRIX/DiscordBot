@@ -525,7 +525,8 @@ function mixerOfflinePost( channelID ) {
       followers : res.body.numFollowers,
       viewers : res.body.viewersTotal,
       announcementChannel : bot.channels.find( ch => ch.name === channel[0].channelName ),
-      embed : channel.embed
+      embed : channel.embed,
+      embedMessage : channel.embedMessage
     }
      
     // updateMixerEmbed( data );
@@ -769,8 +770,18 @@ function pushMixerChannel( mixerChannel, channel ) {
  */
 function modifyMixerChannel( mixerChannel, channel ) {  }
 
-function modifyMixerChannelEmbed( ) {
-
+function modifyMixerChannelEmbed( mixerChannel, embedMessage, embed ) {
+  if( DB.get('mixer').find({ name : mixerChannel }) ) {
+    DB.get('mixer').find({ 
+      name : mixerChannel 
+    }).assign({
+      embedMessage : embedMessage,
+      embed : embed
+    }).write();
+  }
+  
+  console.log( `Error: Trying to update unkown Mixer channel ${mixerChannel}` );
+  return false;
 }
 
 /**
