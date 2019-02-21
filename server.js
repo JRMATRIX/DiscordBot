@@ -446,7 +446,8 @@ function listMixerChannels() {
       
       var content = `- Channel ID: ${channel.id}\n`
         + `- Channel URL: https://mixer.com/${channel.name}\n`
-        + `- Twitter Handle: ${channel.twitter ? channel.twitter : 'undefined'}\n`
+        + `- Twitter Handle: ${channel.twitter ? channel.twitter.replace( 'https://twitter.com/', '@' ) : 'undefined'}\n`
+        + `- Twitter URL: ${channel.twitter ? channel.twitter : 'undefined'}\n`
         + `- Announcement Channel: #${channel.channelName}`;
       
       embed.addBlankField( false );
@@ -726,7 +727,7 @@ function pushMixerChannel( mixerChannel, channel ) {
     id: mixerChannel.id,
     name : mixerChannel.token,
     channelName : channel.substr(1),
-    twitter : null
+    twitter : mixerChannel.user.social.twitter
   }).write();
   
   return true;
