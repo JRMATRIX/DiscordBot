@@ -875,9 +875,9 @@ function fetchOption( option ) {
  * @since   0.0.1
  * @return  boolean
  */
-function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
+function isEmpty( obj ) {
+    for( var key in obj ) {
+        if( obj.hasOwnProperty( key ) )
             return false;
     }
     return true;
