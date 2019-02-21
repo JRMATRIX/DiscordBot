@@ -75,6 +75,7 @@ const DB = low(adapter);
 
 DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
+var prefix = '!trw';
 var msg = null;
 
 const errors = require( './errors.js' );
@@ -118,7 +119,7 @@ var twitterClient = new Twitter({
  */
 bot.on('message', message => {  
   // Don't read commands from the bot account, look for '!' to read for commands
-  if ( ! message.author.bot && message.content.substring(0, 1) == '!' && message.channel.name === 'bot-configuration' ) {
+  if ( ! message.author.bot && message.content.startsWith('!trw') && message.channel.name === 'bot-configuration' ) {
     
     msg = message;
     
@@ -463,23 +464,23 @@ function watchMixerChannel( channelID ) {
  * @return  null
  */
 function mixerLivePost( channelID ) {
-   mixerClient.request('GET', `channels/${channelID}`).then(res => {
-     
-     var announcementChannel = fetchMixerChannel( channelID );
-     
-     var data = {
-       username : res.body.token,
-       title : res.body.name,
-       thumbnail : res.body.thumbnail.url,
-       game : res.body.type.name,
-       avatar : res.body.user.avatarUrl,
-       followers : res.body.numFollowers,
-       viewers : res.body.viewersTotal,
-       announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
-     }
-     
-     createMixerEmbed( data );
-     
+  mixerClient.request('GET', `channels/${channelID}`).then(res => {
+
+    var announcementChannel = fetchMixerChannel( channelID );
+
+    var data = {
+      username : res.body.token,
+      title : res.body.name,
+      thumbnail : res.body.thumbnail.url,
+      game : res.body.type.name,
+      avatar : res.body.user.avatarUrl,
+      followers : res.body.numFollowers,
+      viewers : res.body.viewersTotal,
+      announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
+    }
+
+    createMixerEmbed( data );
+
   }); 
 }
 
@@ -488,18 +489,18 @@ function mixerOfflinePost( channelID ) {
      
     var announcementChannel = fetchMixerChannel( channelID );
      
-     var data = {
-       username : res.body.token,
-       title : res.body.name,
-       thumbnail : res.body.thumbnail.url,
-       game : res.body.type.name,
-       avatar : res.body.user.avatarUrl,
-       followers : res.body.numFollowers,
-       viewers : res.body.viewersTotal,
-       announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
-     }
+    var data = {
+      username : res.body.token,
+      title : res.body.name,
+      thumbnail : res.body.thumbnail.url,
+      game : res.body.type.name,
+      avatar : res.body.user.avatarUrl,
+      followers : res.body.numFollowers,
+      viewers : res.body.viewersTotal,
+      announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
+    }
      
-     createMixerEmbed( data );
+    createMixerEmbed( data );
      
   }); 
 }
