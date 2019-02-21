@@ -128,7 +128,8 @@ bot.on('message', message => {
     // console.log( newArgs );
     
     var args = msg.cleanContent.slice( prefix.length ).trim().split( / +/g );
-    // parse( args );
+    // console.log( args );
+    parse( args );
     
     // var call = args[0];
     
@@ -163,19 +164,19 @@ function parse( args ) {
      *
      * Accepted Arguments:
      * - args[0] : operator            One of 'add', 'update', 'remove' or 'list'
-     * - args[1] : cmd                 One of 'mixer' or 'mixerChannel'
-     * - args[2] : mixerChannel        The Mixer Channel name
-     * - args[3] : announcementChannel The Discord Announcement Channel
-     * - args[4] : discordUsername     The Discord Username of the Mixer Channel Owner
-     * - args[5] : twitterHandle       A Twitter Handle for the user
+     * - args[1] : cmd                 'mixer'
+     * - args[2] : case                One of 'channel' or 'team'
+     * - args[3] : mixerName           The Mixer Channel/Team name
+     * - args[4] : announcementChannel The Discord Announcement Channel
+     * - args[5] : twitterHandle       A Twitter Handle for the user/team
      */
     case 'mixer' :
-    case 'mixerchannel' :
-      mixerChannel( args[0], args[2], args[3] );
+      if( args[2] === 'channel' ) { mixerChannel( args[0], args[3], args[4], args[5] ); }
+      else if( args[2] === 'team' ) { mixerTeam(); }
+      else { return createErrorEmbed( "Missing parameter: Parameter 3 should be either 'channel' or 'team'" ); }
       break;
 
     case 'twitch' :
-    case 'twitchchannel' :
 
       break;
 
@@ -449,6 +450,18 @@ function listMixerChannels() {
   // msg.channel.send( out );
   
 }
+
+function mixerTeam() {
+  
+}
+
+function addMixerTeam() {}
+
+function updateeMixerTeam() {}
+
+function removeMixerTeam() {}
+
+function listMixerTeams() {}
 
 /**
  * Watch Mixer Channel
