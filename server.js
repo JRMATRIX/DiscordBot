@@ -117,17 +117,9 @@ bot.on('message', message => {
     
     msg = message;
     
-    // var args = msg.cleanContent.substring(1).split(' ');
-    // var newArgs = msg.cleanContent.slice( prefix.length ).trim().split( / +/g );
-    // console.log( newArgs );
-    
     var args = msg.cleanContent.slice( prefix.length ).trim().split( / +/g );
-    // console.log( args );
+
     parse( args );
-    
-    // var call = args[0];
-    
-    // if( call == 'trw' ) parse( args );
     
   }
 })
@@ -143,10 +135,6 @@ bot.on('message', message => {
  * @return  null
  */
 function parse( args ) {
-  // msg.channel.send( '*Command received*' );
-
-  // console.log( args[1] );
-  
   console.log( args );
   
   if( args[0] == 'ping' ) return msg.reply( 'Go ping yourself!' );
@@ -248,8 +236,6 @@ function createMixerEmbed( data ) {
     .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
     .setTimestamp( new Date() );
   
-  // var announcementChannel = bot.channels.find( ch => ch.name === data.announcementChannel );
-  // console.log( announcementChannel );
   data.announcementChannel.send( embed );
   
 }
@@ -270,7 +256,7 @@ function createTwitchEmbed( data ) {
     .setFooter( 'The Real World', 'https://cdn.discordapp.com/avatars/547391401000828938/26da8949887ea34cbd3ad3edab407b7c.png?size=256' )
     .setTimestamp( new Date() );
   
-  msg.channel.send( embed );
+  data.announcementChannel.send( embed );
   
 }
 
@@ -315,12 +301,8 @@ function mixerChannel( operator, username, channel ) {
       break;
       
     default:
-      var out = "```diff\n";
-      out = out + "- Error: Unknown operator " + operator + "\n";
-      out = out + "```\n";
-      
       msg.react( '❌');
-      msg.channel.send( out );
+      createErrorEmbed( `Unknown operator '${operator}'` );
       break;
       
   }
@@ -341,18 +323,8 @@ function mixerChannel( operator, username, channel ) {
 function addMixerChannel( username, channel ) {  
   mixerClient.request('GET', `channels/${username}`).then(res => {
     
-    // console.log( channel );
-    
     if( pushMixerChannel( res.body, channel ) ) {
-      
-      // console.log( fetchMixerChannel( res.body.id ) );
-      
       watchMixerChannel( res.body.id );
-    
-      // ca.subscribe(`channel:${res.body.id}:update`, data => {
-      //   console.log(data, res.body.id);
-      //   mixerLivePost( res.body.id );
-      // });
 
       msg.react('✅');
       createSuccessEmbed( `Added Mixer channel ${username} to ${channel}`, 'Mixer Streamer Added' );
@@ -393,24 +365,13 @@ function removeMixerChannel( username ) {
   mixerClient.request('GET', `channels/${username}`).then(res => {
     deleteMixerChannel( res.body.id );
     
-    // console.log( 'Deleting Mixer channel' );
-    
     ca.unsubscribe(`channel:${res.body.id}:update`, data => { 
       console.log( data );
     });
     
-//     var out = "```diff\n";
-//     out = out + "- Removed Mixer channel " + username + " from announcements";
-//     out = out + "```\n";
-    
-//     msg.react('✅');
-//     msg.channel.send( out );
-    
-      msg.react('✅');
-      createErrorEmbed( `Removed Mixer channel ${username} from announcements`, 'Mixer Streamer Removed' );
+    msg.react('✅');
+    createErrorEmbed( `Removed Mixer channel ${username} from announcements`, 'Mixer Streamer Removed' );
   });
-  
-  // console.log( channel );
 }
 
 /**
@@ -423,7 +384,6 @@ function removeMixerChannel( username ) {
  */
 function listMixerChannels() {
   var channels = fetchMixerChannels();
-  
   
   if( isEmpty( channels ) ) {
     
@@ -450,13 +410,8 @@ function listMixerChannels() {
 
   }
   
-  // out = out + "```\n";
-  
   msg.react('✅');
-  // return createSuccessEmbed( out, 'Mixer Streamers' );
   msg.channel.send( embed );
-  
-  // msg.channel.send( out );
   
 }
 
@@ -483,9 +438,9 @@ function watchMixerChannel( channelID ) {
 
 
 
-function mixerTeam() {
-  
-}
+// @TODO : Add Mixer Team functionality to watch all streamers in a team
+
+function mixerTeam() {}
 
 function addMixerTeam() {}
 
@@ -510,12 +465,8 @@ function listMixerTeams() {}
  */
 function mixerLivePost( channelID ) {
   mixerClient.request('GET', `channels/${channelID}`).then(res => {
-    
-    // console.log( res.body );
 
     var announcementChannel = fetchMixerChannel( channelID );
-
-    // console.log( announcementChannel );
     
     var data = {
       username : res.body.token,
@@ -537,7 +488,7 @@ function mixerLivePost( channelID ) {
 function mixerOfflinePost( channelID ) {
   mixerClient.request('GET', `channels/${channelID}`).then(res => {
      
-    var announcementChannel = fetchMixerChannel( channelID );
+    var channel = fetchMixerChannel( channelID );
      
     var data = {
       username : res.body.token,
@@ -547,10 +498,11 @@ function mixerOfflinePost( channelID ) {
       avatar : res.body.user.avatarUrl,
       followers : res.body.numFollowers,
       viewers : res.body.viewersTotal,
-      announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
+      announcementChannel : bot.channels.find( ch => ch.name === channel[0].channelName ),
+      embed : channel.embed
     }
      
-    createMixerEmbed( data );
+    // updateMixerEmbed( data );
      
   }); 
 }
@@ -568,25 +520,6 @@ function mixerOfflinePost( channelID ) {
 /******************************************************************************
  * TWITTER
  ******************************************************************************/
-
-// @TODO: Integrate Twitter
-
-
-/*
-var embed = new Discord.RichEmbed()
-    .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
-    .setTitle( `https://mixer.com/${data.username}` )
-    .setURL( `https://mixer.com/${data.username}` )
-    .addField( 'Now Playing', `${data.game}` )
-    .addField( 'Stream Title', `${data.title}` )
-    .addField( 'Followers', `${data.followers}`, true )
-    .addField( 'Total Views', `${data.viewers}`, true )
-    .setColor( '0x1C78C0' )
-    .setImage( `${data.thumbnail}` )
-    .setThumbnail( `${data.avatar}` )
-    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
-    .setTimestamp( new Date() );
-*/
 
 
 function createMixerTweet( data ) {
@@ -615,8 +548,6 @@ function testMixerTweet( data ) {
 function sendTweet( content ) {
   twitterClient.post('statuses/update', {status: content},  (error, tweet, response) => {
     if(error) { console.log( error ); return false; }
-    // console.log(tweet);
-    // console.log(response);
   });
 }
 
@@ -652,12 +583,8 @@ function trwOption( operator, option, value ) {
       break;
       
     default:
-      var out = "```diff\n";
-      out = out + "- Error: Unknown operator " + operator + "\n";
-      out = out + "```\n";
-      
       msg.react( '❌');
-      msg.channel.send( out );
+      createErrorEmbed( `Unknown operator '${operator}'` );
       break;
       
   }
@@ -678,13 +605,9 @@ function setOption( option, value ) {
   
   // @TODO: Add some check here to see if the option was set correctly
   
-  var out = "```md\n";
-  out = out + "# Updated options:\n\n";
-  out = out + "* Set " + option + " to " + value + "\n";
-  out = out + "```\n";
-  
   msg.react('✅');
-  msg.channel.send( out );
+  createSuccessEmbed( `Set ${option} to ${value}`, 'Updated TRW Bot Options' );
+  
 }
 
 /**
@@ -705,6 +628,7 @@ function getOption( option ) {
   
   if( msg ) {
     msg.react('✅');
+    createSuccessEmbed( `Set ${option} to ${value}`, 'Updated TRW Bot Options' );
     msg.channel.send( out );
   }
   
