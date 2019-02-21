@@ -467,7 +467,7 @@ function listMixerChannels() {
       
       var content = `- Channel ID: ${channel.id}\n`
         + `- Channel URL: https://mixer.com/${channel.name}\n`
-        + `- Twitter Handle: ${channel.twitter ? channel.twitter.replace( 'https://twitter.com/', '@' ) : 'undefined'}\n`
+        + `- Twitter Handle: ${channel.twitter ? channel.twitter.replace( /https\:\/\/twitter\.com\/|https\:\/\/www\.twitter\.com\//gi, '@' ) : 'undefined'}\n`
         + `- Twitter URL: ${channel.twitter ? channel.twitter : 'undefined'}\n`
         + `- Announcement Channel: #${channel.channelName}`;
       
