@@ -501,9 +501,11 @@ function watchMixerChannel( channelID ) {
     
     if( ( data.online !== undefined && data.online == true ) && ( data.updatedAt !== undefined ) ) {
       mixerLivePost( channelID );
+    } else if( ( data.online !== undefined && data.online == false ) && ( data.updatedAt !== undefined ) ) {
+      mixerOfflineUpdate( channelID );
     } else if ( data.viewersCurrent ) {
-               
-               }
+      mixerLiveUpdate( channelID );           
+    }
     
     // }
   });
@@ -578,7 +580,7 @@ function mixerLiveUpdate( channelID ) {
       embedMessage : channel.embedMessage
     }
 
-    updateMixerLiveEmbed( data );
+    if( channel.embedMessage ) updateMixerLiveEmbed( data );
 
   }); 
 }
@@ -600,7 +602,7 @@ function mixerOfflineUpdate( channelID ) {
       embedMessage : channel.embedMessage
     }
      
-    createMixerOfflineEmbed( data );
+    if( channel.embedMessage ) createMixerOfflineEmbed( data );
      
   }); 
 }
