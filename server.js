@@ -443,8 +443,14 @@ function listMixerChannels() {
       // out = out + "\n";
       // out = out + `**${channel.name} *(ID: ${channel.id})***\n`;
       // out = out + `**Announcement Channel**: #${channel.channelName}\n`;
+      
+      var content = `- Channel ID: ${channel.id}\n`
+        + `- Channel URL: https://mixer.com/${channel.name}\n`
+        + `- Twitter Handle: ${channel.twitter ? channel.twitter : 'undefined'}\n`
+        + `- Announcement Channel: #${channel.channelName}`;
+      
       embed.addBlankField( false );
-      embed.addField( `${channel.name} *(ID: ${channel.id})*`, `- Announcement Channel: **#${channel.channelName}**` );
+      embed.addField( `${channel.name} *(ID: ${channel.id})*`, content );
     });
 
   }
@@ -709,10 +715,10 @@ function listOptions() {
  */
 function pushMixerChannel( mixerChannel, channel ) {  
   
+  console.log( mixerChannel );
+  
   if( DB.get( 'mixer' ).find({ id: mixerChannel.id }).value() ) {
-    // msg.react( '❌');
     createErrorEmbed( errors.mixerChannelExists );
-    
     return false;
   }
   
