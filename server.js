@@ -152,6 +152,7 @@ function parse( args ) {
   if( args[0] == 'ping' ) return msg.reply( 'Go ping yourself!' );
   
   if( args[0] == 'testEmbed' ) return mixerLivePost( 39628981 );
+  if( args[0] == 'testTweet' ) return testMixerTweet();
 
   switch( args[1].toLowerCase() ) {
 
@@ -497,7 +498,9 @@ function watchMixerChannel( channelID ) {
   ca.subscribe(`channel:${channelID}:update`, data => {
     console.log( data, channelID );
     
-    if( data.online !== undefined && data.online == true ) mixerLivePost( channelID );
+    if( data.online !== undefined && data.online == true ) {
+      mixerLivePost( channelID );
+    }
   });
 }
 
@@ -533,6 +536,7 @@ function mixerLivePost( channelID ) {
     }
 
     createMixerEmbed( data );
+    createMixerTweet( data );
 
   }); 
 }
@@ -593,20 +597,33 @@ var embed = new Discord.RichEmbed()
 
 
 function createMixerTweet( data ) {
-  var content = `${data.username} went Live on Mixer\n\n`
+  var content = `${data.username} is Live on Mixer\n\n`
     + `Playing: ${data.game}\n\n`
     + `Stream Title: ${data.title}\n\n`
     + `Drop by and join their community of ${data.followers} followers!\n\n`
     + `https://mixer.com/${data.username}\n\n`
-    + `- via @TRWStreaming | ${new Date()}`
+    + `#HappyStreaming`;
+  
+  sendTweet( content );
+}
+
+function testMixerTweet( data ) {
+  var content = `MixerStreamer is Live on @WatchMixer!\n\n`
+    + `Playing: GameName\n`
+    + `Stream Title: StreamTitle\n\n`
+    + `Drop by and join their community of 100 followers!\n`
+    + `https://mixer.com/MixerStreamer\n\n`
+    + `#HappyStreaming`;
+  
+  sendTweet( content );
 }
 
 
 function sendTweet( content ) {
   twitterClient.post('statuses/update', {status: content},  (error, tweet, response) => {
-    if(error) throw error;
-    console.log(tweet);  // Tweet body.
-    console.log(response);  // Raw response object.
+    if(error) { console.log( error ); return false; }
+    // console.log(tweet);
+    // console.log(response);
   });
 }
 
