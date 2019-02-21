@@ -45,7 +45,7 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
  *
  * Used for connecting and interacting with the Mixer Constellation API
  *
- * @minVersion  0.11.2
+ * @minVersion  0.12.0
  */
 
 const Carina = require('carina').Carina;
@@ -78,6 +78,23 @@ DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 var msg = null;
 
 const errors = require( './errors.js' );
+
+
+/** 
+ * Twitter NPM package
+ *
+ * Used for posting curated Tweets to Twitter
+ *
+ * @minVersion  1.7.1
+ */
+const Twitter = require( 'twitter' );
+var twitterClient = {
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN,
+  access_token_secret: process.env.TWITTER_ACCESS_SECRET
+}
+
 
 
 /******************************************************************************
