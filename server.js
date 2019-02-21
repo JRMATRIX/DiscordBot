@@ -521,7 +521,16 @@ function mixerOfflinePost( channelID ) {
  * TWITTER
  ******************************************************************************/
 
-
+/**
+ * Create Mixer Tweet
+ *
+ * Generates content for a new Tweet when a Mixer channel goes live
+ *
+ * @uses    TwitterClient
+ * @param   object              data
+ * @since   0.0.1
+ * @return  null
+ */
 function createMixerTweet( data ) {
   var content = `${data.username} is Live on Mixer\n\n`
     + `Playing: ${data.game}\n\n`
@@ -533,7 +542,32 @@ function createMixerTweet( data ) {
   sendTweet( content );
 }
 
-function testMixerTweet( data ) {
+/**
+ * Send Tweet
+ *
+ * Posts a new Tweet using pre-generated content
+ *
+ * @uses    TwitterClient
+ * @param   object              data
+ * @since   0.0.1
+ * @return  null
+ */
+function sendTweet( content ) {
+  twitterClient.post('statuses/update', {status: content},  (error, tweet, response) => {
+    if(error) { console.log( error ); return false; }
+  });
+}
+
+/**
+ * Test Mixer Tweet (DEBUGGING)
+ *
+ * Generates content for a new Test Tweet that mimicks createMixerTweet output
+ *
+ * @uses    TwitterClient
+ * @since   0.0.1
+ * @return  null
+ */
+function testMixerTweet() {
   var content = `MixerStreamer is Live on @WatchMixer!\n\n`
     + `Playing: GameName\n`
     + `Stream Title: StreamTitle\n\n`
@@ -542,13 +576,6 @@ function testMixerTweet( data ) {
     + `#HappyStreaming`;
   
   sendTweet( content );
-}
-
-
-function sendTweet( content ) {
-  twitterClient.post('statuses/update', {status: content},  (error, tweet, response) => {
-    if(error) { console.log( error ); return false; }
-  });
 }
 
 
@@ -628,8 +655,7 @@ function getOption( option ) {
   
   if( msg ) {
     msg.react('✅');
-    createSuccessEmbed( `Set ${option} to ${value}`, 'Updated TRW Bot Options' );
-    msg.channel.send( out );
+    createSuccessEmbed( `${option} : ${value}`, 'TRW Bot Options' );
   }
   
   return value;
@@ -659,17 +685,14 @@ function listOptions() {
     var out = '';
 
     options.forEach( function( option ) {
-    // for( var key in options ) {
       out = out + "\n";
-      out = out + `**${option.key}** : ${option.value}\n`;
-    // }
+      out = out + `${option.key} : ${option.value}\n`;
     });
 
   }
   
   msg.react('✅');
   return createSuccessEmbed( out, 'TRW Bot Options' );
-  // msg.channel.send( out );
 }
 
 
@@ -690,9 +713,6 @@ function listOptions() {
  * @return  null
  */
 function pushMixerChannel( mixerChannel, channel ) {  
-  
-  console.log( mixerChannel );
-  
   if( DB.get( 'mixer' ).find({ id: mixerChannel.id }).value() ) {
     createErrorEmbed( errors.mixerChannelExists );
     return false;
@@ -707,6 +727,21 @@ function pushMixerChannel( mixerChannel, channel ) {
   
   return true;
 }
+
+/**
+ * @TODO: Make this work
+ *
+ * Modify Mixer Channel
+ *
+ * Updates a Mixer Channel to the Database
+ *
+ * @uses    lowdb
+ * @param   object              mixerChannel
+ * @param   string              channel
+ * @since   0.0.1
+ * @return  null
+ */
+function modifyMixerChannel( mixerChannel, channel ) {  }
 
 /**
  * Delete Mixer Channel
