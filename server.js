@@ -153,9 +153,11 @@ function parse( args ) {
 
   // console.log( args[1] );
   
+  console.log( args );
+  
   if( args[0] == 'ping' ) return msg.reply( 'Go ping yourself!' );
   
-  if( args[0] == 'testEmbed' ) return createMixerEmbed();
+  if( args[0] == 'testEmbed' ) return mixerLivePost( 39628981 );
 
   switch( args[1].toLowerCase() ) {
 
@@ -244,7 +246,7 @@ function createMixerEmbed( data ) {
     .addField( 'Now Playing', `${data.game}` )
     .addField( 'Stream Title', `${data.title}` )
     .addField( 'Followers', `${data.followers}`, true )
-    .addField( 'Views', `${data.viewers}`, true )
+    .addField( 'Total Views', `${data.viewers}`, true )
     .setColor( '0x1C78C0' )
     .setImage( `${data.thumbnail}` )
     .setThumbnail( `${data.avatar}` )
@@ -253,7 +255,7 @@ function createMixerEmbed( data ) {
   
   // var announcementChannel = bot.channels.find( ch => ch.name === data.announcementChannel );
   // console.log( announcementChannel );
-  // data.announcementChannel.send( embed );
+  data.announcementChannel.send( embed );
   
 }
 
@@ -512,9 +514,13 @@ function watchMixerChannel( channelID ) {
  */
 function mixerLivePost( channelID ) {
   mixerClient.request('GET', `channels/${channelID}`).then(res => {
+    
+    // console.log( res.body );
 
     var announcementChannel = fetchMixerChannel( channelID );
 
+    // console.log( announcementChannel );
+    
     var data = {
       username : res.body.token,
       title : res.body.name,
