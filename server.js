@@ -247,7 +247,7 @@ function createMixerEmbed( data ) {
   
   data.announcementChannel.send( embed );
   // data.announcementChannel.send( embed ).then( embedMessage => { 
-    // updateMixerChannelEmbed( data.username, embedMessage, embed );
+    // setMixerChannelEmbed( data.username, embedMessage, embed );
   //});
   
 }
@@ -367,7 +367,7 @@ function updateMixerChannel( username, channel ) {
   
 }
 
-function updateMixerChannelEmbed( username, message, embed ) {
+function setMixerChannelEmbed( username, message, embed ) {
   
 }
 
@@ -768,6 +768,10 @@ function pushMixerChannel( mixerChannel, channel ) {
  * @return  null
  */
 function modifyMixerChannel( mixerChannel, channel ) {  }
+
+function modifyMixerChannelEmbed( ) {
+
+}
 
 /**
  * Delete Mixer Channel
