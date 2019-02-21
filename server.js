@@ -229,7 +229,7 @@ function createMixerEmbed( data ) {
     .setColor( '0x1C78C0' )
     .setImage( `${data.thumbnail}` )
     .setThumbnail( `${data.avatar}` )
-    .setFooter( 'The Real World', 'https://cdn.discordapp.com/avatars/547391401000828938/26da8949887ea34cbd3ad3edab407b7c.png?size=256' )
+    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
     .setTimestamp( new Date() );
   
   // var announcementChannel = bot.channels.find( ch => ch.name === data.announcementChannel );
@@ -330,11 +330,13 @@ function addMixerChannel( username, channel ) {
     if( pushMixerChannel( res.body, channel ) ) {
       
       console.log( fetchMixerChannel( res.body.id ) );
+      
+      watchMixerChannel( res.nody.id );
     
-      ca.subscribe(`channel:${res.body.id}:update`, data => {
-        console.log(data, res.body.id);
-        mixerLivePost( res.body.id );
-      });
+      // ca.subscribe(`channel:${res.body.id}:update`, data => {
+      //   console.log(data, res.body.id);
+      //   mixerLivePost( res.body.id );
+      // });
 
       msg.react('✅');
       createSuccessEmbed( `Added Mixer channel ${username} to ${channel}`, 'Mixer Streamer Added' );
@@ -442,7 +444,10 @@ function listMixerChannels() {
  * @return  null
  */
 function watchMixerChannel( channelID ) {
-  
+  ca.subscribe(`channel:${channelID}:update`, data => {
+    console.log( data, channelID );
+    mixerLivePost( channelID );
+  });
 }
 
 /**
@@ -685,6 +690,16 @@ function fetchMixerChannels() {
   return DB.get( 'mixer' ).value();
 }
 
+/**
+ * Fetch Mixer Channel
+ *
+ * Fetches a single Mixer Channels from the Database
+ *
+ * @uses    lowdb
+ * @param   string              channelID
+ * @since   0.0.1
+ * @return  null
+ */
 function fetchMixerChannel( channelID ) {
   return DB.get( 'mixer' ).filter({id: channelID}).value();
 }
@@ -768,9 +783,4 @@ bot.login(process.env.BOT_TOKEN);
 
 // Loop through our list of streamers and subscribe them to ca events
 var channels = fetchMixerChannels();
-channels.forEach( function( channel ) {
-    ca.subscribe(`channel:${channel.id}:update`, data => {
-      console.log(data, channel.id);
-      mixerLivePost( channel.id );
-    });
-});
+channels.forEach( function( channel ) { watchMixerChannel( channel.id ); });
