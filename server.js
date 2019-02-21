@@ -439,11 +439,13 @@ function watchMixerChannel( channelID ) {
   ca.subscribe(`channel:${channelID}:update`, data => {
     console.log( data, channelID );
     
-    // if( ( data.online !== undefined ) 
+    // if( ( data.online !== undefined ) && ( data.updatedAt !== undefined ) ) {
     
     if( ( data.online !== undefined && data.online == true ) && ( data.updatedAt !== undefined ) ) {
       mixerLivePost( channelID );
     }
+    
+    // }
   });
 }
 
