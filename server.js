@@ -254,11 +254,42 @@ function createMixerEmbed( data ) {
 
 /*
 function createMixerLiveEmbed( data ) {
-
+  var embed = new Discord.RichEmbed()
+    .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+    .setTitle( `https://mixer.com/${data.username}` )
+    .setURL( `https://mixer.com/${data.username}` )
+    .addField( 'Now Playing', `${data.game}` )
+    .addField( 'Stream Title', `${data.title}` )
+    .addField( 'Followers', `${data.followers}`, true )
+    .addField( 'Viewers', `${data.viewers}`, true )
+    .setColor( '0x1C78C0' )
+    .setImage( `${data.thumbnail}` )
+    .setThumbnail( `${data.avatar}` )
+    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
+    .setTimestamp( new Date() );
+  
+  data.announcementChannel.send( embed );
+  // data.announcementChannel.send( embed ).then( embedMessage => { 
+    // modifyMixerChannelEmbed( data.username, embedMessage );
+  //});
 }
 
 function updateMixerLiveEmbed( data ) {
-
+  var embed = new Discord.RichEmbed()
+    .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+    .setTitle( `https://mixer.com/${data.username}` )
+    .setURL( `https://mixer.com/${data.username}` )
+    .addField( 'Now Playing', `${data.game}` )
+    .addField( 'Stream Title', `${data.title}` )
+    .addField( 'Followers', `${data.followers}`, true )
+    .addField( 'Viewers', `${data.liveViewers}`, true )
+    .setColor( '0x1C78C0' )
+    .setImage( `${data.thumbnail}` )
+    .setThumbnail( `${data.avatar}` )
+    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
+    .setTimestamp( new Date() );
+  
+  data.embedMessage.edit( embed );
 }
 
 function createMixerOfflineEmbed( data ) {
@@ -559,7 +590,6 @@ function mixerOfflinePost( channelID ) {
       followers : res.body.numFollowers,
       viewers : res.body.viewersTotal,
       announcementChannel : bot.channels.find( ch => ch.name === channel.channelName ),
-      embed : channel.embed,
       embedMessage : channel.embedMessage
     }
      
@@ -804,13 +834,12 @@ function pushMixerChannel( mixerChannel, channel ) {
  */
 function modifyMixerChannel( mixerChannel, channel ) {  }
 
-function modifyMixerChannelEmbed( mixerChannel, embedMessage, embed ) {
+function modifyMixerChannelEmbed( mixerChannel, embedMessage ) {
   if( DB.get('mixer').find({ name : mixerChannel }) ) {
     DB.get('mixer').find({ 
       name : mixerChannel 
     }).assign({
-      embedMessage : embedMessage,
-      embed : embed
+      embedMessage : embedMessage
     }).write();
   }
   
