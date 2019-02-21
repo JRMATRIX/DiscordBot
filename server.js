@@ -77,7 +77,7 @@ DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 var msg = null;
 
-const prefix = '!trw';
+const prefix = 'trw';
 const errors = require( './errors.js' );
 
 
@@ -123,13 +123,16 @@ bot.on('message', message => {
     
     msg = message;
     
-    var args = msg.cleanContent.substring(1).split(' ');
-    var newArgs = msg.cleanContent.slice( prefix.length ).trim().split( / +/g );
-    console.log( newArgs );
+    // var args = msg.cleanContent.substring(1).split(' ');
+    // var newArgs = msg.cleanContent.slice( prefix.length ).trim().split( / +/g );
+    // console.log( newArgs );
     
-    var call = args[0];
+    var args = msg.cleanContent.slice( prefix.length ).trim().split( / +/g );
+    // parse( args );
     
-    if( call == 'trw' ) parse( args );
+    // var call = args[0];
+    
+    // if( call == 'trw' ) parse( args );
     
   }
 })
@@ -149,15 +152,26 @@ function parse( args ) {
 
   // console.log( args[1] );
   
-  if( args[1] == 'ping' ) return msg.reply( 'Go ping yourself!' );
+  if( args[0] == 'ping' ) return msg.reply( 'Go ping yourself!' );
   
-  if( args[1] == 'testEmbed' ) return createMixerEmbed();
+  if( args[0] == 'testEmbed' ) return createMixerEmbed();
 
-  switch( args[2].toLowerCase() ) {
+  switch( args[1].toLowerCase() ) {
 
+    /**
+     * Mixer Commands
+     *
+     * Accepted Arguments:
+     * - args[0] : operator            One of 'add', 'update', 'remove' or 'list'
+     * - args[1] : cmd                 One of 'mixer' or 'mixerChannel'
+     * - args[2] : mixerChannel        The Mixer Channel name
+     * - args[3] : announcementChannel The Discord Announcement Channel
+     * - args[4] : discordUsername     The Discord Username of the Mixer Channel Owner
+     * - args[5] : twitterHandle       A Twitter Handle for the user
+     */
     case 'mixer' :
     case 'mixerchannel' :
-      mixerChannel( args[1], args[3], args[4] );
+      mixerChannel( args[0], args[2], args[3] );
       break;
 
     case 'twitch' :
@@ -167,7 +181,7 @@ function parse( args ) {
 
     case 'option' :
     case 'options' :
-      trwOption( args[1], args[3], args[4] );
+      trwOption( args[0], args[2], args[3] );
       break;
 
   }
@@ -181,12 +195,12 @@ function parse( args ) {
  * Parses arguments passed to the mixer commands
  *
  * Expects:
- * arg[1] : operator            One of 'add', 'update', 'remove' or 'list'
- * arg[2] : cmd                 One of 'mixer' or 'mixerChannel'
- * arg[3] : mixerChannel        The Mixer Channel name
- * arg[4] : announcementChannel The Discord Announcement Channel
- * arg[5] : discordUsername     The Discord Username of the Mixer Channel Owner
- * arg[6] : twitterHandle       A Twitter Handle for the user
+ * args[1] : operator            One of 'add', 'update', 'remove' or 'list'
+ * args[2] : cmd                 One of 'mixer' or 'mixerChannel'
+ * args[3] : mixerChannel        The Mixer Channel name
+ * args[4] : announcementChannel The Discord Announcement Channel
+ * args[5] : discordUsername     The Discord Username of the Mixer Channel Owner
+ * args[6] : twitterHandle       A Twitter Handle for the user
  *
  * @param   array               args
  * @since   0.0.1
