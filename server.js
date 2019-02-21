@@ -246,6 +246,9 @@ function createMixerEmbed( data ) {
     .setTimestamp( new Date() );
   
   data.announcementChannel.send( embed );
+  // data.announcementChannel.send( embed ).then( embedMessage => { 
+
+  //});
   
 }
 
