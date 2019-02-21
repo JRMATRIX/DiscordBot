@@ -398,7 +398,9 @@ function removeMixerChannel( username ) {
   mixerClient.request('GET', `channels/${username}`).then(res => {
     deleteMixerChannel( res.body.id );
     
-    ca.unsubscribe(`channel:${res.body.id}:update`);
+    ca.unsubscribe(`channel:${res.body.id}:update`, data => { 
+      console.log( data );
+    });
     
 //     var out = "```diff\n";
 //     out = out + "- Removed Mixer channel " + username + " from announcements";
