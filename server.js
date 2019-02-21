@@ -75,9 +75,9 @@ const DB = low(adapter);
 
 DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
-var prefix = '!trw';
 var msg = null;
 
+const prefix = '!trw';
 const errors = require( './errors.js' );
 
 
@@ -117,13 +117,16 @@ var twitterClient = new Twitter({
  * @since   0.0.1
  * @return  null
  */
-bot.on('message', message => {  
+bot.on('message', message => {    
   // Don't read commands from the bot account, look for '!' to read for commands
-  if ( ! message.author.bot && message.content.startsWith('!trw') && message.channel.name === 'bot-configuration' ) {
+  if ( ! message.author.bot && message.content.startsWith( prefix ) && message.channel.name === 'bot-configuration' ) {
     
     msg = message;
     
     var args = msg.cleanContent.substring(1).split(' ');
+    var newArgs = msg.cleanContent.slice( prefix.length ).trim().split( / +/g );
+    console.log( newArgs );
+    
     var call = args[0];
     
     if( call == 'trw' ) parse( args );
