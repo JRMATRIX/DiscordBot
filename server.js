@@ -433,7 +433,8 @@ function listMixerChannels() {
     
     var embed = new Discord.RichEmbed()
     .setTitle( 'Mixer Streamers' )
-    .setColor( '0x00FF00' );
+    .setColor( '0x1C78C0' )
+    .setThumbnail( 'http://www.logospng.com/images/56/logo-sticker-by-mixer-design-humans-56144.png' );
 
     channels.forEach( function( channel ) {
       
@@ -444,7 +445,7 @@ function listMixerChannels() {
         + `- Announcement Channel: #${channel.channelName}`;
       
       // embed.addBlankField( false );
-      embed.addField( `${channel.name} *(ID: ${channel.id})*`, content );
+      embed.addField( `${channel.name}`, content );
     });
 
   }
@@ -457,6 +458,27 @@ function listMixerChannels() {
   
   // msg.channel.send( out );
   
+}
+
+/**
+ * Watch Mixer Channel
+ *
+ * Uses Carina to watch for live updates from a Mixer
+ * Channel
+ *
+ * @uses    Carina
+ * @param   string              channelID
+ * @since   0.0.1
+ * @return  null
+ */
+function watchMixerChannel( channelID ) {
+  ca.subscribe(`channel:${channelID}:update`, data => {
+    console.log( data, channelID );
+    
+    if( ( data.online !== undefined && data.online == true ) && ( data.updatedAt !== undefined ) ) {
+      mixerLivePost( channelID );
+    }
+  });
 }
 
 
@@ -474,27 +496,6 @@ function removeMixerTeam() {}
 function listMixerTeams() {}
 
 
-
-/**
- * Watch Mixer Channel
- *
- * Uses Carina to watch for live updates from a Mixer
- * Channel
- *
- * @uses    Carina
- * @param   string              channelID
- * @since   0.0.1
- * @return  null
- */
-function watchMixerChannel( channelID ) {
-  ca.subscribe(`channel:${channelID}:update`, data => {
-    console.log( data, channelID );
-    
-    if( data.online !== undefined && data.online == true ) {
-      mixerLivePost( channelID );
-    }
-  });
-}
 
 /**
  * Mixer Live Post
