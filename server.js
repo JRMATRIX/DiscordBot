@@ -198,6 +198,15 @@ function parseMixerArgs( args ) {
   return obj;
 }
 
+
+
+// EMBEDS
+
+/**
+ * Create Error Embed
+ *
+ * 
+ */
 function createErrorEmbed( message, title ) {
   if( ! title ) title = 'TRW Bot Error';
   
@@ -532,7 +541,7 @@ function mixerOfflinePost( channelID ) {
  * @return  null
  */
 function createMixerTweet( data ) {
-  var content = `${data.username} is Live on Mixer\n\n`
+  var content = `${data.username} is Live on @WatchMixer\n\n`
     + `Playing: ${data.game}\n\n`
     + `Stream Title: ${data.title}\n\n`
     + `Drop by and join their community of ${data.followers} followers!\n\n`
