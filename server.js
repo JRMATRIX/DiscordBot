@@ -95,6 +95,12 @@ var twitterClient = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_SECRET
 });
 
+// twitterClient.post('statuses/update', {status: 'Testing our new Twitter Integrations!'},  function(error, tweet, response) {
+//   if(error) throw error;
+//   console.log(tweet);  // Tweet body.
+//   console.log(response);  // Raw response object.
+// });
+
 
 
 /******************************************************************************
