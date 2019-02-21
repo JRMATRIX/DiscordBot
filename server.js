@@ -443,8 +443,8 @@ function listMixerChannels() {
       // out = out + "\n";
       // out = out + `**${channel.name} *(ID: ${channel.id})***\n`;
       // out = out + `**Announcement Channel**: #${channel.channelName}\n`;
-      
-      embed.addField( ); 
+      embed.addBlankField( false );
+      embed.addField( `${channel.name} *(ID: ${channel.id})*`, `- Announcement Channel: **#${channel.channelName}**` );
     });
 
   }
