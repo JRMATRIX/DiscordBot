@@ -59,6 +59,9 @@ const ca = new Carina({
     isBot: true,
 }).open();
 
+ca.setMaxListeners( 50 );
+
+
 
 /** 
  * lowdb NPM package
@@ -81,6 +84,7 @@ const prefix = 'trw';
 const errors = require( './errors.js' );
 
 
+
 /** 
  * Twitter NPM package
  *
@@ -96,6 +100,7 @@ var twitterClient = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_SECRET
 });
 
+// twitterClient.setMaxListeners( 50 )
 
 
 /******************************************************************************
