@@ -247,7 +247,7 @@ function createMixerEmbed( data ) {
   
   data.announcementChannel.send( embed );
   // data.announcementChannel.send( embed ).then( embedMessage => { 
-    // setMixerChannelEmbed( data.username, embedMessage, embed );
+    // modifyMixerChannelEmbed( data.username, embedMessage, embed );
   //});
   
 }
@@ -509,6 +509,31 @@ function mixerLivePost( channelID ) {
     createMixerTweet( data );
 
   }); 
+}
+
+function mixerLiveUpdate( channelID ) { 
+/*
+  mixerClient.request('GET', `channels/${channelID}`).then(res => {
+
+    var channel = fetchMixerChannel( channelID )[0];
+    
+    var data = {
+      username : res.body.token,
+      title : res.body.name,
+      thumbnail : res.body.thumbnail ? res.body.thumbnail.url : res.body.bannerUrl,
+      game : res.body.type.name,
+      avatar : res.body.user.avatarUrl,
+      followers : res.body.numFollowers,
+      viewers : res.body.viewersTotal,
+      announcementChannel : bot.channels.find( ch => ch.name === channel.channelName ),
+      embed : channel.embed,
+      embedMessage : channel.embedMessage
+    }
+
+    updateMixerEmbed( data );
+
+  }); 
+*/
 }
 
 function mixerOfflinePost( channelID ) {
