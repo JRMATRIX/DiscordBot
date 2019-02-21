@@ -350,7 +350,7 @@ function addMixerChannel( username, channel ) {
       
       console.log( fetchMixerChannel( res.body.id ) );
       
-      watchMixerChannel( res.nody.id );
+      watchMixerChannel( res.body.id );
     
       // ca.subscribe(`channel:${res.body.id}:update`, data => {
       //   console.log(data, res.body.id);
@@ -431,14 +431,20 @@ function listMixerChannels() {
     // out = out + "No Mixer Channels Available\n";
     
   } else {
-  
+    
+    var embed = new Discord.RichEmbed()
+    .setTitle( 'Mixer Streamers' )
+    .setColor( '0x00FF00' );
+    
     // out = out + "# Mixer channels:\n";
-    var out = '';
+    // var out = '';
 
     channels.forEach( function( channel ) {
-      out = out + "\n";
-      out = out + `**${channel.name} *(ID: ${channel.id})***\n`;
-      out = out + `    - **Announcement Channel**: ${channel.channel}\n`;
+      // out = out + "\n";
+      // out = out + `**${channel.name} *(ID: ${channel.id})***\n`;
+      // out = out + `**Announcement Channel**: #${channel.channelName}\n`;
+      
+      embed.addField( ); 
     });
 
   }
@@ -446,10 +452,14 @@ function listMixerChannels() {
   // out = out + "```\n";
   
   msg.react('✅');
-  return createSuccessEmbed( out, 'Mixer Streamers' );
+  // return createSuccessEmbed( out, 'Mixer Streamers' );
+  msg.channel.send( embed );
+  
   // msg.channel.send( out );
   
 }
+
+
 
 function mixerTeam() {
   
@@ -457,7 +467,7 @@ function mixerTeam() {
 
 function addMixerTeam() {}
 
-function updateeMixerTeam() {}
+function updateMixerTeam() {}
 
 function removeMixerTeam() {}
 
