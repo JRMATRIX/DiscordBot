@@ -252,7 +252,6 @@ function createMixerEmbed( data ) {
   
 }
 
-/*
 function createMixerLiveEmbed( data ) {
   var embed = new Discord.RichEmbed()
     .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
@@ -268,10 +267,10 @@ function createMixerLiveEmbed( data ) {
     .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
     .setTimestamp( new Date() );
   
-  data.announcementChannel.send( embed );
-  // data.announcementChannel.send( embed ).then( embedMessage => { 
-    // modifyMixerChannelEmbed( data.username, embedMessage );
-  //});
+  // data.announcementChannel.send( embed );
+  data.announcementChannel.send( embed ).then( embedMessage => { 
+    modifyMixerChannelEmbed( data.username, embedMessage );
+  });
 }
 
 function updateMixerLiveEmbed( data ) {
@@ -286,16 +285,27 @@ function updateMixerLiveEmbed( data ) {
     .setColor( '0x1C78C0' )
     .setImage( `${data.thumbnail}` )
     .setThumbnail( `${data.avatar}` )
-    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
-    .setTimestamp( new Date() );
+    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' );
   
   data.embedMessage.edit( embed );
 }
 
 function createMixerOfflineEmbed( data ) {
+  var embed = new Discord.RichEmbed()
+    .setAuthor( `${data.username} is now Offline`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+    .setTitle( `https://mixer.com/${data.username}` )
+    .setURL( `https://mixer.com/${data.username}` )
+    .addField( 'Last Played', `${data.game}` )
+    .addField( 'Followers', `${data.followers}`, true )
+    .addField( 'Viewers', `${data.liveViewers}`, true )
+    .setColor( '0x1C78C0' )
+    .setImage( `${data.thumbnail}` )
+    .setThumbnail( `${data.avatar}` )
+    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
+    .setTimestamp( new Date() );
   
+  data.embedMessage.edit( embed );
 }
-*/
 
 function createTwitchEmbed( data ) {
   
@@ -406,10 +416,6 @@ function updateMixerChannel( username, channel ) {
   
 }
 
-function setMixerChannelEmbed( username, message, embed ) {
-  
-}
-
 /**
  * Remove Mixer Channel
  *
@@ -495,7 +501,9 @@ function watchMixerChannel( channelID ) {
     
     if( ( data.online !== undefined && data.online == true ) && ( data.updatedAt !== undefined ) ) {
       mixerLivePost( channelID );
-    }
+    } else if ( data.viewersCurrent ) {
+               
+               }
     
     // }
   });
@@ -531,7 +539,7 @@ function listMixerTeams() {}
 function mixerLivePost( channelID ) {
   mixerClient.request('GET', `channels/${channelID}`).then(res => {
 
-    var announcementChannel = fetchMixerChannel( channelID );
+    var channel = fetchMixerChannel( channelID )[0];
     
     var data = {
       username : res.body.token,
@@ -541,7 +549,8 @@ function mixerLivePost( channelID ) {
       avatar : res.body.user.avatarUrl,
       followers : res.body.numFollowers,
       viewers : res.body.viewersTotal,
-      announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
+      liveViewers : res.body.viewersCurrent,
+      announcementChannel : bot.channels.find( ch => ch.name === channel[0].channelName )
     }
 
     createMixerEmbed( data );
@@ -551,7 +560,6 @@ function mixerLivePost( channelID ) {
 }
 
 function mixerLiveUpdate( channelID ) { 
-/*
   mixerClient.request('GET', `channels/${channelID}`).then(res => {
 
     var channel = fetchMixerChannel( channelID )[0];
@@ -570,13 +578,12 @@ function mixerLiveUpdate( channelID ) {
       embedMessage : channel.embedMessage
     }
 
-    updateMixerEmbed( data );
+    updateMixerLiveEmbed( data );
 
   }); 
-*/
 }
 
-function mixerOfflinePost( channelID ) {
+function mixerOfflineUpdate( channelID ) {
   mixerClient.request('GET', `channels/${channelID}`).then(res => {
      
     var channel = fetchMixerChannel( channelID )[0];
@@ -593,7 +600,7 @@ function mixerOfflinePost( channelID ) {
       embedMessage : channel.embedMessage
     }
      
-    // updateMixerEmbed( data );
+    createMixerOfflineEmbed( data );
      
   }); 
 }
