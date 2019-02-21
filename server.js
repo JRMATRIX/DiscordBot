@@ -574,8 +574,31 @@ function mixerOfflinePost( channelID ) {
 
 // @TODO: Integrate Twitter
 
+
+/*
+var embed = new Discord.RichEmbed()
+    .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+    .setTitle( `https://mixer.com/${data.username}` )
+    .setURL( `https://mixer.com/${data.username}` )
+    .addField( 'Now Playing', `${data.game}` )
+    .addField( 'Stream Title', `${data.title}` )
+    .addField( 'Followers', `${data.followers}`, true )
+    .addField( 'Total Views', `${data.viewers}`, true )
+    .setColor( '0x1C78C0' )
+    .setImage( `${data.thumbnail}` )
+    .setThumbnail( `${data.avatar}` )
+    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
+    .setTimestamp( new Date() );
+*/
+
+
 function createMixerTweet( data ) {
-  var content = '';
+  var content = `${data.username} went Live on Mixer\n\n`
+    + `Playing: ${data.game}\n\n`
+    + `Stream Title: ${data.title}\n\n`
+    + `Drop by and join their community of ${data.followers} followers!\n\n`
+    + `https://mixer.com/${data.username}\n\n`
+    + `- via @TRWStreaming | ${new Date()}`
 }
 
 
