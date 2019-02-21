@@ -446,7 +446,8 @@ function listMixerChannels() {
 function watchMixerChannel( channelID ) {
   ca.subscribe(`channel:${channelID}:update`, data => {
     console.log( data, channelID );
-    mixerLivePost( channelID );
+    
+    if( data.online !== undefined && data.online == true ) mixerLivePost( channelID );
   });
 }
 
@@ -465,6 +466,27 @@ function mixerLivePost( channelID ) {
    mixerClient.request('GET', `channels/${channelID}`).then(res => {
      
      var announcementChannel = fetchMixerChannel( channelID );
+     
+     var data = {
+       username : res.body.token,
+       title : res.body.name,
+       thumbnail : res.body.thumbnail.url,
+       game : res.body.type.name,
+       avatar : res.body.user.avatarUrl,
+       followers : res.body.numFollowers,
+       viewers : res.body.viewersTotal,
+       announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
+     }
+     
+     createMixerEmbed( data );
+     
+  }); 
+}
+
+function mixerOfflinePost( channelID ) {
+  mixerClient.request('GET', `channels/${channelID}`).then(res => {
+     
+    var announcementChannel = fetchMixerChannel( channelID );
      
      var data = {
        username : res.body.token,
