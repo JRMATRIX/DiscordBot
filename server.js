@@ -238,27 +238,6 @@ function createMixerEmbed( data ) {
   
 }
 
-function mixerLivePost( channelID ) {
-   mixerClient.request('GET', `channels/${channelID}`).then(res => {
-     
-     var announcementChannel = fetchMixerChannel( channelID );
-     
-     var data = {
-       username : res.body.token,
-       title : res.body.name,
-       thumbnail : res.body.thumbnail.url,
-       game : res.body.type.name,
-       avatar : res.body.user.avatarUrl,
-       followers : res.body.numFollowers,
-       viewers : res.body.viewersTotal,
-       announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
-     }
-     
-     createMixerEmbed( data );
-     
-  }); 
-}
-
 function createTwitchEmbed( data ) {
   
   var embed = new Discord.RichEmbed()
@@ -413,7 +392,7 @@ function removeMixerChannel( username ) {
 }
 
 /**
- * Lits Mixer Channels
+ * List Mixer Channels
  *
  * Outputs a list of all currently active Mixer Channels
  *
@@ -450,6 +429,69 @@ function listMixerChannels() {
   // msg.channel.send( out );
   
 }
+
+/**
+ * Watch Mixer Channel
+ *
+ * Uses Carina to watch for live updates from a Mixer
+ * Channel
+ *
+ * @uses    Carina
+ * @param   string              channelID
+ * @since   0.0.1
+ * @return  null
+ */
+function watchMixerChannel( channelID ) {
+  
+}
+
+/**
+ * Mixer Live Post
+ *
+ * Collects the required data to send to Discord to generate
+ * a Mixer live post embed
+ *
+ * @uses    MixerClient
+ * @param   string              channelID
+ * @since   0.0.1
+ * @return  null
+ */
+function mixerLivePost( channelID ) {
+   mixerClient.request('GET', `channels/${channelID}`).then(res => {
+     
+     var announcementChannel = fetchMixerChannel( channelID );
+     
+     var data = {
+       username : res.body.token,
+       title : res.body.name,
+       thumbnail : res.body.thumbnail.url,
+       game : res.body.type.name,
+       avatar : res.body.user.avatarUrl,
+       followers : res.body.numFollowers,
+       viewers : res.body.viewersTotal,
+       announcementChannel : bot.channels.find( ch => ch.name === announcementChannel[0].channelName )
+     }
+     
+     createMixerEmbed( data );
+     
+  }); 
+}
+
+
+
+/******************************************************************************
+ * TWITCH
+ ******************************************************************************/
+
+// @TODO: Integrate Twitch
+
+
+
+/******************************************************************************
+ * TWITTER
+ ******************************************************************************/
+
+// @TODO: Integrate Twitter
 
 
 
