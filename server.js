@@ -552,10 +552,10 @@ function mixerLivePost( channelID ) {
       followers : res.body.numFollowers,
       viewers : res.body.viewersTotal,
       liveViewers : res.body.viewersCurrent,
-      announcementChannel : bot.channels.find( ch => ch.name === channel[0].channelName )
+      announcementChannel : bot.channels.find( ch => ch.name === channel.channelName )
     }
 
-    createMixerEmbed( data );
+    createMixerLiveEmbed( data );
     createMixerTweet( data );
 
   }); 
@@ -593,7 +593,7 @@ function mixerOfflineUpdate( channelID ) {
     var data = {
       username : res.body.token,
       title : res.body.name,
-      thumbnail : res.body.thumbnail.url,
+      thumbnail : res.body.thumbnail ? res.body.thumbnail.url : res.body.bannerUrl,
       game : res.body.type.name,
       avatar : res.body.user.avatarUrl,
       followers : res.body.numFollowers,
