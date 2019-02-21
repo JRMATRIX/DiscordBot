@@ -247,10 +247,16 @@ function createMixerEmbed( data ) {
   
   data.announcementChannel.send( embed );
   // data.announcementChannel.send( embed ).then( embedMessage => { 
-
+    // updateMixerChannelEmbed( data.username, embedMessage, embed );
   //});
   
 }
+
+/*
+function updateMixerEmbed( data ) {
+
+}
+*/
 
 function createTwitchEmbed( data ) {
   
@@ -358,6 +364,10 @@ function addMixerChannel( username, channel ) {
  * @return  null
  */
 function updateMixerChannel( username, channel ) {  
+  
+}
+
+function updateMixerChannelEmbed( username, message, embed ) {
   
 }
 
