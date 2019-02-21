@@ -424,26 +424,18 @@ function removeMixerChannel( username ) {
 function listMixerChannels() {
   var channels = fetchMixerChannels();
   
-  // var out = "```md\n";
   
   if( isEmpty( channels ) ) {
     
     return createErrorEmbed( 'No Mixer Channels Available' );
-    // out = out + "No Mixer Channels Available\n";
     
   } else {
     
     var embed = new Discord.RichEmbed()
     .setTitle( 'Mixer Streamers' )
     .setColor( '0x00FF00' );
-    
-    // out = out + "# Mixer channels:\n";
-    // var out = '';
 
     channels.forEach( function( channel ) {
-      // out = out + "\n";
-      // out = out + `**${channel.name} *(ID: ${channel.id})***\n`;
-      // out = out + `**Announcement Channel**: #${channel.channelName}\n`;
       
       var content = `- Channel ID: ${channel.id}\n`
         + `- Channel URL: https://mixer.com/${channel.name}\n`
@@ -451,7 +443,7 @@ function listMixerChannels() {
         + `- Twitter URL: ${channel.twitter ? channel.twitter : 'undefined'}\n`
         + `- Announcement Channel: #${channel.channelName}`;
       
-      embed.addBlankField( false );
+      // embed.addBlankField( false );
       embed.addField( `${channel.name} *(ID: ${channel.id})*`, content );
     });
 
