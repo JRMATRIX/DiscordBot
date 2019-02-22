@@ -226,6 +226,7 @@ function createErrorEmbed( message, title ) {
     .setDescription( message )
     .setColor( '0xFF0000' );
   
+  msg.react( '❌');
   msg.channel.send( embed );
 }
 
@@ -236,31 +237,9 @@ function createSuccessEmbed( message, title ) {
     .setTitle( title )
     .setDescription( message )
     .setColor( '0x00FF00' );
-  
+      
+  msg.react('✅');
   msg.channel.send( embed );
-}
-
-function createMixerEmbed( data ) {
-  
-  var embed = new Discord.RichEmbed()
-    .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
-    .setTitle( `https://mixer.com/${data.username}` )
-    .setURL( `https://mixer.com/${data.username}` )
-    .addField( 'Now Playing', `${data.game}` )
-    .addField( 'Stream Title', `${data.title}` )
-    .addField( 'Followers', `${data.followers}`, true )
-    .addField( 'Total Views', `${data.viewers}`, true )
-    .setColor( '0x1C78C0' )
-    .setImage( `${data.thumbnail}` )
-    .setThumbnail( `${data.avatar}` )
-    .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
-    .setTimestamp( new Date() );
-  
-  data.announcementChannel.send( embed );
-  // data.announcementChannel.send( embed ).then( embedMessage => { 
-    // modifyMixerChannelEmbed( data.username, embedMessage, embed );
-  //});
-  
 }
 
 function createMixerLiveEmbed( data ) {
@@ -381,7 +360,6 @@ function mixerChannel( operator, username, channel, discordUser ) {
       break;
       
     default:
-      msg.react( '❌');
       createErrorEmbed( `Unknown operator '${operator}'` );
       break;
       
@@ -406,11 +384,14 @@ function addMixerChannel( username, channel, discordUser ) {
     if( pushMixerChannel( res.body, channel, discordUser ) ) {
       watchMixerChannel( res.body.id );
 
-      msg.react('✅');
       createSuccessEmbed( `Added Mixer channel ${username} to ${channel}`, 'Mixer Streamer Added' );
       
     }
-  }).catch( console.log );
+  }).catch( err => {
+    console.log( err );
+    
+    
+  });
 }
 
 /**
@@ -433,7 +414,6 @@ function updateMixerChannel( username, announcementChannel, discordUser ) {
       var out = `- Announcement Chanel : ${announcementChannel}\n`
         + `- Discord User : ${discordUser}`;
 
-      msg.react('✅');
       createSuccessEmbed( out, `Updated Mixer Channel ${username}` );
       
     }
@@ -460,7 +440,6 @@ function removeMixerChannel( username ) {
       console.log( data );
     });
     
-    msg.react('✅');
     createErrorEmbed( `Removed Mixer channel ${username} from announcements`, 'Mixer Streamer Removed' );
   });
 }
@@ -501,7 +480,6 @@ function listMixerChannels() {
 
   }
   
-  msg.react('✅');
   msg.channel.send( embed );
   
 }
@@ -734,7 +712,6 @@ function trwOption( operator, option, value ) {
       break;
       
     default:
-      msg.react( '❌');
       createErrorEmbed( `Unknown operator '${operator}'` );
       break;
       
@@ -756,7 +733,6 @@ function setOption( option, value ) {
   
   // @TODO: Add some check here to see if the option was set correctly
   
-  msg.react('✅');
   createSuccessEmbed( `Set ${option} to ${value}`, 'Updated TRW Bot Options' );
   
 }
@@ -777,10 +753,7 @@ function getOption( option ) {
   out = out + "# " + option + " : " + value + "\n";
   out = out + "```\n";
   
-  if( msg ) {
-    msg.react('✅');
-    createSuccessEmbed( `${option} : ${value}`, 'TRW Bot Options' );
-  }
+  if( msg ) createSuccessEmbed( `${option} : ${value}`, 'TRW Bot Options' );
   
   return value;
 }
@@ -815,7 +788,6 @@ function listOptions() {
 
   }
   
-  msg.react('✅');
   return createSuccessEmbed( out, 'TRW Bot Options' );
 }
 
