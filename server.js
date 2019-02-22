@@ -164,7 +164,7 @@ function parse( args ) {
      * - args[2] : case                One of 'channel' or 'team'
      * - args[3] : mixerName           The Mixer Channel/Team name
      * - args[4] : announcementChannel The Discord Announcement Channel
-     * - args[5] : twitterHandle       A Twitter Handle for the user/team
+     * - args[5] : discordUser         A Discord User for the channel/team
      */
     case 'mixer' :
       if( args[2] === 'channel' ) { mixerChannel( args[0], args[3], args[4], args[5] ); }
@@ -192,12 +192,12 @@ function parse( args ) {
  * Parses arguments passed to the mixer commands
  *
  * Expects:
- * args[1] : operator            One of 'add', 'update', 'remove' or 'list'
- * args[2] : cmd                 One of 'mixer' or 'mixerChannel'
- * args[3] : mixerChannel        The Mixer Channel name
- * args[4] : announcementChannel The Discord Announcement Channel
- * args[5] : discordUsername     The Discord Username of the Mixer Channel Owner
- * args[6] : twitterHandle       A Twitter Handle for the user
+ * - args[0] : operator            One of 'add', 'update', 'remove' or 'list'
+ * - args[1] : cmd                 'mixer'
+ * - args[2] : case                One of 'channel' or 'team'
+ * - args[3] : mixerName           The Mixer Channel/Team name
+ * - args[4] : announcementChannel The Discord Announcement Channel
+ * - args[5] : discordUser         A Discord User for the channel/team
  *
  * @param   array               args
  * @since   0.0.1
@@ -356,7 +356,7 @@ function createTwitchEmbed( data ) {
  * @since   0.0.1
  * @return  null
  */
-function mixerChannel( operator, username, channel ) {
+function mixerChannel( operator, username, channel, discordUser ) {
   if( channel === undefined ) {
     var defaultChannel = fetchOption( 'defaultAnnouncementChannel' );
     channel = defaultChannel[0].value;
@@ -365,11 +365,11 @@ function mixerChannel( operator, username, channel ) {
   switch( operator ) {
     
     case 'add':
-      addMixerChannel( username, channel );
+      addMixerChannel( username, channel, discordUser );
       break;
       
     case 'update':
-      updateMixerChannel( username, channel );
+      updateMixerChannel( username, channel, discordUser );
       break;
       
     case 'remove':
@@ -400,17 +400,17 @@ function mixerChannel( operator, username, channel ) {
  * @since   0.0.1
  * @return  null
  */
-function addMixerChannel( username, channel ) {  
+function addMixerChannel( username, channel, discordUser ) {  
   mixerClient.request('GET', `channels/${username}`).then(res => {
     
-    if( pushMixerChannel( res.body, channel ) ) {
+    if( pushMixerChannel( res.body, channel, discordUser ) ) {
       watchMixerChannel( res.body.id );
 
       msg.react('✅');
       createSuccessEmbed( `Added Mixer channel ${username} to ${channel}`, 'Mixer Streamer Added' );
       
     }
-  });
+  }).catch( console.log );
 }
 
 /**
@@ -425,8 +425,19 @@ function addMixerChannel( username, channel ) {
  * @since   0.0.1
  * @return  null
  */
-function updateMixerChannel( username, channel ) {  
-  
+function updateMixerChannel( username, announcementChannel, discordUser ) {  
+  mixerClient.request('GET', `channels/${username}`).then(res => {
+    
+    if( modifyMixerChannel( res.body, announcementChannel, discordUser ) ) {
+      
+      var out = `- Announcement Chanel : ${announcementChannel}\n`
+        + `- Discord User : ${discordUser}`;
+
+      msg.react('✅');
+      createSuccessEmbed( out, `Updated Mixer Channel ${username}` );
+      
+    }
+  }).catch( console.log );
 }
 
 /**
@@ -854,7 +865,7 @@ function pushMixerChannel( mixerChannel, channel ) {
  * @since   0.0.1
  * @return  null
  */
-function modifyMixerChannel( mixerChannel, channel ) {  }
+function modifyMixerChannel( mixerChannel, announcementChannel ) {  }
 
 function modifyMixerChannelEmbed( mixerChannel, embedMessage ) {
   if( DB.get('mixer').find({ name : mixerChannel }) ) {
