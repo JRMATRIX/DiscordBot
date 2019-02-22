@@ -29,7 +29,7 @@ require('events').EventEmitter.defaultMaxListeners = 0;
 const Discord = require('discord.js');
 const bot = new Discord.Client({ token : process.env.BOT_TOKEN });
 
-console.log( bot );
+// console.log( bot );
 
 /** 
  * Mixer NPM package
