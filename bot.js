@@ -8,6 +8,21 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
+const botOptions = {
+  name : 'The Real World',
+  icons : {
+    trw : 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg',
+    mixer : 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4',
+    twitch : 'https://cdn4.iconfinder.com/data/icons/social-media-circle-6/1024/circle-11-512.png'
+  },
+  colors : {
+    error : '#FF0000',
+    success : '#00FF00',
+    mixer : '#1C78C0',
+    twitch : '#6441a5'
+  }
+}
+
 module.exports = {
   
   // Run the bot in the selected Discord Server
@@ -21,7 +36,7 @@ module.exports = {
     var embed = new Discord.RichEmbed()
       .setTitle( title )
       .setDescription( message )
-      .setColor( '0xFF0000' );
+      .setColor( botOptions.colors.error );
     
     return embed;
   },
@@ -32,14 +47,14 @@ module.exports = {
     var embed = new Discord.RichEmbed()
       .setTitle( title )
       .setDescription( message )
-      .setColor( '0x00FF00' );
+      .setColor( botOptions.colors.success );
     
     return embed;
   },
   
   mixerLiveEmbed : function( data ) {
     var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+      .setAuthor( `${data.username} is Live on Mixer`, botOptions.icons.mixer, `https://mixer.com/${data.username}` )
       .setTitle( `https://mixer.com/${data.username}` )
       .setURL( `https://mixer.com/${data.username}` )
       .addField( 'Now Playing', `${data.game}` )
@@ -47,8 +62,8 @@ module.exports = {
       .addField( 'Followers', `${data.followers}`, true )
       .addField( 'Viewers', `${data.viewers}`, true )
       .setColor( '0x1C78C0' )
-      .setImage( `${data.thumbnail}` )
-      .setThumbnail( `${data.avatar}` )
+      .setImage( data.thumbnail )
+      .setThumbnail( data.avatar )
       .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
       .setTimestamp( new Date() );
     
@@ -57,7 +72,7 @@ module.exports = {
   
   mixerUpdateEmbed : function( data ) {
     var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+      .setAuthor( `${data.username} is Live on Mixer`, botOptions.icons.mixer, `https://mixer.com/${data.username}` )
       .setTitle( `https://mixer.com/${data.username}` )
       .setURL( `https://mixer.com/${data.username}` )
       .addField( 'Now Playing', `${data.game}` )
@@ -74,12 +89,12 @@ module.exports = {
   
   mixerOfflineEmbed : function( data ) {
     var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is now Offline`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+      .setAuthor( `${data.username} is now Offline`, botOptions.icons.mixer, `https://mixer.com/${data.username}` )
       .setTitle( `https://mixer.com/${data.username}` )
       .setURL( `https://mixer.com/${data.username}` )
       .addField( 'Last Played', `${data.game}` )
       .addField( 'Followers', `${data.followers}`, true )
-      .addField( 'Viewers', `${data.liveViewers}`, true )
+      .addField( 'Lifetime Views', `${data.viewers}`, true )
       .setColor( '0x1C78C0' )
       .setImage( `${data.thumbnail}` )
       .setThumbnail( `${data.avatar}` )
@@ -89,7 +104,7 @@ module.exports = {
   
   twitchLiveEmbed : function( data ) {
     var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://twitch.tv/${data.username}` )
+      .setAuthor( `${data.username} is Live on Mixer`, botOptions.icons.twitch, `https://twitch.tv/${data.username}` )
       .setTitle( `https://twitch.tv/${data.username}` )
       .setURL( `https://twitch.tv/${data.username}` )
       .addField( 'Now Playing', `${data.game}` )
@@ -107,7 +122,7 @@ module.exports = {
   
   twitchUpdateEmbed : function( data ) {
     var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://twitch.tv/${data.username}` )
+      .setAuthor( `${data.username} is Live on Mixer`, botOptions.icons.twitch, `https://twitch.tv/${data.username}` )
       .setTitle( `https://twitch.tv/${data.username}` )
       .setURL( `https://twitch.tv/${data.username}` )
       .addField( 'Now Playing', `${data.game}` )
@@ -124,12 +139,12 @@ module.exports = {
   
   twitchOfflineEmbed : function( data ) {
     var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is now Offline`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://twitch.tv/${data.username}` )
+      .setAuthor( `${data.username} is now Offline`, botOptions.icons.twitch, `https://twitch.tv/${data.username}` )
       .setTitle( `https://twitch.tv/${data.username}` )
       .setURL( `https://twitch.tv/${data.username}` )
       .addField( 'Last Played', `${data.game}` )
       .addField( 'Followers', `${data.followers}`, true )
-      .addField( 'Viewers', `${data.liveViewers}`, true )
+      .addField( 'Lifetime Views', `${data.viewers}`, true )
       .setColor( '0x1C78C0' )
       .setImage( `${data.thumbnail}` )
       .setThumbnail( `${data.avatar}` )
@@ -237,7 +252,7 @@ function createTwitchEmbed( data ) {
     .addField( 'Stream Title', '{This is the stream title. It can take up to 2 lines on a Mixer embed}' )
     .addField( 'Followers', '318', true )
     .addField( 'Views', '2,926', true )
-    .setColor( '0x1C78C0' )
+    .setColor( '0x6441a5' )
     .setImage( 'https://uploads.mixer.com/thumbnails/hdhepi5a-39628981.jpg' )
     .setThumbnail( 'https://mixer.com/api/v1/users/47436757/avatar?w=256&h=256' )
     .setFooter( 'The Real World', 'https://cdn.discordapp.com/avatars/547391401000828938/26da8949887ea34cbd3ad3edab407b7c.png?size=256' )
