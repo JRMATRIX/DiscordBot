@@ -11,6 +11,8 @@
  * @since        19/02/2019
  */
 
+require('events').EventEmitter.defaultMaxListeners = 0;
+
 
 
 /******************************************************************************
@@ -52,13 +54,15 @@ const Carina = require('carina').Carina;
 const ws = require('ws');
 // ws.setMaxListeners( 50 );
 Carina.WebSocket = ws;
-// Carina.setMaxListeners( 50 );
+// Carina.socket.setMaxListeners( 50 );
+// console.log( Carina );
 
 const ca = new Carina({
     queryString: {
         'Client-ID': process.env.MIXER_TOKEN,
     },
     isBot: true,
+    maxEventListeners: 50
 }).open();
 
 ca.setMaxListeners( 50 );
