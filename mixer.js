@@ -21,10 +21,8 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
 
 const Carina = require('carina').Carina;
 const ws = require('ws');
-// ws.setMaxListeners( 50 );
+
 Carina.WebSocket = ws;
-// Carina.socket.setMaxListeners( 50 );
-// console.log( Carina );
 
 const ca = new Carina({
     queryString: {
@@ -33,7 +31,6 @@ const ca = new Carina({
     isBot: true,
     maxEventListeners: 50
 }).open();
-
 
 module.exports = {
     
