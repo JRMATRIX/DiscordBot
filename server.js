@@ -298,7 +298,9 @@ function updateMixerLiveEmbed( data ) {
     .setThumbnail( `${data.avatar}` )
     .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' );
   
-  data.embedMessage.edit( embed );
+  data.embedMessage.edit( embed ).then( newEmbedMessage => { 
+    modifyMixerChannelEmbed( data.username, newEmbedMessage );
+  }).catch( console.log );
 }
 
 function createMixerOfflineEmbed( data ) {
