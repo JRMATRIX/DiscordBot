@@ -50,7 +50,9 @@ mixerClient.use(new Mixer.OAuthProvider(mixerClient, {
 
 const Carina = require('carina').Carina;
 const ws = require('ws');
+// ws.setMaxListeners( 50 );
 Carina.WebSocket = ws;
+// Carina.setMaxListeners( 50 );
 
 const ca = new Carina({
     queryString: {
@@ -60,8 +62,8 @@ const ca = new Carina({
 }).open();
 
 ca.setMaxListeners( 50 );
-
-
+// console.log( ca );
+// ca.Carina.socket.ConstellationSocket.setMaxListeners(50);
 
 /** 
  * lowdb NPM package
