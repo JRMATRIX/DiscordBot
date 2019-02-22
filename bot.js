@@ -17,7 +17,126 @@ module.exports = {
   
   outputError : function( message, title ) {
     if( ! title ) title = 'Error';
+    
+    var embed = new Discord.RichEmbed()
+      .setTitle( title )
+      .setDescription( message )
+      .setColor( '0xFF0000' );
+    
+    return embed;
+  },
+  
+  outputSuccess : function( message, title ) {
+    if( ! title ) title = 'Success';
+  
+    var embed = new Discord.RichEmbed()
+      .setTitle( title )
+      .setDescription( message )
+      .setColor( '0x00FF00' );
+    
+    return embed;
+  },
+  
+  mixerLiveEmbed : function( data ) {
+    var embed = new Discord.RichEmbed()
+      .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+      .setTitle( `https://mixer.com/${data.username}` )
+      .setURL( `https://mixer.com/${data.username}` )
+      .addField( 'Now Playing', `${data.game}` )
+      .addField( 'Stream Title', `${data.title}` )
+      .addField( 'Followers', `${data.followers}`, true )
+      .addField( 'Viewers', `${data.viewers}`, true )
+      .setColor( '0x1C78C0' )
+      .setImage( `${data.thumbnail}` )
+      .setThumbnail( `${data.avatar}` )
+      .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
+      .setTimestamp( new Date() );
+    
+    return embed;
+  },
+  
+  mixerUpdateEmbed : function( data ) {
+    var embed = new Discord.RichEmbed()
+      .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+      .setTitle( `https://mixer.com/${data.username}` )
+      .setURL( `https://mixer.com/${data.username}` )
+      .addField( 'Now Playing', `${data.game}` )
+      .addField( 'Stream Title', `${data.title}` )
+      .addField( 'Followers', `${data.followers}`, true )
+      .addField( 'Viewers', `${data.liveViewers}`, true )
+      .setColor( '0x1C78C0' )
+      .setImage( `${data.thumbnail}` )
+      .setThumbnail( `${data.avatar}` )
+      .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' );
+    
+    return embed;
+  },
+  
+  mixerOfflineEmbed : function( data ) {
+    var embed = new Discord.RichEmbed()
+      .setAuthor( `${data.username} is now Offline`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://mixer.com/${data.username}` )
+      .setTitle( `https://mixer.com/${data.username}` )
+      .setURL( `https://mixer.com/${data.username}` )
+      .addField( 'Last Played', `${data.game}` )
+      .addField( 'Followers', `${data.followers}`, true )
+      .addField( 'Viewers', `${data.liveViewers}`, true )
+      .setColor( '0x1C78C0' )
+      .setImage( `${data.thumbnail}` )
+      .setThumbnail( `${data.avatar}` )
+      .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
+      .setTimestamp( new Date() );
+  },
+  
+  twitchLiveEmbed : function( data ) {
+    var embed = new Discord.RichEmbed()
+      .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://twitch.tv/${data.username}` )
+      .setTitle( `https://twitch.tv/${data.username}` )
+      .setURL( `https://twitch.tv/${data.username}` )
+      .addField( 'Now Playing', `${data.game}` )
+      .addField( 'Stream Title', `${data.title}` )
+      .addField( 'Followers', `${data.followers}`, true )
+      .addField( 'Viewers', `${data.viewers}`, true )
+      .setColor( '0x1C78C0' )
+      .setImage( `${data.thumbnail}` )
+      .setThumbnail( `${data.avatar}` )
+      .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
+      .setTimestamp( new Date() );
+    
+    return embed;
+  },
+  
+  twitchUpdateEmbed : function( data ) {
+    var embed = new Discord.RichEmbed()
+      .setAuthor( `${data.username} is Live on Mixer`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://twitch.tv/${data.username}` )
+      .setTitle( `https://twitch.tv/${data.username}` )
+      .setURL( `https://twitch.tv/${data.username}` )
+      .addField( 'Now Playing', `${data.game}` )
+      .addField( 'Stream Title', `${data.title}` )
+      .addField( 'Followers', `${data.followers}`, true )
+      .addField( 'Viewers', `${data.liveViewers}`, true )
+      .setColor( '0x1C78C0' )
+      .setImage( `${data.thumbnail}` )
+      .setThumbnail( `${data.avatar}` )
+      .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' );
+    
+    return embed;
+  },
+  
+  twitchOfflineEmbed : function( data ) {
+    var embed = new Discord.RichEmbed()
+      .setAuthor( `${data.username} is now Offline`, 'https://avatars3.githubusercontent.com/u/11798804?s=400&v=4', `https://twitch.tv/${data.username}` )
+      .setTitle( `https://twitch.tv/${data.username}` )
+      .setURL( `https://twitch.tv/${data.username}` )
+      .addField( 'Last Played', `${data.game}` )
+      .addField( 'Followers', `${data.followers}`, true )
+      .addField( 'Viewers', `${data.liveViewers}`, true )
+      .setColor( '0x1C78C0' )
+      .setImage( `${data.thumbnail}` )
+      .setThumbnail( `${data.avatar}` )
+      .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
+      .setTimestamp( new Date() );
   }
+  
 }
 
 // EMBEDS
