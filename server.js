@@ -275,7 +275,7 @@ function createMixerLiveEmbed( data ) {
   // data.announcementChannel.send( embed );
   data.announcementChannel.send( embed ).then( embedMessage => { 
     modifyMixerChannelEmbed( data.username, embedMessage );
-  });
+  }).catch( console.log );
 }
 
 function updateMixerLiveEmbed( data ) {
