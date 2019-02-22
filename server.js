@@ -87,6 +87,9 @@ const DB = low(adapter);
 DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 var msg = null;
+var embeds = {
+   
+}
 
 const prefix = 'trw';
 const errors = require( './errors.js' );
@@ -261,7 +264,8 @@ function createMixerLiveEmbed( data ) {
   
   // data.announcementChannel.send( embed );
   data.announcementChannel.send( embed ).then( embedMessage => { 
-    modifyMixerChannelEmbed( data.username, embedMessage );
+    // modifyMixerChannelEmbed( data.username, embedMessage );
+    embeds[data.username] = embedMessage; 
   }).catch( console.log );
 }
 
@@ -279,8 +283,12 @@ function updateMixerLiveEmbed( data ) {
     .setThumbnail( `${data.avatar}` )
     .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' );
   
-  data.embedMessage.edit( embed ).then( newEmbedMessage => { 
-    modifyMixerChannelEmbed( data.username, newEmbedMessage );
+  // data.embedMessage.edit( embed ).then( newEmbedMessage => { 
+  //   modifyMixerChannelEmbed( data.username, newEmbedMessage );
+  // }).catch( console.log );
+  
+  embeds[data.username].edit( embed ).then( newEmbedMessage => {
+    embeds[data.username] = newEmbedMessage; 
   }).catch( console.log );
 }
 
@@ -298,7 +306,8 @@ function createMixerOfflineEmbed( data ) {
     .setFooter( 'The Real World', 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg' )
     .setTimestamp( new Date() );
   
-  data.embedMessage.edit( embed );
+  embeds[data.username].edit( embed )
+  // data.embedMessage.edit( embed );
 }
 
 function createTwitchEmbed( data ) {
