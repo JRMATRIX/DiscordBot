@@ -87,9 +87,7 @@ const DB = low(adapter);
 DB.defaults({ mixer:[], twitch:[], options:[] }).write();
 
 var msg = null;
-var embeds = {
-   
-}
+var embeds = [];
 
 const prefix = 'trw';
 const errors = require( './errors.js' );
