@@ -65,7 +65,7 @@ const ca = new Carina({
     maxEventListeners: 50
 }).open();
 
-ca.setMaxListeners( 50 );
+// ca.setMaxListeners( 50 );
 // console.log( ca );
 // ca.Carina.socket.ConstellationSocket.setMaxListeners(50);
 
