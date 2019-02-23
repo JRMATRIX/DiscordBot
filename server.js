@@ -286,6 +286,7 @@ function updateMixerLiveEmbed( data ) {
   // }).catch( console.log );
   
   embeds[data.username].edit( embed ).then( newEmbedMessage => {
+    console.log( embeds[data.username] );
     embeds[data.username] = newEmbedMessage; 
   }).catch( console.log );
 }
