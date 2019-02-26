@@ -1,16 +1,3 @@
-/**
- * The Real World Community Announcement Bot
- *
- * Custom Mixer and Discord bot used for shouting out Mixer Streams
- * within The Real World community Discord Server.
- *
- * @package      the-real-world
- * @version      0.0.1
- * @author       JRMATRIX
- * @authorEmail  jrm47r1x@gmail.com
- * @since        19/02/2019
- */
-
 /*============================================================================*/
 /* TRWBot
 /*============================================================================*/
