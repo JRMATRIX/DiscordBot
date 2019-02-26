@@ -116,6 +116,10 @@ var twitterClient = new Twitter({
  * DISCORD
  ******************************************************************************/
 
+bot.on( 'ready', () => {
+  bot.user.setActivity("The Real World Community", {type: "WATCHING"});
+})
+
 /**
  * Discord Command Integration
  *
