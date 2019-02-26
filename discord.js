@@ -61,7 +61,7 @@ class Bot {
             // Don't read commands from the bot account, look for '!' to read for commands
             if ( ! message.author.bot && message.content.startsWith( this.prefix ) && inChannel ) {
                 console.log( 'Chat Message Received: ' );
-                console.log( message );
+                console.log( message.content );
 
                 this.msg = message;
                 this.args = this.msg.cleanContent.slice( this.prefix.length ).trim().split( / +/g );
@@ -71,8 +71,15 @@ class Bot {
         });
     }
     
+  
+    // Command Format:
+    // <operator> <group> <context> <...args>
     parseCommand() {
         console.log( this.args );
+      
+        var operator = this.args[0],
+            group = this.args[1],
+            context = this.args[2]
     }
     
 }
