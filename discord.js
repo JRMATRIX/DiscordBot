@@ -1,5 +1,3 @@
-'use strict';
-
 /*============================================================================*
  * Discord NPM package
  *
@@ -10,7 +8,7 @@
 const Discord = require('discord.js');
 
 
-const botOptions = {
+const defaults = {
   name : 'The Real World',
   icons : {
     trw : 'https://pbs.twimg.com/profile_images/1094303833755402241/TRstEyBz_400x400.jpg',
@@ -35,8 +33,7 @@ const botOptions = {
 /* @since       0.1.0
 /*========================================================================*/
 /* @access      public
-/* @param       (string)    prefix
-/* @param       (string)    token
+/* @param       (object)    args
 /*========================================================================*/
 class Bot {
     
@@ -58,18 +55,24 @@ class Bot {
     
     listen() {
         this.Client.on( 'message', message => {
-            console.log( 'Chat Message Received: ' );
-            console.log( message );
-          
-            this.msg = message;
-            this.args = this.msg.cleanContent.slice( this.prefix.length ).trim().split( / +/g );
+            // For testing only, this shouldn't be hard-coded!!
+            var inChannel = (message.channel.name === 'bot-configuration' );
             
-            this.parseCommand();
+            // Don't read commands from the bot account, look for '!' to read for commands
+            if ( ! message.author.bot && message.content.startsWith( this.prefix ) && inChannel ) {
+                console.log( 'Chat Message Received: ' );
+                console.log( message );
+
+                this.msg = message;
+                this.args = this.msg.cleanContent.slice( this.prefix.length ).trim().split( / +/g );
+
+                this.parseCommand();
+            }
         });
     }
     
     parseCommand() {
-        var args = this.args;
+        console.log( this.args );
     }
     
 }
