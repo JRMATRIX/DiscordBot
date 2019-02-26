@@ -27,7 +27,7 @@ require('events').EventEmitter.defaultMaxListeners = 0;
  * @minVersion  11.4.2
  */
 const Discord = require('discord.js');
-const bot = new Discord.Client({ token : process.env.BOT_TOKEN });
+const bot = new Discord.Client();
 
 // console.log( bot );
 
