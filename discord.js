@@ -77,9 +77,13 @@ class Bot {
     parseCommand() {
         console.log( this.args );
       
-        var operator = this.args[0],
-            group = this.args[1],
-            context = this.args[2]
+        var command = {
+            operator : this.args[0],
+            group : this.args[1],
+            context : this.args[2].trimRight( 's' )
+        }
+        
+        console.log( command );
     }
     
 }
