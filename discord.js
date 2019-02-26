@@ -1,3 +1,5 @@
+'use strict';
+
 /*============================================================================*
  * Discord NPM package
  *
@@ -38,33 +40,33 @@ const botOptions = {
 /*========================================================================*/
 class Bot {
     
-    constructor( prefix ) {
-        Bot.setup( prefix );
+    constructor( args = {} ) {
+        this.setup( args.prefix );
     }
     
     setup( prefix ) {
-        Bot.Client = new Discord.Client();
-        Bot.prefix = prefix;
-        Bot.listen();
+        this.Client = new Discord.Client();
+        this.prefix = prefix;
+        this.listen();
     }
     
     init( token ) {
-        Bot.Client.login( token );
+        this.Client.login( token );
     }
     
     listen() {
-        Bot.Client.on( 'message', message => {
-            Bot.msg = message;
-            Bot.args = Bot.msg.cleanContent.slice( Bot.prefix.length ).trim().split( / +/g );
+        this.Client.on( 'message', message => {
+            this.msg = message;
+            this.args = this.msg.cleanContent.slice( this.prefix.length ).trim().split( / +/g );
             
-            Bot.parseCommand();
+            this.parseCommand();
         });
     }
     
     parseCommand() {
-        var args = Bot.args;
+        var args = this.args;
     }
     
 }
 
-module.exports = { Bot };
+module.exports.Bot = new Bot;
