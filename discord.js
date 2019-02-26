@@ -41,6 +41,7 @@ const botOptions = {
 class Bot {
     
     constructor( args = {} ) {
+      // console.log( args );
         this.setup( args.prefix );
     }
     
@@ -69,4 +70,4 @@ class Bot {
     
 }
 
-module.exports.Bot = new Bot;
+module.exports.Bot = Bot;

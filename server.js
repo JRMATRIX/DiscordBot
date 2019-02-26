@@ -48,10 +48,10 @@ require('events').EventEmitter.defaultMaxListeners = 0;
  *
  * @minVersion  11.4.2
  *============================================================================*/
-const DiscordBot = require( './discord' ).Bot;
+const Discord = require( './discord' );
 const Bot = new Discord.Bot({prefix: 'trw'});
 
 console.log( Bot );
 
 
-Bot.init(process.env.BOT_TOKEN);
+// Bot.init(process.env.BOT_TOKEN);
