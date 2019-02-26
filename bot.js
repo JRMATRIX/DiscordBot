@@ -1,12 +1,12 @@
-/** 
+/*============================================================================*
  * Discord NPM package
  *
  * Used for connecting and interacting with Discord channels
  *
  * @minVersion  11.4.2
- */
+ *============================================================================*/
 const Discord = require('discord.js');
-const bot = new Discord.Client();
+
 
 const botOptions = {
   name : 'The Real World',
@@ -23,141 +23,48 @@ const botOptions = {
   }
 }
 
-module.exports = {
-  
-  // Run the bot in the selected Discord Server
-  login : function() {
-    bot.login( process.env.BOT_TOKEN );
-  },
-  
-  outputError : function( message, title ) {
-    if( ! title ) title = 'Error';
+
+
+/*========================================================================*/
+/* Class: Bot
+/*
+/* Defines bot interactions and behaviours for the system
+/*========================================================================*/
+/* @since       0.1.0
+/*========================================================================*/
+/* @access      public
+/* @param       (string)    prefix
+/* @param       (string)    token
+/*========================================================================*/
+class Bot {
     
-    var embed = new Discord.RichEmbed()
-      .setTitle( title )
-      .setDescription( message )
-      .setColor( botOptions.colors.error );
+    constructor( prefix ) {
+        Bot.setup( prefix );
+    }
     
-    return embed;
-  },
-  
-  outputSuccess : function( message, title ) {
-    if( ! title ) title = 'Success';
-  
-    var embed = new Discord.RichEmbed()
-      .setTitle( title )
-      .setDescription( message )
-      .setColor( botOptions.colors.success );
+    setup( prefix ) {
+        Bot.Client = new Discord.Client();
+        Bot.prefix = prefix;
+        Bot.listen();
+    }
     
-    return embed;
-  },
-  
-  mixerLiveEmbed : function( data ) {
-    var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is Live on Mixer`, botOptions.icons.mixer, `https://mixer.com/${data.username}` )
-      .setTitle( `https://mixer.com/${data.username}` )
-      .setURL( `https://mixer.com/${data.username}` )
-      .addField( 'Now Playing', `${data.game}` )
-      .addField( 'Stream Title', `${data.title}` )
-      .addField( 'Followers', `${data.followers}`, true )
-      .addField( 'Viewers', `${data.viewers}`, true )
-      .setColor( botOptions.colors.mixer )
-      .setImage( data.thumbnail )
-      .setThumbnail( data.avatar )
-      .setFooter( botOptions.name, botOptions.icons.trw )
-      .setTimestamp( new Date() );
+    init( token ) {
+        Bot.Client.login( token );
+    }
     
-    return embed;
-  },
-  
-  mixerUpdateEmbed : function( data ) {
-    var url = `https://mixer.com/${data.username}`;
+    listen() {
+        Bot.Client.on( 'message', message => {
+            Bot.msg = message;
+            Bot.args = Bot.msg.cleanContent.slice( Bot.prefix.length ).trim().split( / +/g );
+            
+            Bot.parseCommand();
+        });
+    }
     
-    var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is Live on Mixer`, botOptions.icons.mixer, url )
-      .setTitle( url )
-      .setURL( url )
-      .addField( 'Now Playing', data.game )
-      .addField( 'Stream Title', data.title )
-      .addField( 'Followers', data.followers, true )
-      .addField( 'Viewers', data.liveViewers, true )
-      .setColor( botOptions.colors.mixer )
-      .setImage( data.thumbnail )
-      .setThumbnail( data.avatar )
-      .setFooter( botOptions.name, botOptions.icons.trw );
+    parseCommand() {
+        var args = Bot.args;
+    }
     
-    return embed;
-  },
-  
-  mixerOfflineEmbed : function( data ) {
-    var url = `https://mixer.com/${data.username}`;
-    
-    var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is now Offline`, botOptions.icons.mixer, url )
-      .setTitle( url )
-      .setURL( url )
-      .addField( 'Last Played', data.game )
-      .addField( 'Followers', data.followers, true )
-      .addField( 'Lifetime Views', data.viewers, true )
-      .setColor( botOptions.colors.mixer )
-      .setImage( data.thumbnail )
-      .setThumbnail( data.avatar )
-      .setFooter( botOptions.name, botOptions.icons.trw )
-  },
-  
-  twitchLiveEmbed : function( data ) {
-    var url = `https://twitch.tv/${data.username}`;
-    
-    var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is Live on Mixer`, botOptions.icons.twitch, url )
-      .setTitle( url )
-      .setURL( url )
-      .addField( 'Now Playing', data.game )
-      .addField( 'Stream Title', data.title )
-      .addField( 'Followers', data.followers, true )
-      .addField( 'Viewers', data.viewers, true )
-      .setColor( botOptions.colors.twitch )
-      .setImage( data.thumbnail )
-      .setThumbnail( data.avatar )
-      .setFooter( botOptions.name, botOptions.icons.trw )
-      .setTimestamp( new Date() );
-    
-    return embed;
-  },
-  
-  twitchUpdateEmbed : function( data ) {
-    var url = `https://twitch.tv/${data.username}`;
-    
-    var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is Live on Mixer`, botOptions.icons.twitch, url )
-      .setTitle( url )
-      .setURL( url )
-      .addField( 'Now Playing', data.game )
-      .addField( 'Stream Title', data.title )
-      .addField( 'Followers', data.followers, true )
-      .addField( 'Viewers', data.liveViewers, true )
-      .setColor( botOptions.colors.twitch )
-      .setImage( data.thumbnail )
-      .setThumbnail( data.avatar )
-      .setFooter( botOptions.name, botOptions.icons.trw );
-    
-    return embed;
-  },
-  
-  twitchOfflineEmbed : function( data ) {
-    var url = `https://twitch.tv/${data.username}`;
-    
-    var embed = new Discord.RichEmbed()
-      .setAuthor( `${data.username} is now Offline`, botOptions.icons.twitch, url )
-      .setTitle( url )
-      .setURL( url )
-      .addField( 'Last Played', data.game )
-      .addField( 'Followers', data.followers, true )
-      .addField( 'Lifetime Views', data.viewers, true )
-      .setColor( botOptions.colors.twitch )
-      .setImage( data.thumbnail )
-      .setThumbnail( data.avatar )
-      .setFooter( botOptions.name, botOptions.icons.trw );
-  }
-  
 }
+
+module.exports = { Bot };
