@@ -41,7 +41,6 @@ const botOptions = {
 class Bot {
     
     constructor( args = {} ) {
-      // console.log( args );
         this.setup( args.prefix );
     }
     
@@ -52,11 +51,16 @@ class Bot {
     }
     
     init( token ) {
-        this.Client.login( token );
+        this.Client.login( token ).then( data => {
+          console.log( 'Discord Client successfully authorized' );
+        }).catch( console.error );
     }
     
     listen() {
         this.Client.on( 'message', message => {
+            console.log( 'Chat Message Received: ' );
+            console.log( message );
+          
             this.msg = message;
             this.args = this.msg.cleanContent.slice( this.prefix.length ).trim().split( / +/g );
             

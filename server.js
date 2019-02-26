@@ -51,7 +51,7 @@ require('events').EventEmitter.defaultMaxListeners = 0;
 const Discord = require( './discord' );
 const Bot = new Discord.Bot({prefix: 'trw'});
 
-console.log( Bot );
+// console.log( Bot );
 
 
-// Bot.init(process.env.BOT_TOKEN);
+Bot.init(process.env.BOT_TOKEN);
