@@ -76,20 +76,28 @@ const Commands = {
                 console.log( args );
                 
                 if( args.channelName === undefined )
-                    return Bot.error( 'Please identify the name of the Mixer streamer you would like to add', 'Missing Parameter: Streamer Name' );
+                    return Bot.error({ 
+                        title : 'Missing Parameter: Streamer Name',
+                        content : 'Please identify the name of the Mixer streamer you would like to add' });
                 
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
                     if( DB.mixerChannelExists( mixerChannel ) )
-                        return Bot.error( `The Mixer Channel for ${mixerChannel.token} has already been added`, 'Mixer Channel Exists' );
+                        return Bot.error({
+                            title : 'Mixer Channel Exists',
+                            content : `The Mixer Channel for ${mixerChannel.token} has already been added` });
                     
                     if( mixerChannel.statusCode == 404 )
-                        return Bot.error( `Unable to find Mixer Channel for ${args.channelName}`, 'Mixer Channel Does Not Exist' );
+                        return Bot.error({
+                            title : 'Mixer Channel Does Not Exist',
+                            content : `Unable to find Mixer Channel for ${args.channelName}` });
                     
                     
                     
                     console.log( mixerChannel );
                 }).catch( err => {
-                    return Bot.error( `Unable to find Mixer Channel for ${args.channelName}`, 'Mixer Channel Does Not Exist' );
+                    return Bot.error({ 
+                        title : 'Mixer Channel Does Not Exist',
+                        content : `Unable to find Mixer Channel for ${args.channelName}` });
                 });
             },
             
