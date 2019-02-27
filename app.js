@@ -45,7 +45,6 @@ const Application = require( './packages' );
  *============================================================================*/
 const Bot = Application.Bot;
 
-
 const DB = Application.Database;
 
 
@@ -53,7 +52,9 @@ const DB = Application.Database;
 
 Bot.Client.on( 'message', message => {
     if( Bot.parseMessage( message ) ) {
+        var cmd = Bot.command;
         
+        Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
     }
 });
 
@@ -64,7 +65,9 @@ const Commands = {
         
         channel : {
             
-            add : function() {},
+            add : function( params ) {
+                console.log( params );
+            },
             
             remove : function() {},
             
