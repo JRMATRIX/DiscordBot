@@ -46,4 +46,23 @@ const Application = require( './packages' );
 const Bot = Application.Bot;
 
 
+
+Bot.Client.on( 'message', message => {
+    // For testing only, this shouldn't be hard-coded!!
+    var inChannel = (message.channel.name === 'bot-configuration' );
+
+    // Don't read commands from the bot account, look for '!' to read for commands
+    if ( ! message.author.bot && message.content.startsWith( Bot.prefix ) && inChannel ) {
+        console.log( 'Chat Message Received: ' );
+        console.log( message.content );
+
+        Bot.msg = message;
+        Bot.args = Bot.msg.cleanContent.slice( Bot.prefix.length ).trim().split( / +/g );
+
+        Bot.parseCommand();
+    }
+});
+
+
+
 Bot.init(process.env.BOT_TOKEN);
