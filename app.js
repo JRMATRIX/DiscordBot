@@ -54,5 +54,92 @@ Bot.Client.on( 'message', message => {
 });
 
 
+const Commands = {
+    
+    mixer : {
+        
+        channel : {
+            
+            add : function() {},
+            
+            remove : function() {},
+            
+            update : function() {},
+            
+            list : function() {}
+            
+        },
+        
+        team : {
+            
+            add : function() {},
+            
+            remove : function() {},
+            
+            update : function() {},
+            
+            list : function() {}
+            
+        }
+        
+    },
+    
+    twitch : {
+        
+        channel : {
+            
+            add : function() {},
+            
+            remove : function() {},
+            
+            update : function() {},
+            
+            list : function() {}
+            
+        },
+        
+        team : {
+            
+            add : function() {},
+            
+            remove : function() {},
+            
+            update : function() {},
+            
+            list : function() {}
+            
+        }
+        
+    },
+    
+    youtube : {
+        
+        channel : {
+            
+            add : function() {},
+            
+            remove : function() {},
+            
+            update : function() {},
+            
+            list : function() {}
+            
+        }
+        
+    },
+    
+    config : {
+        
+        set : function() {},
+        
+        get : function() {},
+        
+        list : function() {}
+        
+    }
+    
+}
+
+
 
 Bot.init(process.env.BOT_TOKEN);
