@@ -48,7 +48,7 @@ const Bot = Application.Bot;
 
 
 Bot.Client.on( 'message', message => {
-    if( Bot.parseMessage( message ) && Bot.validateCommand() ) {
+    if( Bot.parseMessage( message ) ) {
         
     }
 });
