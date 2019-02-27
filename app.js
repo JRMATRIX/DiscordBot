@@ -75,10 +75,11 @@ const Commands = {
                 
                 console.log( args );
                 
-                Mixer.getChannel( args.channelName, mixerChannel => {
-
+                if( args.channelName === undefined )
+                    return Bot.error( 'Please identify the name of the Mixer streamer you would like to add', 'Missing Parameter: Streamer Name' );
+                
+                Mixer.getChannel( args.channelName ).then( mixerChannel => {
                     console.log( mixerChannel );
-                    
                 }).catch( console.error );
             },
             
