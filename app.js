@@ -47,6 +47,8 @@ const Bot = Application.Bot;
 
 const DB = Application.Database;
 
+const Mixer = Application.Mixer;
+
 
 
 

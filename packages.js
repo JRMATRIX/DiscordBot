@@ -12,8 +12,11 @@ var Bot = new Discord.Bot({prefix: 'tb'});
 const Database = require( './lib/database' );
 var DB = new Database();
 
+const MixerAPI = require( './lib/mixer' );
+var Mixer = new Mixer();
 
 module.exports = {
     Bot : Bot,
+    Mixer : Mixer,
     Database : DB
 }
