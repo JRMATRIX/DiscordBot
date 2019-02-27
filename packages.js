@@ -9,7 +9,7 @@ const Discord = require( './lib/discord' );
 var Bot = new Discord.Bot({prefix: 'tb'});
 
 
-const Database = require( './lib/database' ;)
+const Database = require( './lib/database' );
 var DB = new Database();
 
 
