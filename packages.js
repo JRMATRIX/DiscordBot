@@ -6,7 +6,7 @@
  * @minVersion  11.4.2
  *============================================================================*/
 const Discord = require( './lib/discord' );
-var Bot = new Discord.Bot({prefix: 'trw'});
+var Bot = new Discord.Bot({prefix: 'tb'});
 
 
 
