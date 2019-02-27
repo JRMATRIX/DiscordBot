@@ -53,7 +53,7 @@ const DB = Application.Database;
 Bot.Client.on( 'message', message => {
     if( Bot.parseMessage( message ) ) {
         var cmd = Bot.command;
-        
+        console.log( cmd );
         Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
     }
 });
