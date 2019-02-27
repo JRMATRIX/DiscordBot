@@ -68,7 +68,16 @@ const Commands = {
         channel : {
             
             add : function( params ) {
-                console.log( params );
+                var args = {
+                    channelName : params[0],
+                    announcementChannel : params[1]
+                }
+                
+                Mixer.getChannel( args.channelName, mixerChannel => {
+
+                    console.log( mixerChannel );
+                    
+                }).catch( console.error );
             },
             
             remove : function() {},
