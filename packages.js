@@ -13,7 +13,7 @@ const Database = require( './lib/database' );
 var DB = new Database();
 
 const MixerAPI = require( './lib/mixer' );
-var Mixer = new Mixer();
+var Mixer = new MixerAPI();
 
 module.exports = {
     Bot : Bot,
