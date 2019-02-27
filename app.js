@@ -82,6 +82,9 @@ const Commands = {
                     if( DB.mixerChannelExists( mixerChannel ) )
                         return Bot.error( `The Mixer Channel for ${mixerChannel.token} has already been added`, 'Mixer Channel Exists' );
                     
+                    if( mixerChannel.status == 404 )
+                        return Bot.error( `Unable to find Mixer Channel for ${args.channelName}`, 'Mixer Channel Does Not Exist' );
+                    
                     
                     
                     console.log( mixerChannel );
