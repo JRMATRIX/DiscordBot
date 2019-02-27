@@ -46,6 +46,10 @@ const Application = require( './packages' );
 const Bot = Application.Bot;
 
 
+const DB = Application.Database;
+
+
+
 
 Bot.Client.on( 'message', message => {
     if( Bot.parseMessage( message ) ) {

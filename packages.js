@@ -10,9 +10,10 @@ var Bot = new Discord.Bot({prefix: 'tb'});
 
 
 const Database = require( './lib/database' ;)
+var DB = new Database();
 
 
 module.exports = {
     Bot : Bot,
-    Database : Database
+    Database : DB
 }
