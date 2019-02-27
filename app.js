@@ -55,7 +55,7 @@ const Mixer = Application.Mixer;
 Bot.Client.on( 'message', message => {
     if( Bot.parseMessage( message ) ) {
         var cmd = Bot.command;
-        console.log( cmd );
+//        console.log( cmd );
         Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
     }
 });
@@ -72,6 +72,8 @@ const Commands = {
                     channelName : params[0],
                     announcementChannel : params[1]
                 }
+                
+                console.log( args );
                 
                 Mixer.getChannel( args.channelName, mixerChannel => {
 
