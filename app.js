@@ -70,7 +70,7 @@ const Commands = {
             add : function( params ) {
                 var args = {
                     channelName : params[0],
-                    announcementChannel : params[1]
+                    announcementChannel : params[1].substring(1)
                 }
                 
                 console.log( args );
@@ -79,8 +79,15 @@ const Commands = {
                     return Bot.error( 'Please identify the name of the Mixer streamer you would like to add', 'Missing Parameter: Streamer Name' );
                 
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
+                    if( DB.mixerChannelExists( mixerChannel ) )
+                        return Bot.error( `The Mixer Channel for ${mixerChannel.token} has already been added`, 'Mixer Channel Exists' );
+                    
+                    
+                    
                     console.log( mixerChannel );
-                }).catch( console.error );
+                }).catch( err => {
+                    return Bot.error( `Unable to find Mixer Channel for ${args.channelName}`, 'Mixer Channel Does Not Exist' );
+                });
             },
             
             remove : function() {},
