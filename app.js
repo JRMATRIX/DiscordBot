@@ -50,17 +50,6 @@ const DB = Application.Database;
 const Mixer = Application.Mixer;
 
 
-
-
-Bot.Client.on( 'message', message => {
-    if( Bot.parseMessage( message ) ) {
-        var cmd = Bot.command;
-//        console.log( cmd );
-        Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
-    }
-});
-
-
 const Commands = {
     
     mixer : {
@@ -81,9 +70,7 @@ const Commands = {
                     
                     DB.addMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
                         
-                        Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
-                            console.log( data );
-                        }).catch( console.error );
+                        watchMixerChannel( mixerChannel );
                         
                         return Bot.success({
                                 title : 'Mixer Channel Added',
@@ -95,7 +82,7 @@ const Commands = {
                             content : `There was an error while adding the channel ${mixerChannel.token} to the Database` });
                     });
                     
-                    console.log( mixerChannel );
+//                    console.log( mixerChannel );
                 }).catch( err => {
                     return Bot.error({ 
                         title : err.error,
@@ -179,6 +166,43 @@ const Commands = {
         
     }
     
+}
+
+
+
+Bot.Client.on( 'ready', () => {
+   
+    var channels = DB.getMixerChannelList();
+    
+    console.log( channels );
+    
+});
+
+
+
+Bot.Client.on( 'message', message => {
+    if( Bot.parseMessage( message ) ) {
+        var cmd = Bot.command;
+//        console.log( cmd );
+        Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
+    }
+});
+
+
+function watchMixerChannel( mixerChannel ) {
+    Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
+        
+        if( data.online !== undefined ) {
+            
+            if( data.online == true ) {
+                
+            } else {
+                
+            }
+            
+        }
+    
+    }).catch( console.error );
 }
 
 
