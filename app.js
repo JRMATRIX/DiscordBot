@@ -174,7 +174,11 @@ Bot.Client.on( 'ready', () => {
    
     var channels = DB.getMixerChannelList();
     
-    console.log( channels );
+//    channels.forEach( );
+    
+    for( var channel of channels ) {
+        console.log( channel );
+    }
     
 });
 
