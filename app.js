@@ -79,19 +79,26 @@ const Commands = {
                 
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
                     
-                    // Return error message if channel doesn't exist
-//                    if( mixerChannel.statusCode == 404 )
-//                            return Bot.error({
-//                                title : 'Mixer Channel Does Not Exist',
-//                                content : `Unable to find Mixer Channel for ${args.channelName}` });
-                    
-                    if( DB.mixerChannelExists( mixerChannel ) )
-
+                    DB.addMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
+                        
+                        Mixer.watchChannel( mixerChannel ).then( res => {
+                            
+                            return Bot.success({
+                                title : 'Mixer Channel Added',
+                                content : `Added ${mixerChannel.token} to the Watch List. They will be announced in #${args.announcementChannel}`
+                            })
+                            
+                        }).catch( err => {
+                            return Bot.error({
+                                title : 'Unknown Error',
+                                content : `There was an error adding the the channel ${mixerChannel.token} to the Watch List` }); 
+                        });
+                        
+                    }).catch( err => {
                         return Bot.error({
-                            title : 'Mixer Channel Exists',
-                            content : `The Mixer Channel for ${mixerChannel.token} has already been added` });
-                    
-                    
+                            title : 'Unknown Error',
+                            content : `There was an error while adding the channel ${mixerChannel.token} to the Database` });
+                    });
                     
                     console.log( mixerChannel );
                 }).catch( err => {
