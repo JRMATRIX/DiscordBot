@@ -70,10 +70,7 @@ const Commands = {
             add : function( params ) {
                 var args = {
                     channelName : params[0],
-                    announcementChannel : params[1].substring(1)
-                }
-                
-                console.log( args );
+                    announcementChannel : params[1].substring(1) }
                 
                 if( args.channelName === undefined )
                     return Bot.error({ 
@@ -81,23 +78,26 @@ const Commands = {
                         content : 'Please identify the name of the Mixer streamer you would like to add' });
                 
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
+                    
+                    // Return error message if channel doesn't exist
+//                    if( mixerChannel.statusCode == 404 )
+//                            return Bot.error({
+//                                title : 'Mixer Channel Does Not Exist',
+//                                content : `Unable to find Mixer Channel for ${args.channelName}` });
+                    
                     if( DB.mixerChannelExists( mixerChannel ) )
+
                         return Bot.error({
                             title : 'Mixer Channel Exists',
                             content : `The Mixer Channel for ${mixerChannel.token} has already been added` });
-                    
-                    if( mixerChannel.statusCode == 404 )
-                        return Bot.error({
-                            title : 'Mixer Channel Does Not Exist',
-                            content : `Unable to find Mixer Channel for ${args.channelName}` });
                     
                     
                     
                     console.log( mixerChannel );
                 }).catch( err => {
                     return Bot.error({ 
-                        title : 'Mixer Channel Does Not Exist',
-                        content : `Unable to find Mixer Channel for ${args.channelName}` });
+                        title : err.error,
+                        content : err.message });
                 });
             },
             
