@@ -171,15 +171,8 @@ const Commands = {
 
 
 Bot.Client.on( 'ready', () => {
-   
-    var channels = DB.getMixerChannelList();
-    
-//    channels.forEach( );
-    
-    for( var channel of channels ) {
-        console.log( channel );
-    }
-    
+    var mixerChannels = DB.getMixerChannelList();
+    for( var channel of mixerChannels ) { watchMixerChannel( channel ); }
 });
 
 
@@ -187,7 +180,6 @@ Bot.Client.on( 'ready', () => {
 Bot.Client.on( 'message', message => {
     if( Bot.parseMessage( message ) ) {
         var cmd = Bot.command;
-//        console.log( cmd );
         Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
     }
 });
@@ -195,6 +187,8 @@ Bot.Client.on( 'message', message => {
 
 function watchMixerChannel( mixerChannel ) {
     Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
+        
+        console.log( data );
         
         if( data.online !== undefined ) {
             
