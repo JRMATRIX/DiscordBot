@@ -81,18 +81,13 @@ const Commands = {
                     
                     DB.addMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
                         
-                        Mixer.watchChannel( mixerChannel ).then( res => {
-                            
-                            return Bot.success({
+                        Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
+                            console.log( data );
+                        }).catch( console.error );
+                        
+                        return Bot.success({
                                 title : 'Mixer Channel Added',
-                                content : `Added ${mixerChannel.token} to the Watch List. They will be announced in #${args.announcementChannel}`
-                            })
-                            
-                        }).catch( err => {
-                            return Bot.error({
-                                title : 'Unknown Error',
-                                content : `There was an error adding the the channel ${mixerChannel.token} to the Watch List` }); 
-                        });
+                                content : `Added ${mixerChannel.token} to the Watch List. They will be announced in #${args.announcementChannel}` });
                         
                     }).catch( err => {
                         return Bot.error({
