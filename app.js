@@ -94,7 +94,11 @@ const Commands = {
             
             update : function() {},
             
-            list : function() {}
+            list : function() {
+                var channels = DB.getMixerChannelList();
+                
+                console.log( channels );
+            }
             
         },
         
