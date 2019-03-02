@@ -97,7 +97,8 @@ const Commands = {
             list : function() {
                 var channels = DB.getMixerChannelList();
                 
-                console.log( channels );
+                Bot.listMixerEmbed( channels );
+//                console.log( channels );
             }
             
         },
