@@ -196,7 +196,7 @@ function watchMixerChannel( mixerChannel ) {
         console.log( data );
         var channel = buildMixerLiveData( mixerChannel.token );
         
-        if( chanel.online && data.updatedAt !== undefined ) { // Channel went live, create embed
+        if( channel.online && data.updatedAt !== undefined ) { // Channel went live, create embed
             var messageID = Bot.mixerEmbed( channel );
             DB.updateMixerEmbedMessage( mixerChannel, messageID );
         } else if( channel.online && data.updatedAt === undefined) { // Channel is live, update embed
