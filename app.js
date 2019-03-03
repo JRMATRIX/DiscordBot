@@ -248,20 +248,22 @@ function watchMixerChannel( mixerChannel ) {
 }
 
 function buildMixerLiveData( channelName ) {
-    Mixer.getChannel( channelName ).then( channel => {
-        var user = DB.getMixerChannel( channel );
-       
-        var data = {
-            username : channel.token,
-            game : channel.type.name,
-            title : channel.name,
-            avatar : channel.user.avatarUrl,
-            followers : channel.numFollowers,
-            viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
-            thumbnail : channel.thumbnail ? channel.thumbnail.url : channel.bannerUrl,
-            announcementChannel : channel.announcementChannel,
-            online : channel.online
-        }
+    return new Promise( function( resolve, reject ) {
+        Mixer.getChannel( channelName ).then( channel => {
+            var user = DB.getMixerChannel( channel );
+
+            resolve({
+                username : channel.token,
+                game : channel.type.name,
+                title : channel.name,
+                avatar : channel.user.avatarUrl,
+                followers : channel.numFollowers,
+                viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
+                thumbnail : channel.thumbnail ? channel.thumbnail.url : channel.bannerUrl,
+                announcementChannel : channel.announcementChannel,
+                online : channel.online
+            });
+        }).catch( console.error );
     }).catch( console.error );
 }
 
