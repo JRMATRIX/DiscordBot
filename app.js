@@ -270,8 +270,8 @@ function buildMixerLiveData( channelName ) {
                 followers : channel.numFollowers,
                 viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
                 thumbnail : channel.thumbnail ? channel.thumbnail.url : channel.bannerUrl,
-                announcementChannel : channel.announcementChannel,
-                announcementMessage : channel.announcementMessage,
+                announcementChannel : user.announcementChannel,
+                announcementMessage : user.announcementMessage,
                 online : channel.online
             });
         }).catch( console.error );
