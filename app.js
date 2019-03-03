@@ -177,7 +177,12 @@ const Commands = {
 
 Bot.Client.on( 'ready', () => {
     var mixerChannels = DB.getMixerChannelList();
-    for( var channel of mixerChannels ) { watchMixerChannel( channel ); }
+    for( var channel of mixerChannels ) { 
+        watchMixerChannel( channel );
+        
+        // Testing for now, this should be randomised!
+        Mixer.hostChannel( channel );
+    }
 });
 
 

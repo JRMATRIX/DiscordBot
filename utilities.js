@@ -11,3 +11,7 @@ String.prototype.trimRight = function(charlist) {
 
   return this.replace(new RegExp("[" + charlist + "]+$"), "");
 };
+
+Array.prototype.random = function () {
+  return this[Math.floor((Math.random()*this.length))];
+}
