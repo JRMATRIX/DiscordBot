@@ -90,7 +90,33 @@ const Commands = {
                 });
             },
             
-            remove : function() {},
+            remove : function( params ) {
+                var args = {
+                    channelName : params[0] }
+                
+                if( args.channelName === undefined )
+                    return Bot.error({ 
+                        title : 'Missing Parameter: Streamer Name',
+                        content : 'Please identify the name of the Mixer streamer you would like to add' });
+                
+                Mixer.getChannel( args.channelName ).then( mixerChannel => {
+                    
+                    DB.removeMixerChannel( mixerChannel ).then( res => {
+                        return Bot.success({
+                                title : 'Mixer Channel Removed',
+                                content : `Removed ${mixerChannel.token} from the Watch List. They will no longer be announced` });
+                    }).catch( err => {
+                        return Bot.error({ 
+                            title : err.error,
+                            content : err.message }); 
+                    });
+                    
+                }).catch( err => {
+                    return Bot.error({
+                        title : err.error,
+                        content : err.message });
+                });
+            },
             
             update : function() {},
             
