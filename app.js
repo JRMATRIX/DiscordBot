@@ -234,12 +234,14 @@ function watchMixerChannel( mixerChannel ) {
         
         buildMixerLiveData( mixerChannel.token ).then( channel => {
             if( channel.online && data.updatedAt !== undefined ) { // Channel went live, create embed
-                var messageID = Bot.mixerEmbed( channel );
-                DB.updateMixerEmbedMessage( mixerChannel, messageID );
+                Bot.mixerEmbed( channel ).then( message => {
+                    DB.updateMixerEmbedMessage( mixerChannel, message.id );
+                }).catch( console.error );
             } else if( channel.online && data.updatedAt === undefined) { // Channel is live, update embed
                 if( channel.announcementMessage === undefined ) {
-                    var messageID = Bot.mixerEmbed( channel );
-                    DB.updateMixerEmbedMessage( mixerChannel, messageID );
+                    Bot.mixerEmbed( channel ).then( message => {
+                        DB.updateMixerEmbedMessage( mixerChannel, message.id );
+                    }).catch( console.error );
                 } else {
                     Bot.updateMixerEmbed( channel );   
                 }
