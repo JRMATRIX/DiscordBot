@@ -259,9 +259,12 @@ Bot.Client.on( 'message', message => {
 function watchMixerChannel( mixerChannel ) {
     Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
         
-        console.log( data );
+//        console.log( data );
         
-        buildMixerLiveData( mixerChannel.token ).then( channel => {            
+        buildMixerLiveData( mixerChannel.token ).then( channel => {   
+            
+            console.log( channel );
+            
             if( channel.online == true ) {
                 if( data.updatedAt !== undefined ) { // Channel went live, create new embed
                     Bot.mixerEmbed( channel ).then( message => {
