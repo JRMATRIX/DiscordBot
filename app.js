@@ -232,30 +232,29 @@ function watchMixerChannel( mixerChannel ) {
         
         console.log( data );
         
-        buildMixerLiveData( mixerChannel.token ).then( channel => {
-            if( channel.online && data.updatedAt !== undefined ) { // Channel went live, create embed
-                Bot.mixerEmbed( channel ).then( message => {
-                    console.log( message );
-                    DB.updateMixerEmbedMessage( mixerChannel, message.id );
-                }).catch( console.error );
-            } else if( channel.online && data.updatedAt === undefined) { // Channel is live, update embed
-                if( channel.announcementMessage === undefined ) {
+        buildMixerLiveData( mixerChannel.token ).then( channel => {            
+            if( channel.online == true ) {
+                if( data.updatedAt !== undefined ) { // Channel went live, create new embed
                     Bot.mixerEmbed( channel ).then( message => {
-                        console.log( message );
+                        console.log( 'Creating Mixer Embed:', message );
                         DB.updateMixerEmbedMessage( mixerChannel, message.id );
                     }).catch( console.error );
-                } else {
-                    Bot.updateMixerEmbed( channel );   
+                } else if( data.updatedAt === undefined ) { // Channel is already live, update embed
+                   if( channel.announcementMessage === undefined ) {
+                        Bot.mixerEmbed( channel ).then( message => {
+                            console.log( 'Updating Mixer Embed:', message );
+                            DB.updateMixerEmbedMessage( mixerChannel, message.id );
+                        }).catch( console.error );
+                    } else {
+                        console.log( 'Ending Mixer Embed:' );
+                        Bot.updateMixerEmbed( channel );   
+                    } 
                 }
-            } else if( channel.online == false && data.updateAt !== undefined ) { // Channel went offline
-                if( channel.announcementMessage !== undefined ) {
-                    Bot.endMixerEmbed( channel );
-                }
-            } else { // Channel is offline, update viewer / follower count on offline embed
-                if( ! channel.announcementMessage === undefined ) { 
-                    Bot.endMixerEmbed( channel );
-                }
+            } else if( channel.announcementMessage !== undefined ) { // Channel is offline, update offline embed
+                Bot.endMixerEmbed( channel );
             }
+            
+            
         }).catch( console.error );
     
     }).catch( console.error );
