@@ -73,7 +73,8 @@ const Commands = {
                         watchMixerChannel( mixerChannel );
                         
                         if( mixerChannel.online == true ) {
-                            var messageID = Bot.mixerEmbed( channel );
+                            var data = buildMixerLiveData( mixerChannel.token );
+                            var messageID = Bot.mixerEmbed( data );
                             DB.updateMixerEmbedMessage( mixerChannel, messageID );
                         }
                         
