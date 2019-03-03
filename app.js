@@ -237,7 +237,12 @@ function watchMixerChannel( mixerChannel ) {
                 var messageID = Bot.mixerEmbed( channel );
                 DB.updateMixerEmbedMessage( mixerChannel, messageID );
             } else if( channel.online && data.updatedAt === undefined) { // Channel is live, update embed
-                Bot.updateMixerEmbed( channel );
+                if( ! channel.announcementMessage ) {
+                    var messageID = Bot.mixerEmbed( channel );
+                    DB.updateMixerEmbedMessage( mixerChannel, messageID );
+                } else {
+                    Bot.updateMixerEmbed( channel );   
+                }
             } else if( channel.online == false && data.updateAt !== undefined ) { // Channel went offline
                 Bot.endMixerEmbed( channel );
             } else { // Channel is offline, update viewer / follower count on offline embed
@@ -255,13 +260,14 @@ function buildMixerLiveData( channelName ) {
 
             resolve({
                 username : channel.token,
-                game : channel.type.name,
+                game : channel.type ? channel.type.name : 'Unknown',
                 title : channel.name,
                 avatar : channel.user.avatarUrl,
                 followers : channel.numFollowers,
                 viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
                 thumbnail : channel.thumbnail ? channel.thumbnail.url : channel.bannerUrl,
                 announcementChannel : channel.announcementChannel,
+                announcementMessage : channel.announcementMessage,
                 online : channel.online
             });
         }).catch( console.error );
