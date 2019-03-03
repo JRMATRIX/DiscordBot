@@ -72,6 +72,11 @@ const Commands = {
                         
                         watchMixerChannel( mixerChannel );
                         
+                        if( mixerChannel.online == true ) {
+                            var messageID = Bot.mixerEmbed( channel );
+                            DB.updateMixerEmbedMessage( mixerChannel, messageID );
+                        }
+                        
                         return Bot.success({
                                 title : 'Mixer Channel Added',
                                 content : `Added ${mixerChannel.token} to the Watch List. They will be announced in #${args.announcementChannel}` });
