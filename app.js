@@ -231,18 +231,19 @@ function watchMixerChannel( mixerChannel ) {
     Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
         
         console.log( data );
-        var channel = buildMixerLiveData( mixerChannel.token );
         
-        if( channel.online && data.updatedAt !== undefined ) { // Channel went live, create embed
-            var messageID = Bot.mixerEmbed( channel );
-            DB.updateMixerEmbedMessage( mixerChannel, messageID );
-        } else if( channel.online && data.updatedAt === undefined) { // Channel is live, update embed
-            Bot.updateMixerEmbed( channel );
-        } else if( channel.online == false && data.updateAt !== undefined ) { // Channel went offline
-            Bot.endMixerEmbed( channel );
-        } else { // Channel is offline, update viewer / follower count on offline embed
-            Bot.endMixerEmbed( channel );
-        }
+        buildMixerLiveData( mixerChannel.token ).then( channel => {
+            if( channel.online && data.updatedAt !== undefined ) { // Channel went live, create embed
+                var messageID = Bot.mixerEmbed( channel );
+                DB.updateMixerEmbedMessage( mixerChannel, messageID );
+            } else if( channel.online && data.updatedAt === undefined) { // Channel is live, update embed
+                Bot.updateMixerEmbed( channel );
+            } else if( channel.online == false && data.updateAt !== undefined ) { // Channel went offline
+                Bot.endMixerEmbed( channel );
+            } else { // Channel is offline, update viewer / follower count on offline embed
+                Bot.endMixerEmbed( channel );
+            }
+        }).catch( console.error );
     
     }).catch( console.error );
 }
