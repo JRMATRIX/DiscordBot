@@ -101,7 +101,7 @@ const Commands = {
                 
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
                     
-                    DB.removeMixerChannel( mixerChannel ).then( res => {
+                    DB.deleteMixerChannel( mixerChannel ).then( res => {
                         return Bot.success({
                                 title : 'Mixer Channel Removed',
                                 content : `Removed ${mixerChannel.token} from the Watch List. They will no longer be announced` });
