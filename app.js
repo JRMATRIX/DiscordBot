@@ -237,16 +237,20 @@ function watchMixerChannel( mixerChannel ) {
                 var messageID = Bot.mixerEmbed( channel );
                 DB.updateMixerEmbedMessage( mixerChannel, messageID );
             } else if( channel.online && data.updatedAt === undefined) { // Channel is live, update embed
-                if( ! channel.announcementMessage ) {
+                if( channel.announcementMessage === undefined ) {
                     var messageID = Bot.mixerEmbed( channel );
                     DB.updateMixerEmbedMessage( mixerChannel, messageID );
                 } else {
                     Bot.updateMixerEmbed( channel );   
                 }
             } else if( channel.online == false && data.updateAt !== undefined ) { // Channel went offline
-                Bot.endMixerEmbed( channel );
+                if( channel.announcementMessage !== undefined ) 
+                    Bot.endMixerEmbed( channel );
+                }
             } else { // Channel is offline, update viewer / follower count on offline embed
-                Bot.endMixerEmbed( channel );
+                if( ! channel.announcementMessage === undefined ) 
+                    Bot.endMixerEmbed( channel );
+                }
             }
         }).catch( console.error );
     
