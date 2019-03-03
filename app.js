@@ -207,7 +207,7 @@ Bot.Client.on( 'ready', () => {
         watchMixerChannel( channel );
         
         // Testing for now, this should be randomised!
-        Mixer.hostChannel( channel );
+//        Mixer.hostChannel( channel );
     }
 });
 
@@ -243,7 +243,7 @@ function watchMixerChannel( mixerChannel ) {
 
 function buildMixerLiveData( channelName ) {
     Mixer.getChannel( channelName ).then( channel => {
-        var user = DB.getMixerChannel( mixerChannel );
+        var user = DB.getMixerChannel( channel );
        
         var data = {
             username : channel.token,
