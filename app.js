@@ -261,20 +261,20 @@ function watchMixerChannel( mixerChannel ) {
         
 //        console.log( data );
         
-        buildMixerLiveData( mixerChannel.token ).then( channel => {   
+        buildMixerLiveData( mixerChannel.id ).then( channel => {   
             
-            console.log( channel );
+//            console.log( channel );
             
             if( channel.online == true ) {
                 if( data.updatedAt !== undefined ) { // Channel went live, create new embed
                     Bot.mixerEmbed( channel ).then( message => {
-                        console.log( 'Creating Mixer Embed:', message );
+                        console.log( 'Creating Mixer Embed:', message.id );
                         DB.updateMixerEmbedMessage( mixerChannel, message.id );
                     }).catch( console.error );
                 } else if( data.updatedAt === undefined ) { // Channel is already live, update embed
                    if( channel.announcementMessage === undefined ) {
                         Bot.mixerEmbed( channel ).then( message => {
-                            console.log( 'Updating Mixer Embed:', message );
+                            console.log( 'Updating Mixer Embed:', message.id );
                             DB.updateMixerEmbedMessage( mixerChannel, message.id );
                         }).catch( console.error );
                     } else {
@@ -296,7 +296,7 @@ function buildMixerLiveData( channelName ) {
     return new Promise( function( resolve, reject ) {
         Mixer.getChannel( channelName ).then( channel => {
             var user = DB.getMixerChannel( channel );
-
+            
             resolve({
                 username : channel.token,
                 game : channel.type ? channel.type.name : 'Unknown',
