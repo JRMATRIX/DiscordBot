@@ -235,11 +235,13 @@ function watchMixerChannel( mixerChannel ) {
         buildMixerLiveData( mixerChannel.token ).then( channel => {
             if( channel.online && data.updatedAt !== undefined ) { // Channel went live, create embed
                 Bot.mixerEmbed( channel ).then( message => {
+                    console.log( message );
                     DB.updateMixerEmbedMessage( mixerChannel, message.id );
                 }).catch( console.error );
             } else if( channel.online && data.updatedAt === undefined) { // Channel is live, update embed
                 if( channel.announcementMessage === undefined ) {
                     Bot.mixerEmbed( channel ).then( message => {
+                        console.log( message );
                         DB.updateMixerEmbedMessage( mixerChannel, message.id );
                     }).catch( console.error );
                 } else {
