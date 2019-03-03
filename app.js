@@ -274,15 +274,16 @@ function watchMixerChannel( mixerChannel ) {
                 } else if( data.updatedAt === undefined ) { // Channel is already live, update embed
                    if( channel.announcementMessage === undefined ) {
                         Bot.mixerEmbed( channel ).then( message => {
-                            console.log( 'Updating Mixer Embed:', message.id );
+                            console.log( 'Creating Mixer Embed:', message.id );
                             DB.updateMixerEmbedMessage( mixerChannel, message.id );
                         }).catch( console.error );
                     } else {
-                        console.log( 'Ending Mixer Embed:' );
+                        console.log( 'Updating Mixer Embed:' );
                         Bot.updateMixerEmbed( channel );   
                     } 
                 }
             } else if( channel.announcementMessage !== undefined ) { // Channel is offline, update offline embed
+                console.log( 'Ending Mixer Embed:' );
                 Bot.endMixerEmbed( channel );
             }
             
