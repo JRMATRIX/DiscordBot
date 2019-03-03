@@ -244,11 +244,11 @@ function watchMixerChannel( mixerChannel ) {
                     Bot.updateMixerEmbed( channel );   
                 }
             } else if( channel.online == false && data.updateAt !== undefined ) { // Channel went offline
-                if( channel.announcementMessage !== undefined ) 
+                if( channel.announcementMessage !== undefined ) {
                     Bot.endMixerEmbed( channel );
                 }
             } else { // Channel is offline, update viewer / follower count on offline embed
-                if( ! channel.announcementMessage === undefined ) 
+                if( ! channel.announcementMessage === undefined ) { 
                     Bot.endMixerEmbed( channel );
                 }
             }
