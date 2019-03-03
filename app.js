@@ -124,7 +124,36 @@ const Commands = {
                 });
             },
             
-            update : function() {},
+            update : function( params ) {
+                var args = {
+                    channelName : params[0],
+                    announcementChannel : params[1].substring(1) }
+                
+                if( args.channelName === undefined )
+                    return Bot.error({ 
+                        title : 'Missing Parameter: Streamer Name',
+                        content : 'Please identify the name of the Mixer streamer you would like to update' });
+                
+                Mixer.getChannel( args.channelName ).then( mixerChannel => {
+                    
+                    DB.updateMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
+
+                        return Bot.success({
+                                title : 'Mixer Channel Added',
+                                content : `Updated ${mixerChannel.token}. They will be announced in #${args.announcementChannel}` });
+                        
+                    }).catch( err => {
+                        return Bot.error({
+                            title : 'Unknown Error',
+                            content : `There was an error while updating the channel ${mixerChannel.token} in the Database` });
+                    });
+                    
+                }).catch( err => {
+                    return Bot.error({ 
+                        title : err.error,
+                        content : err.message });
+                });
+            },
             
             list : function() {
                 var channels = DB.getMixerChannelList();
