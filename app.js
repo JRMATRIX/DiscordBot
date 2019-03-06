@@ -571,7 +571,8 @@ function watchMixerChannel( mixerChannel ) {
  *============================================================================*/
 function unwatchMixerChannel( mixerChannel ) {
     return new Promise( function( resolve, reject ) {
-        Mixer.Carina.unsubscribe( `channel:${mixerChannel.id}:update`, data => {
+//        Mixer.Carina.unsubscribe( `channel:${mixerChannel.id}:update`, data => {
+        Mixer.Carina.unsubscribe( `channel:${mixerChannel.id}:update` ).then( data => {
             
             console.log( data );
         
