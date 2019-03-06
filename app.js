@@ -132,6 +132,8 @@ const Commands = {
                     
                     DB.addMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
                         
+                        if( res.error ) return Bot.error( res );
+                        
                         // @todo: Resolve with promise
                         watchMixerChannel( mixerChannel );
                         
@@ -181,15 +183,12 @@ const Commands = {
                     // Remove the channel from the Constellations watch list
                     unwatchMixerChannel( mixerChannel ).then( status => {
                         
+                        if( status.error ) return Bot.error( status );
+                        
                         // Remove the channel from the Database
                         DB.deleteMixerChannel( mixerChannel ).then( res => {
-                        
-                            console.log( res );
-                            
-                            if( res.error !== undefined ) return Bot.error( res );
-                            
+                            if( res.error ) return Bot.error( res );    
                             return Bot.success( status );
-                        
                         }).catch( err => {
                             // Database removal hasn't worked. Return Unknown Error
                             return Bot.error({ title : 'Unknown Error', content : err.message }); 
@@ -248,13 +247,7 @@ const Commands = {
                                     title : 'Mixer Channel Added',
                                     content : `Updated ${mixerChannel.token}. They will be announced in #${args.announcementChannel}` });
 
-                            }).catch( err => {
-
-                                return Bot.error({
-                                    title : 'Unknown Error',
-                                    content : `There was an error while updating the channel ${mixerChannel.token} in the Database` });
-
-                            });
+                            }).catch( err => { return Bot.error( err ); });
 
                         }).catch( err => {
                             
@@ -586,7 +579,8 @@ function unwatchMixerChannel( mixerChannel ) {
     }).catch( err => {
         error.log( err );
         
-        reject({
+        return({
+            error : true, 
             title : 'Unknown Error',
             content : `Something went wrong while removing ${mixerChannel.token} from the announcement list`
         });
