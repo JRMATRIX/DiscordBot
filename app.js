@@ -126,12 +126,13 @@ const Commands = {
                     return Bot.error( Errors.mixer.channel.add.channelName );
                 
                 if( args.announcementChannel === undefined )
-                    args.announcementChannel = DB.getMixerAnnouncementChannel();
+                    return Bot.error( Error.mixer.channel.add.announcementChannel );
+//                    args.announcementChannel = DB.getMixerAnnouncementChannel();
                 
-                console.log( args.announcementChannel );
-                
-                if( args.announcementChannel === undefined )
-                    return Bot.error( Errors.mixer.channel.add.announcementChannel );
+//                console.log( args.announcementChannel );
+//                
+//                if( args.announcementChannel === undefined )
+//                    return Bot.error( Errors.mixer.channel.add.announcementChannel );
                 
                 args.announcementChannel = args.announcementChannel.replace( '#', '' );
                 
@@ -240,12 +241,12 @@ const Commands = {
                     if( args.announcementChannel === undefined ) {
                         
                         // If the database channel already has an announcementChannel set, continue to use that
-                        var ch = DB.getMixerChannel( mixerChannel.id ).then( res => {
+                        DB.getMixerChannel( mixerChannel.id ).then( ch => {
                             
                             // If there's no announcement channel set, use the default channel
                             if( ch.announcementChannel && ch.announcementChannel !== undefined ) {
                                 args.announcementChannel = ch.announcementChannel;
-                            } else { args.announcementChannel = DB.getMixerAnnouncementChannel(); }
+                            } //else { args.announcementChannel = DB.getMixerAnnouncementChannel(); }
                             
                             if( args.announcementChannel === undefined )
                                 return Bot.error( Errors.mixer.channel.update.announcementChannel );
