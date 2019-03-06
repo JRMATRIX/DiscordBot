@@ -128,6 +128,8 @@ const Commands = {
                 if( args.announcementChannel === undefined )
                     args.announcementChannel = DB.getMixerAnnouncementChannel();
                 
+                console.log( args.announcementChannel );
+                
                 if( args.announcementChannel === undefined )
                     return Bot.error( Errors.mixer.channel.add.announcementChannel );
                 
