@@ -126,7 +126,7 @@ const Commands = {
                     return Bot.error( Errors.mixer.channel.add.channelName );
                 
                 if( args.announcementChannel === undefined )
-                    return Bot.error( Error.mixer.channel.add.announcementChannel );
+                    return Bot.error( Errors.mixer.channel.add.announcementChannel );
 //                    args.announcementChannel = DB.getMixerAnnouncementChannel();
                 
 //                console.log( args.announcementChannel );
