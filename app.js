@@ -183,6 +183,8 @@ const Commands = {
                         
                         // Remove the channel from the Database
                         DB.deleteMixerChannel( mixerChannel ).then( res => {
+                            
+                            console.log( res );
                         
                             if( res.error !== undefined ) return Bot.error( res );
                             
