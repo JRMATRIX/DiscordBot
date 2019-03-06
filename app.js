@@ -34,42 +34,105 @@ require( './utilities' );
 /* PACKAGES
 /*============================================================================*/
 
-const Application = require( './packages' );
+const Require = require( './packages' );
 
 /*============================================================================*
  * Discord Bot
  *
  * Used for connecting and interacting with Discord channels
- *
- * @minVersion  11.4.2
  *============================================================================*/
-const Bot = Application.Bot;
+const Bot = Require.Bot;
 
-const DB = Application.Database;
+/*============================================================================*
+ * Mixer Interface
+ *
+ * Uses the Mixer API and Constellations Interface for communicating with and 
+ * listening to Mixer API endpoints and Channels
+ *============================================================================*/
+const Mixer = Require.Mixer;
 
-const Mixer = Application.Mixer;
+/*============================================================================*
+ * Application Database
+ *
+ * Used for persistent storage of application data through a lodash database
+ *============================================================================*/
+const DB = Require.Database;
+
+/*============================================================================*
+ * Application Errors
+ *
+ * Standard Error output for commands
+ *============================================================================*/
+const Errors = Require.Errors;
 
 
+
+/*============================================================================*/
+/* APPLICATION
+/*============================================================================*/
+
+
+
+/*============================================================================*
+ * Application Commands
+ *
+ * An object containing command functions for the bot to run
+ *
+ * Command Formats : 
+ *      trw <add|remove|update|list> mixer channel(s) <channelName> <announcementChannel>
+ *      trw config <get|set|list> <optionName> <optionValue>
+ *============================================================================*/
 const Commands = {
     
+    
+    
+    /*========================================================================*
+     * Mixer Commands
+     *
+     * Commands for adding and modifying Mixer Channels and Teams.
+     *
+     * @todo : Implement Mixer Teams
+     *========================================================================*/
     mixer : {
         
+        
+        
+        /*====================================================================*
+         * Mixer Channel Commands
+         *
+         * Commands for adding and modifying Mixer Channels.
+         *====================================================================*/
         channel : {
             
+            /*================================================================*
+             * Add Mixer Channel
+             *
+             * Adds a new Mixer Channel into the announcement list.
+             *
+             * @param   (object)    params  Command parameters
+             *
+             * Expects :
+             *      channelName
+             *      announcementChannel
+             *      @TODO: discordUser (optional) 
+             *================================================================*/
             add : function( params ) {
                 var args = {
                     channelName : params[0],
-                    announcementChannel : params[1].substring(1) }
+                    announcementChannel : params[1].substring(1),
+                    discordUser : params[2] }
                 
                 if( args.channelName === undefined )
-                    return Bot.error({ 
-                        title : 'Missing Parameter: Streamer Name',
-                        content : 'Please identify the name of the Mixer streamer you would like to add' });
+                    return Bot.error( Errors.mixer.channel.add.channelName );
+                
+                if( args.announcementChannel === undefined )
+                    args.announcementChannel = DB.getMixerAnnouncementChannel();
                 
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
                     
                     DB.addMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
                         
+                        // @todo: Resolve with promise
                         watchMixerChannel( mixerChannel );
                         
                         if( mixerChannel.online == true ) {
@@ -88,7 +151,6 @@ const Commands = {
                             content : `There was an error while adding the channel ${mixerChannel.token} to the Database` });
                     });
                     
-//                    console.log( mixerChannel );
                 }).catch( err => {
                     return Bot.error({ 
                         title : err.error,
@@ -96,74 +158,139 @@ const Commands = {
                 });
             },
             
+            /*================================================================*
+             * Remove Mixer Channel
+             *
+             * Removes a Mixer Channel from the announcement list.
+             *
+             * @param   (object)    params  Command parameters
+             *
+             * Expects :
+             *      channelName
+             *================================================================*/
             remove : function( params ) {
                 var args = {
                     channelName : params[0] }
                 
                 if( args.channelName === undefined )
-                    return Bot.error({ 
-                        title : 'Missing Parameter: Streamer Name',
-                        content : 'Please identify the name of the Mixer streamer you would like to add' });
+                    return Bot.error( Errors.mixer.channel.remove.channelName );
                 
+                // Fetch the Mixer Channel data from the Mixer API
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
                     
-                    DB.deleteMixerChannel( mixerChannel ).then( res => {
-                        return Bot.success({
-                                title : 'Mixer Channel Removed',
-                                content : `Removed ${mixerChannel.token} from the Watch List. They will no longer be announced` });
+                    // Remove the channel from the Constellations watch list
+                    unwatchMixerChannel( mixerChannel ).then( status => {
+                        
+                        // Remove the channel from the Database
+                        DB.deleteMixerChannel( mixerChannel ).then( res => {
+                        
+                            Bot.success({ status });
+                        
+                        }).catch( err => {
+                            // Database removal hasn't worked. Retunr Unknown Error
+                            return Bot.error({ title : 'Unknown Error', content : err.message }); 
+                        });
+                        
                     }).catch( err => {
-                        return Bot.error({ 
-                            title : err.error,
-                            content : err.message }); 
+                        // Carina has returned an error. Return error message
+                        error.log( err ); 
+                        Bot.error( err );
                     });
                     
                 }).catch( err => {
-                    return Bot.error({
-                        title : err.error,
-                        content : err.message });
+                    // Mixer couldn't find the channel. Output error message
+                    return Bot.error({ title : err.error, content : err.message });
                 });
             },
             
+            /*================================================================*
+             * Remove Mixer Channel
+             *
+             * Removes a Mixer Channel from the announcement list.
+             *
+             * @param   (object)    params  Command parameters
+             *
+             * Expects :
+             *      channelName
+             *      announcementChannel
+             *      @TODO: discordUser (optional)
+             *================================================================*/
             update : function( params ) {
                 var args = {
                     channelName : params[0],
                     announcementChannel : params[1].substring(1) }
                 
                 if( args.channelName === undefined )
-                    return Bot.error({ 
-                        title : 'Missing Parameter: Streamer Name',
-                        content : 'Please identify the name of the Mixer streamer you would like to update' });
+                    return Bot.error( Errors.mixer.channel.update.channelName );
                 
+                // Get the Mixer channel data from the API
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
                     
-                    DB.updateMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
-
-                        return Bot.success({
-                                title : 'Mixer Channel Added',
-                                content : `Updated ${mixerChannel.token}. They will be announced in #${args.announcementChannel}` });
+                    // Check if a new announcementChannel has been set
+                    if( args.announcementChannel === undefined ) {
                         
-                    }).catch( err => {
-                        return Bot.error({
-                            title : 'Unknown Error',
-                            content : `There was an error while updating the channel ${mixerChannel.token} in the Database` });
-                    });
+                        // If the database channel already has an announcementChannel set, continue to use that
+                        var ch = DB.getMixerChannel( mixerChannel.id ).then( res => {
+                            
+                            // If there's no announcement channel set, use the default channel
+                            if( ch.announcementChannel && ch.announcementChannel !== undefined ) {
+                                args.announcementChannel = ch.announcementChannel;
+                            } else { args.announcementChannel = DB.getMixerAnnouncementChannel(); }
+                            
+                            // Update the database with the new announcementChannel
+                            DB.updateMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
+                        
+                                return Bot.success({
+                                    title : 'Mixer Channel Added',
+                                    content : `Updated ${mixerChannel.token}. They will be announced in #${args.announcementChannel}` });
+
+                            }).catch( err => {
+
+                                return Bot.error({
+                                    title : 'Unknown Error',
+                                    content : `There was an error while updating the channel ${mixerChannel.token} in the Database` });
+
+                            });
+
+                        }).catch( err => {
+                            
+                            // Return error if the channel isn't already in the database
+                            return Bot.error({
+                                title : 'Unable to find Mixer Channel',
+                                content : `The Mixer Channel for ${args.channelName} is not currently in the database. Please add the channel before updating` });
+                            
+                        });
+                    }
                     
-                }).catch( err => {
+                }).catch( err => { 
                     return Bot.error({ 
-                        title : err.error,
-                        content : err.message });
+                        title : 'Unknown Error', 
+                        content : err.message }); 
                 });
             },
             
+            /*================================================================*
+             * List Mixer Channels
+             *
+             * Lists all of the available Mixer Channels that are currently in 
+             * the announcement list.
+             *================================================================*/
             list : function() {
                 var channels = DB.getMixerChannelList();
-                
                 Bot.listMixerEmbed( channels );
-//                console.log( channels );
             }
             
         },
         
+        
+        
+        /*====================================================================*
+         * Mixer Team Commands
+         *
+         * Commands for adding and modifying Mixer Teams.
+         *
+         * @TODO : Check Mixer API for Teams
+         *====================================================================*/
         team : {
             
             add : function() {},
@@ -178,6 +305,15 @@ const Commands = {
         
     },
     
+    
+    
+    /*========================================================================*
+     * Twitch Commands
+     *
+     * Commands for adding and modifying Twitch Channels and Teams.
+     *
+     * @todo : Implement Twitch API
+     *========================================================================*/
     twitch : {
         
         channel : {
@@ -206,6 +342,15 @@ const Commands = {
         
     },
     
+    
+    
+    /*========================================================================*
+     * YouTube Commands
+     *
+     * Commands for adding and modifying YouTube Channels.
+     *
+     * @todo : Implement YouTube API
+     *========================================================================*/
     youtube : {
         
         channel : {
@@ -222,13 +367,95 @@ const Commands = {
         
     },
     
+    
+    
+    /*========================================================================*
+     * Config Commands
+     *
+     * Commands for adding and modifying Bot Configuration options.
+     *========================================================================*/
     config : {
         
-        set : function() {},
+        /*================================================================*
+         * Set Config Option
+         *
+         * Updates a config option value in the Database.
+         *
+         * @param   (object)    params  Command parameters
+         *
+         * Expects :
+         *      optionName
+         *      optionValue
+         *================================================================*/
+        set : function( params ) {
+            var args = {
+                optionName : params[0],
+                optionValue : params[1] }
+            
+            if( args.optionName === undefined )
+                return Bot.error( Errors.config.set.optionName );
+            
+            if( args.optionValue === undefined )
+                return Bot.error( Errors.config.set.optionValue );
+            
+            // Check that the option is available to set in the Database
+            DB.hasOption( args.optionName ).then( () => {
+                
+                // Update the requested option value
+                DB.setOption( args.optionName, args.optionValue ).then( () => {
+                    
+                    Bot.success({
+                        title : 'Config Option Updated',
+                        content : `${args.optionName} successfully updated to ${args.optionValue}`
+                    });
+                    
+                }).catch( err => { Bot.error( err ); })
+            
+            }).catch( err => { Bot.error( err ); });
+        },
         
-        get : function() {},
+        /*================================================================*
+         * Get Config Option
+         *
+         * Retrieves a config option value from the Database.
+         *
+         * @param   (object)    params  Command parameters
+         *
+         * Expects :
+         *      optionName
+         *================================================================*/
+        get : function( params ) {
+            var args = { 
+                optionName : params[0] };
+            
+            if( args.optionName == undefined )
+                return Bot.error( Errors.config.get.optionName );
+            
+            // Check that the option is available to set in the Database
+            DB.hasOption( args.optionName ).then( () => {
+                
+                // Update the requested option value
+                DB.getOption( args.optionName ).then( optionValue => {
+                    
+                    Bot.success({
+                        title : 'Bot Configuration',
+                        content : `**${args.optionName}**: ${args.optionValue}`
+                    });
+                    
+                }).catch( err => { Bot.error( err ); })
+            
+            }).catch( err => { Bot.error( err ); });
+        },
         
-        list : function() {}
+        /*================================================================*
+         * List Config Options
+         *
+         * Outputs a list of currently set config options.
+         *================================================================*/
+        list : function() {
+            var options = DB.getOptionsList();
+            Bot.listConfigEmbed( options );
+        }
         
     }
     
@@ -236,66 +463,149 @@ const Commands = {
 
 
 
-Bot.Client.on( 'ready', () => {
-    var mixerChannels = DB.getMixerChannelList();
-    for( var channel of mixerChannels ) { 
-        watchMixerChannel( channel );
-        
-        // Testing for now, this should be randomised!
-//        Mixer.hostChannel( channel );
-    }
-});
-
-
-
-Bot.Client.on( 'message', message => {
-    if( Bot.parseMessage( message ) ) {
-        var cmd = Bot.command;
-        Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
-    }
-});
-
-
+/*============================================================================*
+ * Watch Mixer Channel
+ *
+ * Uses Carina to monitor a Mixer Channel's activity and run the relevant bot 
+ * method.
+ *
+ * @todo : Integrate Twitter to post when the channel goes live
+ *============================================================================*/
 function watchMixerChannel( mixerChannel ) {
-    Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
+    return new Promise( function( resolve, reject ) {
+        Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
         
-//        console.log( data );
-        
-        buildMixerLiveData( mixerChannel.id ).then( channel => {   
-            
-//            console.log( channel );
-            
-            if( channel.online == true ) {
-                if( data.updatedAt !== undefined ) { // Channel went live, create new embed
-                    Bot.mixerEmbed( channel ).then( message => {
-                        console.log( 'Creating Mixer Embed:', message.id );
-                        DB.updateMixerEmbedMessage( mixerChannel, message.id );
-                    }).catch( console.error );
-                } else if( data.updatedAt === undefined ) { // Channel is already live, update embed
-                   if( channel.announcementMessage === undefined ) {
+            buildMixerLiveData( mixerChannel.id ).then( channel => {   
+
+                if( channel.online == true ) {
+                    
+                    // Channel went live, create new embed
+                    if( data.updatedAt !== undefined ) {
+
                         Bot.mixerEmbed( channel ).then( message => {
                             console.log( 'Creating Mixer Embed:', message.id );
                             DB.updateMixerEmbedMessage( mixerChannel, message.id );
-                        }).catch( console.error );
-                    } else {
-                        console.log( 'Updating Mixer Embed:' );
-                        Bot.updateMixerEmbed( channel );   
+                            
+                            resolve({
+                                title : 'Mixer Embed Created',
+                                content : 'Channel went live, created new Mixer embed' });
+                            
+                        }).catch( err => {
+                            reject( err );
+                            console.error( err ); 
+                        });
+
                     } 
+                    
+                    // Channel is already live, update embed
+                    else if( data.updatedAt === undefined ) { 
+                        
+                        // Merge current viewers into Mixer Channel API data
+                        if( data.viewersCurrent ) channel.viewers = data.viewersCurrent;
+
+                        // No current announcement message, create a new embed
+                        if( channel.announcementMessage === undefined ) {
+
+                            Bot.mixerEmbed( channel ).then( message => {
+//                                console.log( 'Creating Mixer Embed:', message.id );
+                                DB.updateMixerEmbedMessage( mixerChannel, message.id );
+                                
+                                resolve({
+                                    title : 'Mixer Embed Created',
+                                    content : 'Channel updated, created new Mixer embed' });
+                                
+                            }).catch( err => {
+                                reject( err );
+                                console.error( err ); 
+                            });
+
+                        // Announcement message already exists, update current embed
+                        } else {
+//                            console.log( 'Updating Mixer Embed:' );
+                            Bot.updateMixerEmbed( channel );   
+                            
+                            resolve({
+                                title : 'Mixer Embed Updated',
+                                content : 'Channel updated, updated Mixer embed' });
+                        } 
+                    }
+                
+                // Channel is offline, update offline embed
+                } else if( channel.announcementMessage !== undefined ) { 
+
+                    console.log( 'Ending Mixer Embed:' );
+                    Bot.endMixerEmbed( channel );
+                    
+                    resolve({
+                        title : 'Mixer Embed Updated',
+                        content : 'Channel went offline, updated Mixer embed' });
+                    
                 }
-            } else if( channel.announcementMessage !== undefined ) { // Channel is offline, update offline embed
-                console.log( 'Ending Mixer Embed:' );
-                Bot.endMixerEmbed( channel );
-            }
-            
-            
-        }).catch( console.error );
-    
-    }).catch( console.error );
+
+            }).catch( err =>  {
+                reject( err );
+                console.error( err ); 
+            });
+
+        }).catch( err =>  {
+            reject( err );
+            console.error( err ); 
+        });
+        
+    }).catch( err => {
+        error.log( err );
+        
+        reject({
+            title : 'Unknown Error',
+            content : `Something went wrong while adding ${mixerChannel.token} to the announcement list`
+        });
+    });
 }
 
+
+
+/*============================================================================*
+ * Unwatch Mixer Channel
+ *
+ * Removes a Mixer Channel from the Carina watch list.
+ *============================================================================*/
+function unwatchMixerChannel( mixerChannel ) {
+    return new Promise( function( resolve, reject ) {
+        Mixer.Carina.unsubscribe( `channel:${mixerChannel.id}:update`, data => {
+            
+            console.log( data );
+        
+            // We should double check the return value here to make sure the channel has been 
+            // correctly unsubscribed 
+            
+            resolve({
+                title : 'Mixer Channel Removed',
+                content : `The Mixer Channel for ${mixerChannel.token} has been removed from the announcement list`
+            });
+
+        }); 
+    }).catch( err => {
+        error.log( err );
+        
+        reject({
+            title : 'Unknown Error',
+            content : `Something went wrong while removing ${mixerChannel.token} from the announcement list`
+        });
+    });
+}
+
+
+
+/*============================================================================*
+ * Build Mixer Live Data
+ *
+ * Creates a data object used to pass to the Discord Embed.
+ *============================================================================*/
 function buildMixerLiveData( channelName ) {
     return new Promise( function( resolve, reject ) {
+        
         Mixer.getChannel( channelName ).then( channel => {
+            
             var user = DB.getMixerChannel( channel );
             
             resolve({
@@ -310,10 +620,44 @@ function buildMixerLiveData( channelName ) {
                 announcementMessage : user.announcementMessage,
                 online : channel.online
             });
+            
         }).catch( console.error );
+        
     }).catch( console.error );
 }
 
 
 
-Bot.init(process.env.BOT_TOKEN);
+/*============================================================================*
+ * Bot Ready State
+ *
+ * Defines functions to run when the bot connects to Discord.
+ *============================================================================*/
+Bot.Client.on( 'ready', () => {
+    var mixerChannels = DB.getMixerChannelList();
+    for( var channel of mixerChannels ) { 
+        watchMixerChannel( channel );
+    }
+});
+
+
+
+/*============================================================================*
+ * Bot Message Received
+ *
+ * Defines functions to run when the bot receives a Discord Message.
+ *============================================================================*/
+Bot.Client.on( 'message', message => {
+    if( Bot.parseMessage( message ) ) {
+        var cmd = Bot.command;
+        Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
+    }
+});
+
+
+/*============================================================================*
+ * Initialise the Discord Bot
+ *
+ * @param   string  BOT_TOKEN   The Discord Bot's Application ID
+ *============================================================================*/
+Bot.init( process.env.BOT_TOKEN );

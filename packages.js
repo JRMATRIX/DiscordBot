@@ -15,8 +15,11 @@ var DB = new Database();
 const MixerAPI = require( './lib/mixer' );
 var Mixer = new MixerAPI();
 
+const Error = require( './content/errors' );
+
 module.exports = {
     Bot : Bot,
     Mixer : Mixer,
-    Database : DB
+    Database : DB,
+    Errors : Errors
 }
