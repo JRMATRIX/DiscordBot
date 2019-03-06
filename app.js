@@ -181,6 +181,8 @@ const Commands = {
                     // Remove the channel from the Constellations watch list
                     unwatchMixerChannel( mixerChannel ).then( status => {
                         
+                        console.log( status );
+                        
                         // Remove the channel from the Database
                         DB.deleteMixerChannel( mixerChannel ).then( res => {
                         
@@ -571,13 +573,7 @@ function watchMixerChannel( mixerChannel ) {
  *============================================================================*/
 function unwatchMixerChannel( mixerChannel ) {
     return new Promise( function( resolve, reject ) {
-//        Mixer.Carina.unsubscribe( `channel:${mixerChannel.id}:update`, data => {
-        Mixer.Carina.unsubscribe( `channel:${mixerChannel.id}:update` ).then( data => {
-            
-            console.log( data );
-        
-            // We should double check the return value here to make sure the channel has been 
-            // correctly unsubscribed 
+        Mixer.Carina.unsubscribe( `channel:${mixerChannel.id}:update` ).then( () => {
             
             resolve({
                 title : 'Mixer Channel Removed',
