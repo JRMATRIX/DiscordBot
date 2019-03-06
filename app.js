@@ -128,6 +128,9 @@ const Commands = {
                 if( args.announcementChannel === undefined )
                     args.announcementChannel = DB.getMixerAnnouncementChannel();
                 
+                if( args.announcementChannel === undefined )
+                    return Bot.error( Errors.mixer.channel.add.announcementChannel );
+                
                 args.announcementChannel = args.announcementChannel.replace( '#', '' );
                 
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
@@ -242,7 +245,8 @@ const Commands = {
                                 args.announcementChannel = ch.announcementChannel;
                             } else { args.announcementChannel = DB.getMixerAnnouncementChannel(); }
                             
-                            args.announcementChannel = args.announcementChannel.replace( '#', '' );
+                            if( args.announcementChannel === undefined )
+                                return Bot.error( Errors.mixer.channel.update.announcementChannel );
                             
                             // Update the database with the new announcementChannel
                             DB.updateMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
