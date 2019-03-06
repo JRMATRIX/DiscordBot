@@ -119,7 +119,7 @@ const Commands = {
             add : function( params ) {
                 var args = {
                     channelName : params[0],
-                    announcementChannel : params[1].substring(1),
+                    announcementChannel : params[1],
                     discordUser : params[2] }
                 
                 if( args.channelName === undefined )
@@ -127,6 +127,8 @@ const Commands = {
                 
                 if( args.announcementChannel === undefined )
                     args.announcementChannel = DB.getMixerAnnouncementChannel();
+                
+                args.announcementChannel = args.announcementChannel.replace( '#', '' );
                 
                 Mixer.getChannel( args.channelName ).then( mixerChannel => {
                     
@@ -207,9 +209,9 @@ const Commands = {
             },
             
             /*================================================================*
-             * Remove Mixer Channel
+             * Update Mixer Channel
              *
-             * Removes a Mixer Channel from the announcement list.
+             * Updates a Mixer Channel in the announcement list.
              *
              * @param   (object)    params  Command parameters
              *
@@ -221,7 +223,7 @@ const Commands = {
             update : function( params ) {
                 var args = {
                     channelName : params[0],
-                    announcementChannel : params[1].substring(1) }
+                    announcementChannel : params[1] }
                 
                 if( args.channelName === undefined )
                     return Bot.error( Errors.mixer.channel.update.channelName );
@@ -239,6 +241,8 @@ const Commands = {
                             if( ch.announcementChannel && ch.announcementChannel !== undefined ) {
                                 args.announcementChannel = ch.announcementChannel;
                             } else { args.announcementChannel = DB.getMixerAnnouncementChannel(); }
+                            
+                            args.announcementChannel = args.announcementChannel.replace( '#', '' );
                             
                             // Update the database with the new announcementChannel
                             DB.updateMixerChannel( mixerChannel, args.announcementChannel ).then( res => {
