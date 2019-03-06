@@ -182,16 +182,14 @@ const Commands = {
                     unwatchMixerChannel( mixerChannel ).then( status => {
                         
                         // Remove the channel from the Database
-                        DB.deleteMixerChannel( mixerChannel ).then( res => {
-                            
-                            console.log( res );
+                        DB.deleteMixerChannel( mixerChannel ).then( ( res, rej ) => {
                         
-                            if( res.error !== undefined ) return Bot.error( res );
+                            if( rej.error !== undefined ) return Bot.error( rej );
                             
                             return Bot.success( status );
                         
                         }).catch( err => {
-                            // Database removal hasn't worked. Retunr Unknown Error
+                            // Database removal hasn't worked. Return Unknown Error
                             return Bot.error({ title : 'Unknown Error', content : err.message }); 
                         });
                         
