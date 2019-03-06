@@ -182,11 +182,11 @@ const Commands = {
                     unwatchMixerChannel( mixerChannel ).then( status => {
                         
                         // Remove the channel from the Database
-                        DB.deleteMixerChannel( mixerChannel ).then( ( res, rej ) => {
+                        DB.deleteMixerChannel( mixerChannel ).then( res => {
                         
-                            console.log( res, rej );
+                            console.log( res );
                             
-                            if( rej.error !== undefined ) return Bot.error( rej );
+                            if( res.error !== undefined ) return Bot.error( res );
                             
                             return Bot.success( status );
                         
