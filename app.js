@@ -181,12 +181,12 @@ const Commands = {
                     // Remove the channel from the Constellations watch list
                     unwatchMixerChannel( mixerChannel ).then( status => {
                         
-                        console.log( status );
-                        
                         // Remove the channel from the Database
                         DB.deleteMixerChannel( mixerChannel ).then( res => {
                         
-                            Bot.success({ status });
+                            if( res.error !== undefined ) return Bot.error( res );
+                            
+                            return Bot.success( status );
                         
                         }).catch( err => {
                             // Database removal hasn't worked. Retunr Unknown Error
