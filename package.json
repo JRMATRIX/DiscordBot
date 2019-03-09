@@ -8,8 +8,11 @@
         "@mixer/client-node": "^3.2.0",
         "lowdb": "^1.0.0",
         "carina": "^0.12.0",
-        "ws": "^6.1.4",
+        "ws": "^6.2.0",
         "twitter": "^1.7.1",
-        "@mixer/shortcode-oauth": "^1.0.0"
+        "@mixer/shortcode-oauth": "^1.0.0",
+        "twitter-webhooks": "^0.3.0",
+        "body-parser": "^1.18.3",
+        "https": "^1.0.0"
     }
 }
