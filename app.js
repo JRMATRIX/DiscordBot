@@ -625,16 +625,11 @@ function buildMixerLiveData( channelName, carinaData ) {
         Mixer.getChannel( channelName ).then( channel => {
             
             DB.getMixerChannel( channel ).then( user => {
-               
-//                console.log( user, channel );
+                
+                if( user.error ) reject( user );
                 
                 var online = ( carinaData.online !== undefined ) ? carinaData.online : channel.online;
                 
-                // TESTING: REMOVE ME!!
-                online = false;
-                
-                if( user.error ) reject( user );
-
                 // Merge any carina data with the returned API data
                 var username = (carinaData.token !== undefined ) ? carinaData.token : channel.token;
                 
@@ -654,6 +649,7 @@ function buildMixerLiveData( channelName, carinaData ) {
                     viewers = ( carinaData.viewersTotal !== undefined ) ? carinaData.viewersTotal : channel.viewersTotal;
                 }
                 
+                // Resolve the promise with a new data object
                 resolve({
                     username : channel.token,
                     game : game,
