@@ -478,7 +478,7 @@ function watchMixerChannel( mixerChannel ) {
         
         Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
         
-            buildMixerLiveData( mixerChannel.id ).then( channel => {   
+            buildMixerLiveData( mixerChannel.id, data ).then( channel => {   
 
                 // Check if the channel is live
                 if( channel.online == true ) {
@@ -562,7 +562,7 @@ function watchMixerChannel( mixerChannel ) {
                 
             });
 
-        }).catch( err =>  {
+        }).catch( err => {
             
             // Something went wrong on Carina's end
             
@@ -619,28 +619,49 @@ function unwatchMixerChannel( mixerChannel ) {
  *
  * Creates a data object used to pass to the Discord Embed.
  *============================================================================*/
-function buildMixerLiveData( channelName ) {
+function buildMixerLiveData( channelName, carinaData ) {
     return new Promise( function( resolve, reject ) {
         
         Mixer.getChannel( channelName ).then( channel => {
             
             DB.getMixerChannel( channel ).then( user => {
                
-                console.log( user, channel );
+//                console.log( user, channel );
                 
                 if( user.error ) reject( user );
+
+                // Merge any carina data with the returned API data
+                var username = (carinaData.token !== undefined ) ? carinaData.token : channel.token;
+                
+                var game = channel.type ? channel.type.name : 'Unknown';
+                if( carinaData.type !== undefined ) game = carinaData.type.name;
+                
+                var title = ( carinaData.name !== undefined ) ? carinaData.name : channel.name;
+                
+                var avatar = ( carinaData.user !== undefined ) ? carinaData.user.avatarUrl : channel.user.avatarUrl;
             
+                var followers = ( carinaData.numFollowers !== undefined ) ? carinaData.numFollowers : channel.numFollowers;
+                
+                var viewers = 0;
+                if( channel.online ) {
+                    viewers = ( carinaData.viewersCurrent !== undefined ) ? carinaData.viewersCurrent : channel.viewersCurrent;
+                } else {
+                    viewers = ( carinaData.viewersTotal !== undefined ) ? carinaData.viewersTotal : channel.viewersTotal;
+                }
+                
+                var online = ( carinaData.online !== undefined ) ? carinaData.online : channel.online;
+                
                 resolve({
                     username : channel.token,
-                    game : channel.type ? channel.type.name : 'Unknown',
-                    title : channel.name,
-                    avatar : channel.user.avatarUrl,
-                    followers : channel.numFollowers,
-                    viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
+                    game : game,
+                    title : title,
+                    avatar : avatar,
+                    followers : followers,
+                    viewers : viewers,
                     thumbnail : channel.thumbnail ? channel.thumbnail.url : channel.bannerUrl,
                     announcementChannel : user.announcementChannel,
                     announcementMessage : user.announcementMessage,
-                    online : channel.online
+                    online : online
                 });
                 
             });
