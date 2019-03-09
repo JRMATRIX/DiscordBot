@@ -17,5 +17,5 @@ Array.prototype.random = function () {
 }
 
 Object.prototype.toArray = function() {
-    return Array.from( this.keys( options ), k => this[ k ] );
+    return Array.from( this.keys( this ), k => this[ k ] );
 }
