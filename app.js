@@ -127,12 +127,6 @@ const Commands = {
                 
                 if( args.announcementChannel === undefined )
                     return Bot.error( Errors.mixer.channel.add.announcementChannel );
-//                    args.announcementChannel = DB.getMixerAnnouncementChannel();
-                
-//                console.log( args.announcementChannel );
-//                
-//                if( args.announcementChannel === undefined )
-//                    return Bot.error( Errors.mixer.channel.add.announcementChannel );
                 
                 args.announcementChannel = args.announcementChannel.replace( '#', '' );
                 
@@ -204,7 +198,7 @@ const Commands = {
                         
                     }).catch( err => {
                         // Carina has returned an error. Return error message
-                        error.log( err ); 
+                        console.error( err ); 
                         Bot.error( err );
                     });
                     
@@ -482,6 +476,8 @@ const Commands = {
 function watchMixerChannel( mixerChannel ) {
     return new Promise( function( resolve, reject ) {
         Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
+            
+            console.log( data );
         
             buildMixerLiveData( mixerChannel.id ).then( channel => {   
 
