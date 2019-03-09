@@ -481,6 +481,8 @@ function watchMixerChannel( mixerChannel ) {
             console.log( data );
         
             buildMixerLiveData( mixerChannel.id ).then( channel => {   
+                
+                console.log( channel );
 
                 // Check if the channel is live
                 if( channel.online == true ) {
