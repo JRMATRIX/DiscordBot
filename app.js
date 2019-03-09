@@ -679,7 +679,7 @@ function buildMixerLiveData( channelName, carinaData ) {
  *============================================================================*/
 function mergeMixerCarinaData( channel, data ) {
     
-    var channelData = channel.arrayValue();
+    var channelData = Object.entries( channel );
     
     console.log( channelData );
     
