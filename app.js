@@ -624,22 +624,26 @@ function buildMixerLiveData( channelName ) {
         
         Mixer.getChannel( channelName ).then( channel => {
             
-            var user = DB.getMixerChannel( channel );
+            DB.getMixerChannel( channel ).then( user => {
+               
+                console.log( user, channel );
+                
+                if( user.error ) reject( user );
             
-            console.log( user, channel );
-            
-            resolve({
-                username : channel.token,
-                game : channel.type ? channel.type.name : 'Unknown',
-                title : channel.name,
-                avatar : channel.user.avatarUrl,
-                followers : channel.numFollowers,
-                viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
-                thumbnail : channel.thumbnail ? channel.thumbnail.url : channel.bannerUrl,
-                announcementChannel : user.announcementChannel,
-                announcementMessage : user.announcementMessage,
-                online : channel.online
-            });
+                resolve({
+                    username : channel.token,
+                    game : channel.type ? channel.type.name : 'Unknown',
+                    title : channel.name,
+                    avatar : channel.user.avatarUrl,
+                    followers : channel.numFollowers,
+                    viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
+                    thumbnail : channel.thumbnail ? channel.thumbnail.url : channel.bannerUrl,
+                    announcementChannel : user.announcementChannel,
+                    announcementMessage : user.announcementMessage,
+                    online : channel.online
+                });
+                
+            }};
             
         }).catch( err => {
             console.error( err );
