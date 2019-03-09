@@ -679,7 +679,11 @@ function buildMixerLiveData( channelName, carinaData ) {
  *============================================================================*/
 function mergeMixerCarinaData( channel, data ) {
     
-    channel.arrayValue().forEach( function( value, key ) {
+    var channelData = channel.arrayValue();
+    
+    console.log( channelData );
+    
+    channelData.forEach( function( value, key ) {
         if( data[key] !== undefined ) {
             channel[key] = data[key];
         }
