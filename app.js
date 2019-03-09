@@ -642,7 +642,7 @@ function buildMixerLiveData( channelName, carinaData ) {
                 resolve({
                     username : channel.token,
                     game : channel.type ? channel.type.name : 'Unknown',
-                    title : chanel.name,
+                    title : channel.name,
                     avatar : channel.user.avatarUrl,
                     followers : channel.numFollowers,
                     viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
