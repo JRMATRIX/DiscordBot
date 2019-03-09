@@ -643,7 +643,7 @@ function buildMixerLiveData( channelName ) {
                     online : channel.online
                 });
                 
-            }};
+            });
             
         }).catch( err => {
             console.error( err );
