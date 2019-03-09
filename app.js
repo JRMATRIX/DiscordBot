@@ -684,8 +684,12 @@ function mergeMixerCarinaData( channel, data ) {
     console.log( channelData );
     
     channelData.forEach( function( value, key ) {
-        if( data[key] !== undefined ) {
-            channel[key] = data[key];
+        
+        var itemKey = value[0],
+            itemValue = value[1];
+        
+        if( data[itemKey] !== undefined ) {
+            channel[itemKey] = data[itemKey];
         }
     });
     
