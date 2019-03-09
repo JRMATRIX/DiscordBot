@@ -496,6 +496,7 @@ function watchMixerChannel( mixerChannel ) {
                             
                         }).catch( err => {
                             reject( err );
+                            console.log( 'Unable to create Mixer Embed' );
                             console.error( err ); 
                         });
 
@@ -520,6 +521,7 @@ function watchMixerChannel( mixerChannel ) {
                                 
                             }).catch( err => {
                                 reject( err );
+                                console.log( 'Unable to create Mixer Embed' );
                                 console.error( err ); 
                             });
 
@@ -548,16 +550,20 @@ function watchMixerChannel( mixerChannel ) {
 
             }).catch( err =>  {
                 reject( err );
+                console.log( 'Unable to create Mixer Live Data' );
                 console.error( err ); 
             });
 
         }).catch( err =>  {
             reject( err );
+            console.log( `Unable to subscribe to Mixer Channel ${mixerChannel.token}` );
             console.error( err ); 
         });
         
     }).catch( err => {
-        error.log( err );
+        console.error( err );
+        
+        console.log( `Something went wrong while adding ${mixerChannel.token} to the announcement list` );
         
         reject({
             title : 'Unknown Error',
