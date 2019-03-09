@@ -477,12 +477,8 @@ function watchMixerChannel( mixerChannel ) {
     return new Promise( function( resolve, reject ) {
         
         Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
-            
-            console.log( data );
         
             buildMixerLiveData( mixerChannel.id ).then( channel => {   
-                
-                console.log( channel );
 
                 // Check if the channel is live
                 if( channel.online == true ) {
@@ -516,7 +512,8 @@ function watchMixerChannel( mixerChannel ) {
                         if( channel.announcementMessage === undefined ) {
 
                             Bot.mixerEmbed( channel ).then( message => {
-//                                console.log( 'Creating Mixer Embed:', message.id );
+                                console.log( 'Creating Mixer Embed:', message.id );
+                                
                                 DB.updateMixerEmbedMessage( mixerChannel, message.id );
                                 
                                 resolve({
@@ -628,6 +625,8 @@ function buildMixerLiveData( channelName ) {
         Mixer.getChannel( channelName ).then( channel => {
             
             var user = DB.getMixerChannel( channel );
+            
+            console.log( user, channel );
             
             resolve({
                 username : channel.token,
