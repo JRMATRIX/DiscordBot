@@ -472,6 +472,8 @@ const Commands = {
  * method.
  *
  * @todo : Integrate Twitter to post when the channel goes live
+ *
+ * @param   (object)    mixerChannel
  *============================================================================*/
 function watchMixerChannel( mixerChannel ) {
     return new Promise( function( resolve, reject ) {
@@ -590,6 +592,8 @@ function watchMixerChannel( mixerChannel ) {
  * Unwatch Mixer Channel
  *
  * Removes a Mixer Channel from the Carina watch list.
+ *
+ * @param   (object)    mixerChannel
  *============================================================================*/
 function unwatchMixerChannel( mixerChannel ) {
     return new Promise( function( resolve, reject ) {
@@ -618,6 +622,9 @@ function unwatchMixerChannel( mixerChannel ) {
  * Build Mixer Live Data
  *
  * Creates a data object used to pass to the Discord Embed.
+ *
+ * @param   (string)    channelName
+ * @param   (object)    carinaData
  *============================================================================*/
 function buildMixerLiveData( channelName, carinaData ) {
     return new Promise( function( resolve, reject ) {
@@ -628,39 +635,21 @@ function buildMixerLiveData( channelName, carinaData ) {
                 
                 if( user.error ) reject( user );
                 
-                var online = ( carinaData.online !== undefined ) ? carinaData.online : channel.online;
-                
                 // Merge any carina data with the returned API data
-                var username = (carinaData.token !== undefined ) ? carinaData.token : channel.token;
-                
-                var game = channel.type ? channel.type.name : 'Unknown';
-                if( carinaData.type !== undefined ) game = carinaData.type.name;
-                
-                var title = ( carinaData.name !== undefined ) ? carinaData.name : channel.name;
-                
-                var avatar = ( carinaData.user !== undefined ) ? carinaData.user.avatarUrl : channel.user.avatarUrl;
-            
-                var followers = ( carinaData.numFollowers !== undefined ) ? carinaData.numFollowers : channel.numFollowers;
-                
-                var viewers = 0;
-                if( online ) {
-                    viewers = ( carinaData.viewersCurrent !== undefined ) ? carinaData.viewersCurrent : channel.viewersCurrent;
-                } else {
-                    viewers = ( carinaData.viewersTotal !== undefined ) ? carinaData.viewersTotal : channel.viewersTotal;
-                }
+                channel = mergeMixerCarinaData( channel, carinaData );
                 
                 // Resolve the promise with a new data object
                 resolve({
                     username : channel.token,
-                    game : game,
-                    title : title,
-                    avatar : avatar,
-                    followers : followers,
-                    viewers : viewers,
+                    game : channel.type ? channel.type.name : 'Unknown',
+                    title : chanel.name,
+                    avatar : channel.user.avatarUrl,
+                    followers : channel.numFollowers,
+                    viewers : channel.online ? channel.viewersCurrent : channel.viewersTotal,
                     thumbnail : channel.thumbnail ? channel.thumbnail.url : channel.bannerUrl,
                     announcementChannel : user.announcementChannel,
                     announcementMessage : user.announcementMessage,
-                    online : online
+                    online : channel.online
                 });
                 
             });
@@ -679,15 +668,39 @@ function buildMixerLiveData( channelName, carinaData ) {
 
 
 /*============================================================================*
+ * Merge Mixer Carina Data
+ *
+ * Merges any live data from Carina with the data returned from the Mixer API
+ *
+ * @param   (object)    channel
+ * @param   (object)    data
+ *
+* @return   (object)    channel
+ *============================================================================*/
+function mergeMixerCarinaData( channel, data ) {
+    
+    channel.forEach( value, key ) {
+        if( data[key] !== undefined ) {
+            channel[key] = data[key];
+        }
+    }
+    
+    return channel;
+}
+
+
+
+/*============================================================================*
  * Bot Ready State
  *
  * Defines functions to run when the bot connects to Discord.
  *============================================================================*/
 Bot.Client.on( 'ready', () => {
+    
+    // Watch all current Mixer Channels from the Database
     var mixerChannels = DB.getMixerChannelList();
-    for( var channel of mixerChannels ) { 
-        watchMixerChannel( channel );
-    }
+    for( var channel of mixerChannels ) { watchMixerChannel( channel ); }
+    
 });
 
 
@@ -700,7 +713,13 @@ Bot.Client.on( 'ready', () => {
 Bot.Client.on( 'message', message => {
     if( Bot.parseMessage( message ) ) {
         var cmd = Bot.command;
-        Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
+        
+        if( cmd.group == 'config' ){
+            Commands[cmd.group][cmd.operator]( cmd.params );
+        } else {
+            Commands[cmd.group][cmd.context][cmd.operator]( cmd.params );
+        }
+                    
     }
 });
 
