@@ -568,7 +568,13 @@ function watchMixerChannel( mixerChannel ) {
         console.log( `Something went wrong while adding ${mixerChannel.token} to the announcement list` );
         console.error( err );
         
-        reject({
+        // Reject is not defined here, return instead
+        // reject({
+            // title : 'Unknown Error',
+            // content : `Something went wrong while adding ${mixerChannel.token} to the announcement list`
+        // });
+        
+        return({
             title : 'Unknown Error',
             content : `Something went wrong while adding ${mixerChannel.token} to the announcement list`
         });
