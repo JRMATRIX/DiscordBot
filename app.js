@@ -628,6 +628,11 @@ function buildMixerLiveData( channelName, carinaData ) {
                
 //                console.log( user, channel );
                 
+                var online = ( carinaData.online !== undefined ) ? carinaData.online : channel.online;
+                
+                // TESTING: REMOVE ME!!
+                online = false;
+                
                 if( user.error ) reject( user );
 
                 // Merge any carina data with the returned API data
@@ -643,16 +648,11 @@ function buildMixerLiveData( channelName, carinaData ) {
                 var followers = ( carinaData.numFollowers !== undefined ) ? carinaData.numFollowers : channel.numFollowers;
                 
                 var viewers = 0;
-                if( channel.online ) {
+                if( online ) {
                     viewers = ( carinaData.viewersCurrent !== undefined ) ? carinaData.viewersCurrent : channel.viewersCurrent;
                 } else {
                     viewers = ( carinaData.viewersTotal !== undefined ) ? carinaData.viewersTotal : channel.viewersTotal;
                 }
-                
-                var online = ( carinaData.online !== undefined ) ? carinaData.online : channel.online;
-                
-                // TESTING: REMOVE ME!!
-                online = false;
                 
                 resolve({
                     username : channel.token,
