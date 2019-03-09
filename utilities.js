@@ -15,3 +15,7 @@ String.prototype.trimRight = function(charlist) {
 Array.prototype.random = function () {
   return this[Math.floor((Math.random()*this.length))];
 }
+
+Object.prototype.toArray = function() {
+    return Array.from( this.keys( options ), k => this[ k ] );
+}
