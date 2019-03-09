@@ -475,12 +475,14 @@ const Commands = {
  *============================================================================*/
 function watchMixerChannel( mixerChannel ) {
     return new Promise( function( resolve, reject ) {
+        
         Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
             
             console.log( data );
         
             buildMixerLiveData( mixerChannel.id ).then( channel => {   
 
+                // Check if the channel is live
                 if( channel.online == true ) {
                     
                     // Channel went live, create new embed
@@ -495,9 +497,9 @@ function watchMixerChannel( mixerChannel ) {
                                 content : 'Channel went live, created new Mixer embed' });
                             
                         }).catch( err => {
-                            reject( err );
-                            console.log( 'Unable to create Mixer Embed' );
+                            console.error( 'Unable to create Mixer Embed' );
                             console.error( err ); 
+                            reject( err );
                         });
 
                     } 
@@ -550,6 +552,10 @@ function watchMixerChannel( mixerChannel ) {
 
             }).catch( err => {
                 
+                // Something went wrong building the live data for the Mixer stream
+                
+                console.error( `Failed building live Mixer data for ${mixerChannel.token}` );
+                
                 reject({
                     title : 'Unable to build Mixer Live Data',
                     content : `Failed building live Mixer data for ${mixerChannel.token}`
@@ -558,7 +564,11 @@ function watchMixerChannel( mixerChannel ) {
             });
 
         }).catch( err =>  {
-            console.log( `Unable to subscribe to Mixer Channel ${mixerChannel.token}` );
+            
+            // Something went wrong on Carina's end
+            
+            console.error( `Unable to subscribe to Mixer Channel ${mixerChannel.token}` );
+            
             console.error( err ); 
             
             reject( err );
@@ -567,12 +577,6 @@ function watchMixerChannel( mixerChannel ) {
     }).catch( err => {
         console.log( `Something went wrong while adding ${mixerChannel.token} to the announcement list` );
         console.error( err );
-        
-        // Reject is not defined here, return instead
-        // reject({
-            // title : 'Unknown Error',
-            // content : `Something went wrong while adding ${mixerChannel.token} to the announcement list`
-        // });
         
         return({
             title : 'Unknown Error',
@@ -641,7 +645,10 @@ function buildMixerLiveData( channelName ) {
             reject( err );
         });
         
-    }).catch( console.error );
+    }).catch( err => {
+        console.error( err );
+        return err;
+    });
 }
 
 
