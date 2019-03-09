@@ -651,6 +651,9 @@ function buildMixerLiveData( channelName, carinaData ) {
                 
                 var online = ( carinaData.online !== undefined ) ? carinaData.online : channel.online;
                 
+                // TESTING: REMOVE ME!!
+                online = false;
+                
                 resolve({
                     username : channel.token,
                     game : game,
