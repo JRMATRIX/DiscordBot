@@ -548,22 +548,25 @@ function watchMixerChannel( mixerChannel ) {
                     
                 }
 
-            }).catch( err =>  {
-                reject( err );
-                console.log( 'Unable to create Mixer Live Data' );
-                console.error( err ); 
+            }).catch( err => {
+                
+                reject({
+                    title : 'Unable to build Mixer Live Data',
+                    content : `Failed building live Mixer data for ${mixerChannel.token}`
+                });
+                
             });
 
         }).catch( err =>  {
-            reject( err );
             console.log( `Unable to subscribe to Mixer Channel ${mixerChannel.token}` );
             console.error( err ); 
+            
+            reject( err );
         });
         
     }).catch( err => {
-        console.error( err );
-        
         console.log( `Something went wrong while adding ${mixerChannel.token} to the announcement list` );
+        console.error( err );
         
         reject({
             title : 'Unknown Error',
@@ -627,7 +630,10 @@ function buildMixerLiveData( channelName ) {
                 online : channel.online
             });
             
-        }).catch( console.error );
+        }).catch( err => {
+            console.error( err );
+            reject( err );
+        });
         
     }).catch( console.error );
 }
