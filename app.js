@@ -681,8 +681,6 @@ function mergeMixerCarinaData( channel, data ) {
     
     var channelData = Object.entries( channel );
     
-    console.log( channelData );
-    
     channelData.forEach( function( value, key ) {
         
         var itemKey = value[0],
