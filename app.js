@@ -721,6 +721,8 @@ function mergeMixerCarinaData( channel, data ) {
  *============================================================================*/
 Bot.Client.on( 'ready', () => {
     
+    console.log( 'Bot Client Ready' );
+    
     // Watch all current Mixer Channels from the Database
     var mixerChannels = DB.getMixerChannelList();
     for( var channel of mixerChannels ) { 
