@@ -394,8 +394,6 @@ const Commands = {
                 optionName : params[0],
                 optionValue : params[1] }
             
-            console.log( args );
-            
             if( args.optionName === undefined )
                 return Bot.error( Errors.config.set.optionName );
             
@@ -413,9 +411,14 @@ const Commands = {
                         content : `${args.optionName} successfully updated to ${args.optionValue}`
                     });
                     
-                }).catch( err => { Bot.error( err ); })
+                }).catch( err => { 
+                    console.log( err )
+                    Bot.error( err ); })
             
-            }).catch( err => { Bot.error( err ); });
+            }).catch( err => { 
+                console.log( err );
+                Bot.error( err ); 
+            });
         },
         
         /*================================================================*
