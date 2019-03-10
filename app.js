@@ -737,10 +737,10 @@ Bot.Client.on( 'ready', () => {
 //            if( channel.name == 'JRMATRIX' ) Mixer.hostChannel( channel );
 //        }, 5000 );
         
-        setTimeoutPromise( function() {
+        setTimeoutPromise( 5000, function() {
             console.log( channel.name );
             if( channel.name == 'JRMATRIX' ) Mixer.hostChannel( channel );
-        }, 5000 ).then( res => { console.log( res ); }, 2000 );
+        }).then( res => { console.log( res ); });
         
         watchMixerChannel( channel ).then( res => {
 //            console.log( res, channel.name );
