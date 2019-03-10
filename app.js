@@ -59,6 +59,14 @@ const Mixer = Require.Mixer;
 const DB = Require.Database;
 
 /*============================================================================*
+ * Twitter Interface
+ *
+ * Uses the Twitter API for commnunicating with and listeining to the bot's 
+ * linked Twitter account
+ *============================================================================*/
+const Twitter = Require.Twitter;
+
+/*============================================================================*
  * Application Errors
  *
  * Standard Error output for commands
@@ -121,6 +129,8 @@ const Commands = {
                     channelName : params[0],
                     announcementChannel : params[1],
                     discordUser : params[2] }
+                
+                // @todo : re-add default announcement channels
                 
                 if( args.channelName === undefined )
                     return Bot.error( Errors.mixer.channel.add.channelName );
