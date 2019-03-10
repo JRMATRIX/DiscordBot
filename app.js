@@ -725,6 +725,9 @@ Bot.Client.on( 'ready', () => {
     
     // Watch all current Mixer Channels from the Database
     var mixerChannels = DB.getMixerChannelList();
+    
+    console.log( mixerChannels );
+    
     for( var channel of mixerChannels ) { 
         watchMixerChannel( channel ).then( () => {
             console.log( channel.name );
