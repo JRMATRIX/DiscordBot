@@ -394,6 +394,8 @@ const Commands = {
                 optionName : params[0],
                 optionValue : params[1] }
             
+            console.log( args );
+            
             if( args.optionName === undefined )
                 return Bot.error( Errors.config.set.optionName );
             
