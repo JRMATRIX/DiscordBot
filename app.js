@@ -563,6 +563,10 @@ function watchMixerChannel( mixerChannel ) {
                         title : 'Mixer Embed Updated',
                         content : 'Channel went offline, updated Mixer embed' });
                     
+                } else {
+                    resolve({
+                        title : 'Nothing to do',
+                        content : 'There was no action to perform' });
                 }
 
             }).catch( err => {
@@ -720,13 +724,15 @@ Bot.Client.on( 'ready', () => {
     // Watch all current Mixer Channels from the Database
     var mixerChannels = DB.getMixerChannelList();
     for( var channel of mixerChannels ) { 
-        watchMixerChannel( channel ); 
+        watchMixerChannel( channel ).then( () => {
+            console.log( channel.name );
         
-        console.log( channel.name );
-        
-        setTimeout( function() {
-            if( channel.name == 'JRMATRIX' ) Mixer.hostChannel( channel );
-        }, 5000 );
+            setTimeout( function() {
+                if( channel.name == 'JRMATRIX' ) Mixer.hostChannel( channel );
+            }, 5000 );
+        }).catch( err => {
+            console.error( err );  
+        }); 
     }
     
 });
