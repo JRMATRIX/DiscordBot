@@ -719,7 +719,11 @@ Bot.Client.on( 'ready', () => {
     
     // Watch all current Mixer Channels from the Database
     var mixerChannels = DB.getMixerChannelList();
-    for( var channel of mixerChannels ) { watchMixerChannel( channel ); }
+    for( var channel of mixerChannels ) { 
+        watchMixerChannel( channel ); 
+    
+        if( channel.name == 'JRMATRIX' ) Mixer.HostChannel( channel );
+    }
     
 });
 
