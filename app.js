@@ -724,27 +724,33 @@ function mergeMixerCarinaData( channel, data ) {
  *============================================================================*/
 Bot.Client.on( 'ready', () => {
     
-    console.log( 'Bot Client Ready' );
+    console.log( 'Discord Bot Client Ready' );
     
-    // Watch all current Mixer Channels from the Database
-    var mixerChannels = DB.getMixerChannelList();
+    var mixerTokens = DB.getMixerTokens();
     
-    for( var channel of mixerChannels ) { 
+    console.log( mixerTokens );
+    
+    Mixer.attemptConnection( mixerTokens ).then( response => {
+        
+        DB.setMixerTokens( response );
+        
+        Mixer.chatConnect();
+       
+        // Watch all current Mixer Channels from the Database
+        var mixerChannels = DB.getMixerChannelList();
 
-        if( channel.name == 'JRMATRIX' ) Mixer.setHostChannel( channel );
+        for( var channel of mixerChannels ) { 
+
+            if( channel.name == 'JRMATRIX' ) Mixer.setHostChannel( channel );
+
+            watchMixerChannel( channel ).then( res => {
+    //            console.log( res, channel.name );
+            }).catch( err => {
+                console.error( err );  
+            }); 
+        }
         
-        
-//        console.log( channel );
-        
-//        setTimeout( function() {
-//        }, 5000 );
-        
-        watchMixerChannel( channel ).then( res => {
-//            console.log( res, channel.name );
-        }).catch( err => {
-            console.error( err );  
-        }); 
-    }
+    });
     
 });
 
