@@ -728,8 +728,6 @@ Bot.Client.on( 'ready', () => {
     
     var mixerTokens = DB.getMixerTokens();
     
-    console.log( mixerTokens );
-    
     Mixer.attemptConnection( mixerTokens ).then( response => {
         
         DB.setMixerTokens( response );
