@@ -730,17 +730,14 @@ Bot.Client.on( 'ready', () => {
     var mixerChannels = DB.getMixerChannelList();
     
     for( var channel of mixerChannels ) { 
+
+        if( channel.name == 'JRMATRIX' ) Mixer.setHostChannel( channel );
+        
         
 //        console.log( channel );
         
 //        setTimeout( function() {
-//            if( channel.name == 'JRMATRIX' ) Mixer.hostChannel( channel );
 //        }, 5000 );
-        
-        setTimeoutPromise( 5000, function() {
-            console.log( channel.name );
-            if( channel.name == 'JRMATRIX' ) Mixer.hostChannel( channel );
-        }).then( res => { console.log( res ); });
         
         watchMixerChannel( channel ).then( res => {
 //            console.log( res, channel.name );
