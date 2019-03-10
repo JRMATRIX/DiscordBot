@@ -25,6 +25,9 @@ require( 'events' ).EventEmitter.defaultMaxListeners = 0;
 // Simple Keep-Alive Server
 require( './server' );
 
+const util = require('util');
+const setTimeoutPromise = util.promisify( setTimeout );
+
 // Custom Utility Functions
 require( './utilities' );
 
@@ -728,14 +731,19 @@ Bot.Client.on( 'ready', () => {
     
     for( var channel of mixerChannels ) { 
         
-        console.log( channel );
+//        console.log( channel );
         
-        setTimeout( function() {
+//        setTimeout( function() {
+//            if( channel.name == 'JRMATRIX' ) Mixer.hostChannel( channel );
+//        }, 5000 );
+        
+        setTimeoutPromise( function() {
+            console.log( channel.name );
             if( channel.name == 'JRMATRIX' ) Mixer.hostChannel( channel );
-        }, 5000 );
+        }, 5000 ).then( res => { console.log( res ); }, 2000 );
         
         watchMixerChannel( channel ).then( res => {
-            console.log( res, channel.name );
+//            console.log( res, channel.name );
         }).catch( err => {
             console.error( err );  
         }); 
