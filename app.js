@@ -417,8 +417,7 @@ const Commands = {
             
             }).catch( err => { 
                 console.log( err );
-                Bot.error( err ); 
-            });
+                Bot.error( err ); });
         },
         
         /*================================================================*
