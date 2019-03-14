@@ -530,7 +530,7 @@ function watchMixerChannel( mixerChannel ) {
                         if( data.viewersCurrent ) channel.viewers = data.viewersCurrent;
 
                         // No current announcement message, create a new embed
-                        if( channel.announcementMessage === undefined ) {
+                        if( channel.announcementMessage === undefined || typeof channel.announcementMessage !== 'string' ) {
 
                             Bot.mixerEmbed( channel ).then( message => {
                                 console.log( 'Creating Mixer Embed:', message.id );
