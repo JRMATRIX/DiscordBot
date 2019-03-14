@@ -578,11 +578,11 @@ function watchMixerChannel( mixerChannel ) {
                 // Something went wrong building the live data for the Mixer stream
                 console.error( mixerChannel );
                 
-                console.error( `Failed building live Mixer data for ${mixerChannel.token}` );
+                console.error( `Failed building live Mixer data for ${mixerChannel.token ? mixerChannel.token : mixerChannel.name}` );
                 
                 reject({
                     title : 'Unable to build Mixer Live Data',
-                    content : `Failed building live Mixer data for ${mixerChannel.token}`
+                    content : `Failed building live Mixer data for ${mixerChannel.token ? mixerChannel.token : mixerChannel.name}`
                 });
                 
             });
@@ -591,7 +591,7 @@ function watchMixerChannel( mixerChannel ) {
             
             // Something went wrong on Carina's end
             
-            console.error( `Unable to subscribe to Mixer Channel ${mixerChannel.token}` );
+            console.error( `Unable to subscribe to Mixer Channel ${mixerChannel.token ? mixerChannel.token : mixerChannel.name}` );
             
             console.error( err ); 
             
