@@ -497,7 +497,9 @@ function watchMixerChannel( mixerChannel ) {
         
         Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
         
-            buildMixerLiveData( mixerChannel.id, data ).then( channel => {   
+            buildMixerLiveData( mixerChannel.id, data ).then( channel => {  
+                
+                console.log( channel );
 
                 // Check if the channel is live
                 if( channel.online == true ) {
