@@ -739,7 +739,7 @@ Bot.Client.on( 'ready', () => {
 
         for( var channel of mixerChannels ) { 
 
-            if( channel.name == 'JRMATRIX' ) Mixer.setHostChannel( channel );
+//            if( channel.name == 'JRMATRIX' ) Mixer.setHostChannel( channel );
 
             watchMixerChannel( channel ).then( res => {
     //            console.log( res, channel.name );
