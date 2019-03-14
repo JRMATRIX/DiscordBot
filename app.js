@@ -493,14 +493,13 @@ const Commands = {
  * @param   (object)    mixerChannel
  *============================================================================*/
 function watchMixerChannel( mixerChannel ) {
+        
     return new Promise( function( resolve, reject ) {
         
         Mixer.Carina.subscribe( `channel:${mixerChannel.id}:update`, data => {
         
             buildMixerLiveData( mixerChannel.id, data ).then( channel => {  
                 
-                console.log( channel );
-
                 // Check if the channel is live
                 if( channel.online == true ) {
                     
@@ -577,6 +576,7 @@ function watchMixerChannel( mixerChannel ) {
             }).catch( err => {
                 
                 // Something went wrong building the live data for the Mixer stream
+                console.error( mixerChannel );
                 
                 console.error( `Failed building live Mixer data for ${mixerChannel.token}` );
                 
